@@ -32,7 +32,8 @@ $temp=date("Y");
 
 
 // Si formulaire soumis et que utilisateur connecté 
-if($_POST){
+if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
+{
             
       // set bouteille property values
       if (isset($_POST['nom']))   			$bouteille->nom = $_POST['nom'];
@@ -66,11 +67,13 @@ if($_POST){
     }
 }
 
-
-
-echo "<div class='right-button-margin'>";
-    echo "<a href='index.php' class='btn  btn-primary pull-right' style='margin-left:10px;'>Liste des bouteilles</a>";
+echo "<div class='row'>";
+echo "<div class='col-md-12 right-button-margin'>";
+    echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des bouteilles</a>";
+    if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 	echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter une bouteille </a>";
+    }
+echo "</div>";
 echo "</div>";
 
 ?>

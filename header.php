@@ -1,12 +1,17 @@
+<?php 
+session_start();
+ini_set('zlib.output_compression_level', 6);
+ob_start('ob_gzhandler');
+?>
 <!DOCTYPE html>
 <html>
 <head>
- 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
- 
-    <title><?php echo $page_title; ?></title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title><?php echo $page_title; ?></title>
  
     <!-- some custom CSS -->
     <style>
@@ -93,8 +98,23 @@
         max-width: 330px;
         padding: 15px;
     }
-
+    .navbar a.btn {
+        color: #fff !important;
+        font-weight: 700;
+    }
+    /* Page Index : hide operations columns */
+    td [data-column="9"] {
+        display:none;
+    }
+    .titreOperations {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+    }
+    h2 {
+        margin-top: 0px !important;
+    }
     </style>
+ 
  
  
     <!-- Bootstrap -->
@@ -164,18 +184,21 @@
         </li>
       </ul>
 
+      <form action='index.php' method='POST' class="navbar-form " role="search" name="filtre">
+         <?php
+        if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+            echo "<a href='logout.php' class='btn btn-danger navbar-right'>Déconnexion</a>";
+        }
+        else {
+            echo "<a href='login.php' class='btn btn-primary navbar-right'>Connexion</a>";
+        }
+        ?>
+      </form>
+      
     </div><!-- /.navbar-collapse -->
+
   </div><!-- /.container-fluid -->
 </nav>
-<br>
-<br>
-
-    <!-- container -->
-    <div class="container">
- 
-        <?php
-        // show page header
-        echo "<div class='page-header'>";
-        echo "<h1>{$page_title}</h1>";
-        echo "</div>";
-        ?>
+<!-- container -->
+<div class="container">
+    <br><br><br>

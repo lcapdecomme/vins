@@ -58,8 +58,8 @@ class Referentiel{
     }
 
     function readOne($nom){
-        $query = "SELECT nom, region, id_type FROM " . $this->table_name . "
-                WHERE nom = '" . $nom . "' LIMIT 0,1";        
+        $query = "SELECT nom, region, id_type FROM " . $this->table_name . '
+                WHERE nom = "' . $nom . '" LIMIT 0,1';
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

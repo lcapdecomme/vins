@@ -2,10 +2,6 @@
 	$page_title = "Mes bouteilles";
 	include_once "header.php";
 
-	echo "<div class='right-button-margin'>";
-	echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter une bouteille </a>";
-	echo "</div>";
-
 	// include database and object files
 	include_once 'config/database.php';
 	include_once 'objects/Bouteille.php';
@@ -19,17 +15,38 @@
 	 
 	$bouteille = new Bouteille($db);
 
-
 	// show page header
-	$total_rows = $bouteille->countAll('');
-	$sum = $bouteille->sumAll('');
+	$total_rows = $bouteille->countAll();
+	$sum = $bouteille->sumAll();
 
-	if($sum>0)
-	{
-		echo "<h3><span id='totalVins'>{$total_rows}</span> vins, <span id='totalBouteilles'>{$sum}</span> bouteilles</h3>";
+    echo "<div class='row'>";
+	echo "<div  class='col-md-6'>";
+	if ($_SESSION && isset($_SESSION['pseudo_utilisateur']) ) {
+		echo "<h2>".$_SESSION['pseudo_utilisateur']."</h2>";
 	}
+	echo "<h3><span id='totalVins'>{$total_rows}</span> ";
+	if ($total_rows>1) {
+		echo "vins";
+	}else{
+		echo "vin";
+	}
+	echo ", <span id='totalBouteilles'>{$sum}</span> ";
+	if ($sum>1) {
+		echo "<span id='titreBouteilles'>bouteilles</span> ";
+	}else{
+		echo "<span id='titreBouteilles'>bouteille</span> ";
+	}
+	echo "</h3>";
+	echo "</div>";
+	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+        echo "<div  class='col-md-6'><div class='right-button-margin'>";
+		echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter une bouteille </a>";
+		echo "</div></div>";
+	}
+	echo "</div>";
 
-	// query products
+
+	// query bottles
 	$stmt = $bouteille->readAll();
 	$num = $stmt->rowCount();
 ?>
@@ -40,7 +57,6 @@
 	// display the products if there are any
 	if($num>0)
 	{
-
 	    echo "<div class='pager'>";
 		echo "<img src='lib/tablesorter/addons/pager/icons/first.png' class='first' alt='First' />";
 		echo "<img src='lib/tablesorter/addons/pager/icons/prev.png' class='prev' alt='Prev' />";
@@ -73,19 +89,13 @@
 	            echo "<th class='filter-select filter-onlyAvail'>Apogée</th>";
 	            echo "<th>AOC</th>";
 	            echo "<th class='filter-select filter-onlyAvail'>Achat</th>";
+				if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+		            echo "<th class='titreOperations'>Opérations</th>";
+				} else {
+		            echo "<th class='titreOperations'>Propriétaire</th>";
+				}
 	        echo "</tr></thead>";
 
-	 		echo "<tfoot><tr>";
-	            echo "<th>Nom</th>";
-	            echo "<th>&nbsp;</th>";
-	            echo "<th>Qté</th>";
-	            echo "<th>Type</th>";
-	            echo "<th>Emplacement</th>";
-	            echo "<th>Millesime</th>";
-	            echo "<th>Apogée</th>";
-	            echo "<th>AOC</th>";
-	            echo "<th>Achat</th>";
-	        echo "</tr></tfoot>";
 
 	        echo "<tbody>";
 	 
@@ -150,14 +160,18 @@
 	                	echo "<td></td>";
 	                }
 	 
-					// edit and delete button is here
-					echo "<td><a href='maj_bouteille.php?id={$id}' class='btn  btn-primary left-margin' title='Modification'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></a></td>";
-					echo "<td><a delete-id='{$id}' update-name='{$nomComplet}' class='btn btn-primary deleteOperation' title='Suppression'><span class='glyphicon glyphicon-remove aria-hidden='true'></span></a></td>";
-					if ($quantite>0) {
-						echo "<td><a update-id='{$id}' update-name='{$nomComplet}' class='btn btn-primary drinkOperation right-margin' title='Boire'><span class='glyphicon glyphicon-glass aria-hidden='true'></span></a></td>";
-					} else {
-						echo "<td></td>";					
+					if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+						// edit and delete button is here
+						echo "<td><a href='maj_bouteille.php?id={$id}' class='btn  btn-primary left-margin' title='Modification'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></a>&nbsp;";
+						echo "<a delete-id='{$id}' update-name='{$nomComplet}' class='btn btn-primary deleteOperation' title='Suppression'><span class='glyphicon glyphicon-remove aria-hidden='true'></span></a>&nbsp;";
+						if ($quantite>0) {
+							echo "<a update-id='{$id}' update-name='{$nomComplet}' class='btn btn-primary drinkOperation right-margin' title='Boire'><span class='glyphicon glyphicon-glass aria-hidden='true'></span></a>&nbsp;";
+						} 
+						echo "</td>";
 					}
+	                else {
+	                	echo "<td>".$pseudo."</td>";
+	                }
 	 
 	            echo "</tr>";
 	 
@@ -165,21 +179,6 @@
 	 
 	    echo "</tbody></table>";
 
-
-	    echo "<div class='pager'>";
-		echo "<img src='lib/tablesorter/addons/pager/icons/first.png' class='first' alt='First' />";
-		echo "<img src='lib/tablesorter/addons/pager/icons/prev.png' class='prev' alt='Prev' />";
-		echo "<span class='pagedisplay'></span> <!-- this can be any element, including an input -->";
-	    echo "<img src='lib/tablesorter/addons/pager/icons/next.png' class='next' alt='Next' />";
-	    echo "<img src='lib/tablesorter/addons/pager/icons/last.png' class='last' alt='Last' />";
-	    echo "<select class='pagesize' title='Nombre de vins / page'>";
-		echo "<option value='10'>10</option>";
-		echo "<option value='20'>20</option>";
-		echo "<option value='50'>50</option>";
-		echo "<option value='100'>100</option>";
-	    echo "</select>";
-	    echo "<select class='gotoPage' title='Choisir la page'></select>";
-    	echo "</div>";
 
 	}
 ?>
@@ -470,7 +469,12 @@ $.tablesorter.filter.types.end = function( config, data ) {
 					type: "POST",
 					data: {id : valueId, qte : valueQte},
 					success : function(msg) {
+						// -1 bottle
 						$("#quantite_"+this.valueId).html(this.valueQte);
+						$("#totalBouteilles").html($("#totalBouteilles").html()-1);
+						if ($("#totalBouteilles").html()<2) {
+							$("#titreBouteilles").html("bouteille");
+						}
 					}
 				});
 			}

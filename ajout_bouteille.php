@@ -14,7 +14,8 @@ $db = $database->getConnection();
 
 
 // Si formulaire soumis et que utilisateur connecté 
-if($_POST){
+if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
+{
  
         try{
               // Nouvel objet Bouteille
@@ -34,7 +35,7 @@ if($_POST){
               if (isset($_POST['id_type']))   $bouteille->id_type = $_POST['id_type'];
               if (isset($_POST['id_emplacement']))   $bouteille->id_emplacement = $_POST['id_emplacement'];
               if (isset($_POST['commentaire']))   $bouteille->commentaire = $_POST['commentaire'];
-              $bouteille->id_utilisateur = 0;
+              if (isset($_SESSION['id_utilisateur']))   $bouteille->id_utilisateur = $_SESSION['id_utilisateur'];
            
               // Ajout d'une bouteille
               if($bouteille->create()){
@@ -98,11 +99,12 @@ if($_POST){
 }
 
 
-echo "<div class='right-button-margin'>";
-    echo "<a href='index.php' class='btn  btn-primary pull-right'>Liste des bouteilles</a>";
-echo "</div>";
-
 ?>
+<div class='row'>
+  <div class='col-md-12 right-button-margin'>
+    <a href='index.php' class='btn  btn-primary pull-right'>Liste des bouteilles</a>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-md-4"><img src="img/fond.png" alt="verre"></div>

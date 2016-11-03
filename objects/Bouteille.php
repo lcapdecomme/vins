@@ -5,6 +5,7 @@ class Bouteille{
     private $conn;
     private $table_name = "bouteille";
     private $table_name_conso = "consommation";
+    private $table_name_utilisateur = "utilisateur";
  
     // object properties
     public $id;
@@ -86,7 +87,7 @@ class Bouteille{
  
     }
 
-    function readAllFilter($page, $filtre, $columnSort, $descSort, $from_record_num, $records_per_page){
+    function readAllFilternonutilise($page, $filtre, $columnSort, $descSort, $from_record_num, $records_per_page){
      $order='ASC';
      if ($descSort==1) {
          $order='DESC';
@@ -144,12 +145,21 @@ class Bouteille{
     }
 
     function readAll(){
-        $query = "SELECT
+       if (isset($_SESSION['id_utilisateur'])){
+            $query = "SELECT
             id, nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
             id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, ajout
-            FROM {$this->table_name}";
-  
+            FROM {$this->table_name} WHERE id_utilisateur = ?" ;
+        }else {
+            $query = "SELECT
+                b.id, b.nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
+                id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, b.ajout, u.pseudo
+                FROM {$this->table_name} b,  {$this->table_name_utilisateur} u WHERE b.id_utilisateur = u.id";
+        }
         $stmt = $this->conn->prepare( $query );
+        if (isset($_SESSION['id_utilisateur'])){
+            $stmt->bindParam(1, $_SESSION['id_utilisateur']);
+        }        
         $stmt->execute();
      
         return $stmt;
@@ -216,6 +226,7 @@ class Bouteille{
         }
     }
 
+    // Drink a bottle of this wine
     function drink($id, $qte) {
 
         $query = "UPDATE " . $this->table_name . " SET quantite = :quantite
@@ -246,7 +257,7 @@ class Bouteille{
         }
     }
 
-    // delete the product
+    // delete the wine
     function delete(){
      
         $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
@@ -261,22 +272,40 @@ class Bouteille{
         }
     }
 
-    // used for paging products
+    // count wines
     public function countAll(){
-        $query = "SELECT id FROM " . $this->table_name;
+        if (isset($_SESSION['id_utilisateur'])){
+            $query = "SELECT count(*) as nb FROM " . $this->table_name. " WHERE id_utilisateur = ?" ;
+        }else {
+            $query = "SELECT count(*) as nb FROM " . $this->table_name;
+        }
         $stmt = $this->conn->prepare( $query );
+        if (isset($_SESSION['id_utilisateur'])){
+            $stmt->bindParam(1, $_SESSION['id_utilisateur']);
+        }
         $stmt->execute();
-        $num = $stmt->rowCount();
-        return $num;
+        $columns = $stmt->fetch();
+        $nb = $columns['nb'];
+        return $nb;
     }
 
-    // used for paging products
-    public function sumAll($filtre){
-        $query = "SELECT sum(quantite) total FROM " . $this->table_name;
+    // sum of bottles
+    public function sumAll(){
+        if (isset($_SESSION['id_utilisateur'])){
+            $query = "SELECT sum(quantite) total FROM " . $this->table_name. " WHERE id_utilisateur = ?" ;
+        }else {
+            $query = "SELECT sum(quantite) total FROM " . $this->table_name;
+        }
         $stmt = $this->conn->prepare( $query );
+        if (isset($_SESSION['id_utilisateur'])){
+            $stmt->bindParam(1, $_SESSION['id_utilisateur']);
+        }
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $sum = $row['total'];
+        if ($sum==null) {
+            $sum=0;
+        }        
         return $sum;
     }
 
