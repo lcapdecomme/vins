@@ -21,22 +21,19 @@
 
     echo "<div class='row'>";
 	echo "<div  class='col-md-6'>";
-	if ($_SESSION && isset($_SESSION['pseudo_utilisateur']) ) {
-		echo "<h2>".$_SESSION['pseudo_utilisateur']."</h2>";
-	}
-	echo "<h3><span id='totalVins'>{$total_rows}</span> ";
+	echo "<h2><span id='totalVins'>{$total_rows}</span> ";
 	if ($total_rows>1) {
 		echo "vins";
 	}else{
 		echo "vin";
 	}
-	echo ", <span id='totalBouteilles'>{$sum}</span> ";
+	echo "</h2><h2><span id='totalBouteilles'>{$sum}</span> ";
 	if ($sum>1) {
 		echo "<span id='titreBouteilles'>bouteilles</span> ";
 	}else{
 		echo "<span id='titreBouteilles'>bouteille</span> ";
 	}
-	echo "</h3>";
+	echo "</h2>";
 	echo "</div>";
 	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
         echo "<div  class='col-md-6'><div class='right-button-margin'>";
@@ -44,7 +41,6 @@
 		echo "</div></div>";
 	}
 	echo "</div>";
-
 
 	// query bottles
 	$stmt = $bouteille->readAll();
@@ -104,8 +100,7 @@
 	            extract($row);
 	 
 	            echo "<tr>";
-	            	$nomComplet = $nom;
-	                echo "<td>{$nom}</td>";
+	                echo "<td>{$nomb}</td>";
 	                echo "<td class='textAndImg colMagnum'>";
 	                    if ($id_contenance==3)	echo "0&nbsp;&nbsp;<img src='img/logo_magnum.png' title='Magnum' />";
 	                    else	echo "1&nbsp;&nbsp;";
@@ -163,14 +158,14 @@
 					if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 						// edit and delete button is here
 						echo "<td><a href='maj_bouteille.php?id={$id}' class='btn  btn-primary left-margin' title='Modification'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></a>&nbsp;";
-						echo "<a delete-id='{$id}' update-name='{$nomComplet}' class='btn btn-primary deleteOperation' title='Suppression'><span class='glyphicon glyphicon-remove aria-hidden='true'></span></a>&nbsp;";
+						echo "<a delete-id='{$id}' update-name='{$nomb}' class='btn btn-primary deleteOperation' title='Suppression'><span class='glyphicon glyphicon-remove aria-hidden='true'></span></a>&nbsp;";
 						if ($quantite>0) {
-							echo "<a update-id='{$id}' update-name='{$nomComplet}' class='btn btn-primary drinkOperation right-margin' title='Boire'><span class='glyphicon glyphicon-glass aria-hidden='true'></span></a>&nbsp;";
+							echo "<a update-id='{$id}' update-name='{$nomb}' class='btn btn-primary drinkOperation right-margin' title='Boire'><span class='glyphicon glyphicon-glass aria-hidden='true'></span></a>&nbsp;";
 						} 
 						echo "</td>";
 					}
 	                else {
-	                	echo "<td>".$pseudo."</td>";
+	                	echo "<td>".$nomu."</td>";
 	                }
 	 
 	            echo "</tr>";

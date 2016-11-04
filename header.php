@@ -107,12 +107,25 @@ ob_start('ob_gzhandler');
         display:none;
     }
     .titreOperations {
-        padding-left: 40px !important;
-        padding-right: 40px !important;
+        padding-left: 50px !important;
+        padding-right: 50px !important;
     }
     h2 {
         margin-top: 0px !important;
     }
+    .espaceForm {
+        height: 70px;
+        display:block;
+    }
+    .separatorForm {
+        border-right: 1px solid #DCDCDC;
+    }
+    .errorMessage {
+    display: block;
+    margin-top: 10px;
+    color: red;
+    font-weight: 700;
+}
     </style>
  
  
@@ -187,7 +200,18 @@ ob_start('ob_gzhandler');
       <form action='index.php' method='POST' class="navbar-form " role="search" name="filtre">
          <?php
         if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-            echo "<a href='logout.php' class='btn btn-danger navbar-right'>Déconnexion</a>";
+            ?>
+                <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['nom_utilisateur']; ?> <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Mon compte</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="logout.php">Déconnexion</a></li>
+                  </ul>
+                </li>
+                </ul>
+              <?php
         }
         else {
             echo "<a href='login.php' class='btn btn-primary navbar-right'>Connexion</a>";
@@ -201,4 +225,4 @@ ob_start('ob_gzhandler');
 </nav>
 <!-- container -->
 <div class="container">
-    <br><br><br>
+    <br><br><br><br>
