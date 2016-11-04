@@ -35,6 +35,8 @@ class Bouteille{
  
         // to get time-stamp for 'created' field
         $this->getTimestamp();
+        // " => '
+        $this->nom= str_replace('"',"'", $this->nom);
         // If null ....
         if (!is_numeric($this->prixachat)) {
             $this->prixachat=0;
@@ -87,73 +89,16 @@ class Bouteille{
  
     }
 
-    function readAllFilternonutilise($page, $filtre, $columnSort, $descSort, $from_record_num, $records_per_page){
-     $order='ASC';
-     if ($descSort==1) {
-         $order='DESC';
-     }
-     $column="nom";
-     if ($columnSort==1) {
-         $column="nom";
-     }
-     elseif ($columnSort==3) {
-         $column="quantite";
-     }
-     elseif ($columnSort==4) {
-         $column="id_type";
-     }
-     elseif ($columnSort==5) {
-         $column="id_emplacement";
-     }
-     elseif ($columnSort==6) {
-         $column="millesime";
-     }
-     elseif ($columnSort==7) {
-         $column="apogee";
-     }
-     elseif ($columnSort==8) {
-         $column="id_aoc";
-     }
-     elseif ($columnSort==9) {
-         $column="achat";
-     }
-
-     if ($filtre=="") {
-            $query = "SELECT
-            id, nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
-            id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, ajout
-            FROM {$this->table_name}                    
-            ORDER BY  {$column} {$order}  
-            LIMIT
-            {$from_record_num}, {$records_per_page}";
-     }
-     else {
-            $query = "SELECT
-            id, nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
-            id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, ajout
-            FROM {$this->table_name}    
-            WHERE nom like '{$filtre}'                     
-            ORDER BY {$column} {$order}  
-            LIMIT
-            {$from_record_num}, {$records_per_page}";
-     }
-     
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-     
-        return $stmt;
-    }
-
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
             $query = "SELECT
-            id, nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
+            id, nom as nomb, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
             id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, ajout
             FROM {$this->table_name} WHERE id_utilisateur = ?" ;
         }else {
             $query = "SELECT
-                b.id, b.nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
-                id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, b.ajout, u.pseudo
+                b.id, b.nom as nomb, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
+                id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, b.ajout, u.nom as nomu
                 FROM {$this->table_name} b,  {$this->table_name_utilisateur} u WHERE b.id_utilisateur = u.id";
         }
         $stmt = $this->conn->prepare( $query );

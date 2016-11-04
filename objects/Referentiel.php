@@ -22,6 +22,7 @@ class Referentiel{
  
         // to get time-stamp for 'created' field
         $this->getTimestamp();
+        $this->nom= str_replace('"',"'", $this->nom);
  
         try {
 
@@ -50,14 +51,15 @@ class Referentiel{
 
     function readLike($nom){
      
-        $query = "SELECT id, nom 'label', region, id_type FROM " . $this->table_name . "
-                WHERE nom like '" . $nom . "' ORDER BY nom ASC LIMIT 0, 10";
+        $query = "SELECT id, nom 'label', region, id_type FROM " . $this->table_name . '
+                WHERE nom like "' . $nom . '" ORDER BY nom ASC LIMIT 0, 10';
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
         return $stmt;
     }
 
     function readOne($nom){
+        $nom= str_replace('"',"'", $nom);
         $query = "SELECT nom, region, id_type FROM " . $this->table_name . '
                 WHERE nom = "' . $nom . '" LIMIT 0,1';
         $stmt = $this->conn->prepare( $query );
