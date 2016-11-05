@@ -4,6 +4,10 @@
 include_once 'config/database.php';
 include_once 'objects/Bouteille.php';
  
+if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
+    header('Location: index.php');
+}
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -16,8 +20,7 @@ if($_POST){
 	$id = $_POST['id'];
 	$qte = $_POST['qte'];
 
-	$stmt = $bouteille->drink($id, $qte);
-	if ($stmt==true) {
+	if ($bouteille->drink($id, $qte)) {
 		echo "Ok";
 	}
 	else {

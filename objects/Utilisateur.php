@@ -36,7 +36,7 @@ class Utilisateur{
             return false;
         }
         // User exist ? 
-        if ($this->checkUser()) {
+        if ($this->checkUserNom()) {
             $this->error = "Utilisateur existant";
             return false;
         }
@@ -64,13 +64,51 @@ class Utilisateur{
  
     }
 
-    function checkUser() {
+    function read() {
+        $query = "SELECT nom, mdp, mail, ajout
+            FROM {$this->table_name}    
+            WHERE id = :id";       
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();         
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->nom = $row['nom'];
+        $this->mdp = $row['mdp'];
+        $this->mail = $row['mail'];
+        $this->ajout = $row['ajout'];
+        if($this->nom) {
+            return true;
+        } else {
+            $this->error = "Utilisateur inconnu";
+            return false;
+        }
+    }
+
+   function checkUserNom() {
         $query = "SELECT id
             FROM {$this->table_name}    
             WHERE nom = :nom";       
      
         $stmt = $this->conn->prepare( $query );
         $stmt->bindParam(':nom', $this->nom);
+        $stmt->execute();         
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->id = $row['id'];
+        if($this->id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+   function checkUserId() {
+        $query = "SELECT id
+            FROM {$this->table_name}    
+            WHERE id = :id";       
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindParam(':id', $this->id);
         $stmt->execute();         
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->id = $row['id'];
@@ -104,14 +142,30 @@ class Utilisateur{
 
     // update the user
     function update(){
-        // If null ....
-        if (!is_numeric($this->nom)) {
+       // If null ....
+        if (!isset($this->nom)) {
+            $this->error = "Login obligatoire";
             return false;
         }
-        if (!is_numeric($this->mdp)) {
+        if (!isset($this->id)) {
+            $this->error = "Utilisateur inconnu";
             return false;
         }
- 
+        if (!isset($this->mdp)) {
+            $this->error = "Mot de passe obligatoire";
+            return false;
+        }
+        // Mail valid ? 
+        if (!filter_var($this->mail, FILTER_VALIDATE_EMAIL)) {
+            $this->error = "Mail invalide";
+            return false;
+        }
+        // User exist ? 
+        if (!$this->checkUserId()) {
+            $this->error = "Utilisateur inexistant";
+            return false;
+        }
+
         $query = "UPDATE " . $this->table_name . " SET
                     nom = :nom,
                     mdp = :mdp,
@@ -123,6 +177,7 @@ class Utilisateur{
         $stmt->bindParam(':nom', $this->nom);
         $stmt->bindParam(':mdp', $this->mdp);
         $stmt->bindParam(':mail', $this->mail);
+        $stmt->bindParam(':id', $this->id);
      
         // execute the query
         if($stmt->execute()){
@@ -132,6 +187,16 @@ class Utilisateur{
             $this->error = $errorInfo[2];
             return false;
         }
+    }
+
+    // count wines
+    public function countAll(){
+        $query = "SELECT count(*) as nb FROM " . $this->table_name;
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+        $columns = $stmt->fetch();
+        $nb = $columns['nb'];
+        return $nb;
     }
 
     // delete the user

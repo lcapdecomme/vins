@@ -8,14 +8,15 @@
 	include_once 'objects/AOC.php';
 	include_once 'objects/Type.php';
 	include_once 'objects/Emplacement.php';
+	include_once 'objects/Utilisateur.php';
 	 
 	// instantiate database and product object
 	$database = new Database();
 	$db = $database->getConnection();
-	 
+	$login = new Utilisateur($db);	 
 	$bouteille = new Bouteille($db);
-
 	// show page header
+	$total_users = $login->countAll();
 	$total_rows = $bouteille->countAll();
 	$sum = $bouteille->sumAll();
 
@@ -39,7 +40,16 @@
         echo "<div  class='col-md-6'><div class='right-button-margin'>";
 		echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter une bouteille </a>";
 		echo "</div></div>";
-	}
+	}else {
+        echo "<div  class='col-md-6'><div class='right-button-margin'>";
+		echo "</h2><h2><span id='totalUsers'>{$total_users}</span> ";
+		if ($total_users>1) {
+			echo "<span>utilisateurs</span> ";
+		}else{
+			echo "<span>utilisateur</span> ";
+		}
+			echo "</div></div>";
+		}
 	echo "</div>";
 
 	// query bottles
@@ -88,7 +98,7 @@
 				if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 		            echo "<th class='titreOperations'>Opérations</th>";
 				} else {
-		            echo "<th class='titreOperations'>Propriétaire</th>";
+		            echo "<th class='titreCavistes'>Caviste</th>";
 				}
 	        echo "</tr></thead>";
 
@@ -183,7 +193,6 @@
 
 
      $(document).ready(function() {
-
 
  // **********************************
   //  Description of ALL pager options
@@ -477,6 +486,28 @@ $.tablesorter.filter.types.end = function( config, data ) {
 		});
 
     });
+
+	/**
+	 * Initialisation de la page 
+	 * 
+	 */
+	function initApplication() {
+	    var s = $(".titreOperations div").html();
+	    console.log(s);
+     	// hide last column if label is 'Opérations'
+		if ( (s.match(/Opérations.*/))) {
+			$('input').filter(function(){return $(this).data().column == '9';}).hide();
+		}
+	}
+
+	
+	/**
+	 * Initialisation de l'application dÃ¨s que le DOM est chargÃ©
+	 */
+	$(document).ready(initApplication);
+
+
+
   </script>
 
 

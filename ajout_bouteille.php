@@ -13,6 +13,10 @@ $database = new Database();
 $db = $database->getConnection();
 
 
+if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
+    header('Location: index.php');
+}
+
 // Si formulaire soumis et que utilisateur connecté 
 if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
 {

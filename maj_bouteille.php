@@ -14,6 +14,11 @@ include_once 'config/database.php';
 include_once 'objects/Bouteille.php';
  
 
+if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
+    header('Location: index.php');
+}
+
+
 // get database connection
 $database = new Database();
 $db = $database->getConnection();

@@ -103,10 +103,14 @@ ob_start('ob_gzhandler');
         font-weight: 700;
     }
     /* Page Index : hide operations columns */
-    td [data-column="9"] {
+    td.titreOperations [data-column="9"] {
         display:none;
     }
-    .titreOperations {
+    /* Page Index : enlarge last column */
+    table#allVins .tablesorter-filter-row td:nth-child(4n+6) .tablesorter-filter {
+        width: 140px;
+    }
+    .titreOperations, .titreCavistes {
         padding-left: 50px !important;
         padding-right: 50px !important;
     }
@@ -125,7 +129,17 @@ ob_start('ob_gzhandler');
     margin-top: 10px;
     color: red;
     font-weight: 700;
-}
+    }
+    .successMessage {
+    display: block;
+    margin-top: 10px;
+    color: green;
+    font-weight: 700;
+    }
+    #totalBouteilles, #totalVins, #totalUsers {
+    font-style: italic;
+    color: #333;
+    }
     </style>
  
  
@@ -205,7 +219,7 @@ ob_start('ob_gzhandler');
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['nom_utilisateur']; ?> <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#">Mon compte</a></li>
+                    <li><a href="mon_compte.php">Mon compte</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="logout.php">Déconnexion</a></li>
                   </ul>
