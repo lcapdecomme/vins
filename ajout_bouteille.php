@@ -78,13 +78,13 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
                   if($referentiel->create()){
                     echo "<div class=\"alert alert-success alert-dismissable\">";
                         echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                        echo "La bouteille <strong>".$_POST['nom']."</strong> a été ajoutée au référentiel :-)";
+                        echo "Le vin <strong>".$_POST['nom']."</strong> a été ajouté au référentiel :-)";
                     echo "</div>";
                   }
                   else{
                   echo "<div class=\"alert alert-danger alert-dismissable\">";
                       echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                      echo "Impossible d'ajouter la bouteille au référentiel";
+                      echo "Impossible d'ajouter ce vin au référentiel";
                   echo "</div>";
                 }
                }
@@ -93,7 +93,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
               else{
                   echo "<div class=\"alert alert-danger alert-dismissable\">";
                       echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                      echo "Impossible d'ajouter la bouteille ".$_POST['nom'];
+                      echo "Impossible d'ajouter ce vin ".$_POST['nom'];
                   echo "</div>";
               }
 
@@ -106,7 +106,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
 ?>
 <div class='row'>
   <div class='col-md-12 right-button-margin'>
-    <a href='index.php' class='btn  btn-primary pull-right'>Liste des bouteilles</a>
+    <a href='index.php' class='btn  btn-primary pull-right'>Liste des vins</a>
   </div>
 </div>
 

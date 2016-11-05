@@ -16,7 +16,7 @@ ob_start('ob_gzhandler');
     <!-- some custom CSS -->
     <style>
     table#allVins .tablesorter-filter-row td:nth-child(4n+1) .tablesorter-filter {
-        width: 300px;
+        width: 350px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+2) .tablesorter-filter {
         width: 35px;
@@ -41,6 +41,9 @@ ob_start('ob_gzhandler');
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+9) .tablesorter-filter {
         width: 60px;
+    }
+    table#allVins .tablesorter-filter-row td:nth-child(4n+10) .tablesorter-filter {
+        width: 120px;
     }
     table#allVins tbody tr td a.btn.btn-primary {
         color: white;
@@ -102,18 +105,6 @@ ob_start('ob_gzhandler');
         color: #fff !important;
         font-weight: 700;
     }
-    /* Page Index : hide operations columns */
-    td.titreOperations [data-column="9"] {
-        display:none;
-    }
-    /* Page Index : enlarge last column */
-    table#allVins .tablesorter-filter-row td:nth-child(4n+6) .tablesorter-filter {
-        width: 140px;
-    }
-    .titreOperations, .titreCavistes {
-        padding-left: 50px !important;
-        padding-right: 50px !important;
-    }
     h2 {
         margin-top: 0px !important;
     }
@@ -138,8 +129,34 @@ ob_start('ob_gzhandler');
     }
     #totalBouteilles, #totalVins, #totalUsers {
     font-style: italic;
-    color: #333;
+    color: #808080;
     }
+    .pager {
+        background-color: #F3F3F3;
+    }
+    .pager img, .pager select {
+        margin: 0 10px !important;
+    }
+    .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 50px;
+  background-color: #f5f5f5;
+}
+.footer > .container {
+  padding-right: 15px;
+  padding-
+  left: 15px;
+}
+.footer .container p {
+    margin-top: 10px;
+    font-size: 10px;
+}
+table tr td a, table tr td a:link, table tr td a:visited {
+    color:white !important;
+}
     </style>
  
  
@@ -149,8 +166,6 @@ ob_start('ob_gzhandler');
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="lib/datepicker/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="lib/jquery/jquery-ui.min.css">
-    <link rel="stylesheet" href="lib/jquery/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="lib/jquery/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="lib/jquery/bootstrap-slider.min.css">
     <link rel="stylesheet" href="lib/tablesorter/css/theme.dropbox.min.css">
     <link rel="stylesheet" href="lib/tablesorter/addons/pager/jquery.tablesorter.pager.css">

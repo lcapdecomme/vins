@@ -59,7 +59,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
     if($bouteille->update()){
         echo "<div class=\"alert alert-success alert-dismissable\">";
             echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-            echo "La bouteille <strong>".$_POST['nom']."</strong> a été mise à jour :-)";
+            echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
         echo "</div>";
     }
  
@@ -67,16 +67,16 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
     else{
         echo "<div class=\"alert alert-danger alert-dismissable\">";
             echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-            echo "Problème de mise à jour de la bouteille";
+            echo "Problème de mise à jour du vin";
         echo "</div>";
     }
 }
 
 echo "<div class='row'>";
 echo "<div class='col-md-12 right-button-margin'>";
-    echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des bouteilles</a>";
+    echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des vins</a>";
     if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-	echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter une bouteille </a>";
+	echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter un vin </a>";
     }
 echo "</div>";
 echo "</div>";

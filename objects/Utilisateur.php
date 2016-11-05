@@ -131,7 +131,6 @@ class Utilisateur{
         $stmt->execute();         
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->id = $row['id'];
-        $this->nom = $row['nom'];
         if($this->id){
             return true;
         }else{
