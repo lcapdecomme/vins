@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 02 Novembre 2016 à 16:29
+-- Généré le :  Sam 05 Novembre 2016 à 17:26
 -- Version du serveur :  5.7.14
 -- Version de PHP :  5.6.25
 
@@ -16000,8 +16000,7 @@ INSERT INTO `referentiel` (`id`, `nom`, `region`, `id_type`) VALUES
 (15456, 'chateau la sauvageonne ', 'Languedoc', 0),
 (15457, 'château saint-roch maury', '', 1),
 (15458, 'domaine jubain cairanne', 'vallée du Rhône', 1),
-(15459, 'domaine cassillac visan', 'vallée du Rhône', 1),
-(15460, 'Pif', 'vallée de la Loire', 3);
+(15459, 'domaine cassillac visan', 'vallée du Rhône', 1);
 
 -- --------------------------------------------------------
 
@@ -16026,6 +16025,21 @@ INSERT INTO `type` (`id`, `libelle`) VALUES
 (4, 'Vin doux / moelleux'),
 (5, 'Vin effervescent / champagne'),
 (6, 'Apéritifs');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `utilisateur`
+--
+
+DROP TABLE IF EXISTS `utilisateur`;
+CREATE TABLE `utilisateur` (
+  `id` int(11) NOT NULL,
+  `nom` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `mdp` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `mail` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `ajout` date DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Index pour les tables exportées
@@ -16079,6 +16093,13 @@ ALTER TABLE `type`
   ADD UNIQUE KEY `id` (`id`);
 
 --
+-- Index pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- AUTO_INCREMENT pour les tables exportées
 --
 
@@ -16091,7 +16112,7 @@ ALTER TABLE `aoc`
 -- AUTO_INCREMENT pour la table `bouteille`
 --
 ALTER TABLE `bouteille`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT pour la table `cepage`
 --
@@ -16111,12 +16132,17 @@ ALTER TABLE `emplacement`
 -- AUTO_INCREMENT pour la table `referentiel`
 --
 ALTER TABLE `referentiel`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15461;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15465;
 --
 -- AUTO_INCREMENT pour la table `type`
 --
 ALTER TABLE `type`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
