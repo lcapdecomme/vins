@@ -6,6 +6,8 @@ class Bouteille{
     private $table_name = "bouteille";
     private $table_name_conso = "consommation";
     private $table_name_utilisateur = "utilisateur";
+    private $table_name_emplacement = "emplacement";
+    private $table_name_aoc = "aoc";
  
     // object properties
     public $id;
@@ -91,15 +93,24 @@ class Bouteille{
 
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
-            $query = "SELECT
-            id, nom as nomb, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
-            id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, ajout
-            FROM {$this->table_name} WHERE id_utilisateur = ?" ;
+            $query = " SELECT b.id, nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, 
+                        prixestime, achat, quantite, commentaire, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region
+                        FROM {$this->table_name} b
+                        LEFT JOIN {$this->table_name_emplacement} e
+                        ON e.id = b.id_emplacement
+                        LEFT JOIN {$this->table_name_aoc} a
+                        ON a.id = b.id_aoc
+                        WHERE id_utilisateur = ?" ;
         }else {
-            $query = "SELECT
-                b.id, b.nom as nomb, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, 
-                id_cepage, id_aoc, id_type, id_emplacement,id_utilisateur, b.ajout, u.nom as nomu
-                FROM {$this->table_name} b,  {$this->table_name_utilisateur} u WHERE b.id_utilisateur = u.id";
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, 
+                        prixestime, achat, quantite, commentaire, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region
+                        FROM {$this->table_name} b
+                        LEFT JOIN {$this->table_name_emplacement} e
+                        ON e.id = b.id_emplacement
+                        LEFT JOIN {$this->table_name_aoc} a
+                        ON a.id = b.id_aoc
+                        INNER JOIN {$this->table_name_utilisateur} u
+                        ON b.id_utilisateur = u.id" ;
         }
         $stmt = $this->conn->prepare( $query );
         if (isset($_SESSION['id_utilisateur'])){

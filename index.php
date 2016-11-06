@@ -5,9 +5,7 @@
 	// include database and object files
 	include_once 'config/database.php';
 	include_once 'objects/Bouteille.php';
-	include_once 'objects/AOC.php';
 	include_once 'objects/Type.php';
-	include_once 'objects/Emplacement.php';
 	include_once 'objects/Utilisateur.php';
 	 
 	// instantiate database and product object
@@ -79,9 +77,7 @@
 	    echo "<select class='gotoPage' title='Choisir la page'></select>";
     	echo "</div>";
 	 
-	    $aoc = new AOC($db);
 	    $type = new Type($db);
-		$emplacement = new Emplacement($db);
 	 
 		echo "<div id='modal_confirm_yes_no' title='Confirm'></div>";
 	    echo "<table class='table table-striped table-hover table-responsive tablesorter' id='allVins'>";
@@ -128,9 +124,7 @@
 	                echo "</td>";
 
 			        // Emplacement de la bouteille
-		 	        $emplacement->id = $id_emplacement;
-		 	       	$emplacement->readName();
-	                echo "<td>{$emplacement->lieu}</td>";
+	                echo "<td>{$lieu}</td>";
 
 		                         		
 	                if ($millesime<>0) {
@@ -154,9 +148,7 @@
 	                }
 	                
 	                echo "<td>";
-	                    $aoc->id = $id_aoc;
-	                    $aoc->readName();
-	                    echo $aoc->appellation;
+	                    echo $appellation;
 	                echo "</td>";
 	                         		
 	                if ($achat<>0) {

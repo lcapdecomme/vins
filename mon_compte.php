@@ -10,6 +10,7 @@ if (!$_SESSION || !(isset($_SESSION['id_utilisateur'])) ) {
     header('Location: index.php');
 }
 
+$op=false;
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
@@ -24,6 +25,7 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse']))) {
     // update User
     if ($login->update()) {
           $_SESSION["nom_utilisateur"]  = $login->nom;
+          $op=true;
     }
 } else {
     $login->read();
@@ -58,8 +60,10 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse']))) {
         <?php
           if (isset($login->error) ) {
             echo '<p class="errorMessage text-center">'.$login->error.'</p>';
-          } else {
+          } elseif ($op) {
             echo '<p class="successMessage text-center">Mise à jour réussie</p>';
+          } else {
+            echo '<p class=" text-center"></p>';
           }
         ?>
     </form>
