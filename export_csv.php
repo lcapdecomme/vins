@@ -17,18 +17,23 @@ $db = $database->getConnection();
 $bouteille = new Bouteille($db);
 $stmt = $bouteille->readAll();
 
-$header = array('Identifiant', 'Nom du vin', 'quantite', 'Date achat', 'prix achat', 'prix estime', 'millesime', 'apogee', 'commentaire', 'contenance', 'cepage', 'aoc', 'type', 'emplacement', 'ajout');
+$header = array('Nom du vin', 'quantite', 'Date achat', 'millesime', 'apogee', 'prix achat', 'prix estime', 'type', 'commentaire', 'contenance', 'cepage', 'aoc', 'region', 'emplacement', 'ajout');
 
 $fp = fopen('php://output', 'w');
+// Encoding
+fprintf($fp, chr(0xEF).chr(0xBB).chr(0xBF));
 if ($fp && $stmt) {
-    header('Content-Type: text/csv');
+    header("Content-type: application/vnd.ms-excel; charset=UTF-8");
     header('Content-Disposition: attachment; filename="export.csv"');
     header('Pragma: no-cache');
     header('Expires: 0');
 	// header
     fputcsv($fp, $header,';'); 
 	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-        fputcsv($fp, array_values($row), ';');
+        extract($row);
+		$value = array($nomb, $quantite, $achat, $millesime, $apogee, $prixachat, 
+                        $prixestime, $type_vin, $commentaire, $type_contenance, $nom_cepage, $appellation, $region, $lieu, $ajout);
+        fputcsv($fp, array_values($value), ';');
     }
     die;
 }

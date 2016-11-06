@@ -8,6 +8,9 @@ class Bouteille{
     private $table_name_utilisateur = "utilisateur";
     private $table_name_emplacement = "emplacement";
     private $table_name_aoc = "aoc";
+    private $table_name_type = "type";
+    private $table_name_contenance = "contenance";
+    private $table_name_cepage = "cepage";
  
     // object properties
     public $id;
@@ -93,22 +96,34 @@ class Bouteille{
 
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
-            $query = " SELECT b.id, nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, 
-                        prixestime, achat, quantite, commentaire, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, prixestime, achat, 
+                        quantite, commentaire, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance, p.nom as nom_cepage
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
                         LEFT JOIN {$this->table_name_aoc} a
                         ON a.id = b.id_aoc
+                        LEFT JOIN {$this->table_name_type} t
+                        ON t.id = b.id_type
+                        LEFT JOIN {$this->table_name_contenance} c
+                        ON c.id = b.id_contenance
+                        LEFT JOIN {$this->table_name_cepage} p
+                        ON p.id = b.id_cepage
                         WHERE id_utilisateur = ?" ;
         }else {
-            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, 
-                        prixestime, achat, quantite, commentaire, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, prixestime, achat, 
+                        quantite, commentaire, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance, p.nom as nom_cepage
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
                         LEFT JOIN {$this->table_name_aoc} a
                         ON a.id = b.id_aoc
+                        LEFT JOIN {$this->table_name_type} t
+                        ON t.id = b.id_type
+                        LEFT JOIN {$this->table_name_contenance} c
+                        ON c.id = b.id_contenance
+                        LEFT JOIN {$this->table_name_cepage} p
+                        ON p.id = b.id_cepage
                         INNER JOIN {$this->table_name_utilisateur} u
                         ON b.id_utilisateur = u.id" ;
         }
