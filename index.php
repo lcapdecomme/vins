@@ -7,25 +7,32 @@
 	include_once 'objects/Bouteille.php';
 	include_once 'objects/Type.php';
 	include_once 'objects/Utilisateur.php';
+	include_once 'objects/Emplacement.php';
 	 
 	// instantiate database and product object
 	$database = new Database();
 	$db = $database->getConnection();
 	$login = new Utilisateur($db);	 
 	$bouteille = new Bouteille($db);
+
 	// show page header
 	$total_users = $login->countAll();
 	$total_rows = $bouteille->countAll();
 	$sum = $bouteille->sumAll();
 
+	// Recherche de tous les objets Emplacement
+	$total_emplacement = 0;
+	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+		$emplacement = new Emplacement($db);
+		$emplacement->id_utilisateur = $_SESSION['id_utilisateur'];
+		$stmtEmplacment = $emplacement->readAll();
+		$total_emplacement = $stmtEmplacment->rowCount();
+	}
+
     echo "<div class='row'>";
 	echo "<div  class='col-md-4'>";
-	echo "<h2><span id='totalVins'>{$total_rows}</span> ";
-	if ($total_rows>1) {
-		echo "vins";
-	}else{
-		echo "vin";
-	}
+	echo "<h2><span id='totalVins'>{$total_rows}</span> vin";
+	if ($total_rows>1) {   echo "s";  }
 	echo "</h2></div>";
 	echo "<div  class='col-md-4'>";
 	echo "<h2 class='text-center'><span id='totalBouteilles'>{$sum}</span> ";
@@ -58,7 +65,6 @@
 
 
 <?php
-
 	// display the products if there are any
 	if($num>0)
 	{
@@ -87,15 +93,19 @@
 	            echo "<th class='colMagnum'>&nbsp;</th>";
 	            echo "<th>Qté</th>";
 	            echo "<th class='colCouleur'>Type</th>";
-	            echo "<th class='filter-select filter-onlyAvail'>Emplacement</th>";
 	            echo "<th class='filter-select filter-onlyAvail'>Millesime</th>";
 	            echo "<th class='filter-select filter-onlyAvail'>Apogée</th>";
-	            echo "<th>AOC</th>";
 	            echo "<th class='filter-select filter-onlyAvail'>Achat</th>";
+	            echo "<th>AOC</th>";
+	            if ($total_emplacement>1) {
+	            	echo "<th>Emplacement</th>";
+	            } else {
+	            	echo "<th>Région</th>";
+	            }
 				if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-		            echo "<th class='titreOperations'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Opérations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>";
+		            echo "<th class='titreOperations'>Opérations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>";
 				} else {
-		            echo "<th class='titreCavistes'>&nbsp;&nbsp;&nbsp;&nbsp;Caviste&nbsp;&nbsp;&nbsp;&nbsp;</th>";
+		            echo "<th class='titreCavistes'>Caviste&nbsp;&nbsp;&nbsp;&nbsp;</th>";
 				}
 	        echo "</tr></thead>";
 
@@ -123,10 +133,6 @@
 	                    if ($id_type==6)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_aperitifs.png' title='Apéritifs' />";
 	                echo "</td>";
 
-			        // Emplacement de la bouteille
-	                echo "<td>{$lieu}</td>";
-
-		                         		
 	                if ($millesime<>0) {
 	                	echo "<td style='text-align:center;'>{$millesime}</td>";
 	                }
@@ -147,9 +153,6 @@
 	                	echo "<td></td>";
 	                }
 	                
-	                echo "<td>";
-	                    echo $appellation;
-	                echo "</td>";
 	                         		
 	                if ($achat<>0) {
 	                	echo "<td style='text-align:center;'>{$achat}</td>";
@@ -158,6 +161,15 @@
 	                	echo "<td></td>";
 	                }
 	 
+	                // AOC
+	                echo "<td>{$appellation}</td>";
+			        // Emplacement de la bouteille
+		            if ($total_emplacement>1) {
+		                echo "<td>{$lieu}</td>";
+		            } else {
+		                echo "<td>{$region}</td>";
+		            }
+
 					if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 						// edit and delete button is here
 						echo "<td><a href='maj_bouteille.php?id={$id}' class='btn btn-xs btn-primary left-margin' title='Modification'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></a>&nbsp;";
@@ -175,7 +187,7 @@
 	 
 	        }
 	 
-	    echo "</tbody></table>";
+	    echo "</tbody></table><br><br>";
 
 
 	}
@@ -376,8 +388,6 @@ $(document).ready(function() {
     });
 
 
-
-
 	// Bouton Suppression
 	$(document).on('click', '.deleteOperation', function(){
 		var id = $(this).attr('delete-id');
@@ -474,6 +484,13 @@ $(document).ready(function() {
 		/*$('table').trigger('filterReset');
 		$('table').trigger('filterResetSaved');*/
      	// hide last column if label is 'Opérations'
+     	<?php
+     		if ( isset($_SESSION) && isset($_SESSION["nb_vins_affiches"]) ) { 
+     			echo "$('table').trigger('pageSize', ";
+     			echo $_SESSION['nb_vins_affiches'];
+     			echo ");";
+     		}
+     	?>
 	    var s = $(".titreOperations div").html();
 		if ( (typeof s !== 'undefined')  && (s.indexOf('Opérations') !== -1 ) ) {
 			$('input').filter(function(){return $(this).data().column == '9';}).hide();

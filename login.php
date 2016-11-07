@@ -35,6 +35,7 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse'])))
           // Create session 
           $_SESSION["id_utilisateur"]   = $login->id;
           $_SESSION["nom_utilisateur"]  = $login->nom;
+          $_SESSION["nb_vins_affiches"]  = $login->nb_vins_affiches;
           // Connection auto ?
           if (isset($_POST['auto']))
           {

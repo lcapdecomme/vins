@@ -9,6 +9,7 @@ class Utilisateur{
     public $id;
     public $nom;
     public $mdp;
+    public $nb_vins_affiches;
     public $mail;
     public $error;
 
@@ -43,12 +44,13 @@ class Utilisateur{
 
         try {
             //write query
-            $query = "INSERT INTO `" . $this->table_name . "` (nom, mdp, mail, ajout) 
-                            values (:nom, :mdp, :mail, :ajout)";
+            $query = "INSERT INTO `" . $this->table_name . "` (nom, mdp, mail, nb_vins_affiches, ajout) 
+                            values (:nom, :mdp, :mail, :nb_vins_affiches, :ajout)";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':nom', $this->nom);
             $stmt->bindParam(':mdp', $this->mdp);
             $stmt->bindParam(':mail', $this->mail);
+            $stmt->bindParam(':nb_vins_affiches', $this->nb_vins_affiches);
             $stmt->bindParam(':ajout', $this->timestamp);
 
             if ($stmt->execute()) {
@@ -65,7 +67,7 @@ class Utilisateur{
     }
 
     function read() {
-        $query = "SELECT nom, mdp, mail, ajout
+        $query = "SELECT nom, mdp, mail, nb_vins_affiches, ajout
             FROM {$this->table_name}    
             WHERE id = :id";       
      
@@ -76,6 +78,7 @@ class Utilisateur{
         $this->nom = $row['nom'];
         $this->mdp = $row['mdp'];
         $this->mail = $row['mail'];
+        $this->nb_vins_affiches = $row['nb_vins_affiches'];
         $this->ajout = $row['ajout'];
         if($this->nom) {
             return true;
@@ -150,10 +153,6 @@ class Utilisateur{
             $this->error = "Utilisateur inconnu";
             return false;
         }
-        if (!isset($this->mdp)) {
-            $this->error = "Mot de passe obligatoire";
-            return false;
-        }
         // Mail valid ? 
         if (!filter_var($this->mail, FILTER_VALIDATE_EMAIL)) {
             $this->error = "Mail invalide";
@@ -167,15 +166,49 @@ class Utilisateur{
 
         $query = "UPDATE " . $this->table_name . " SET
                     nom = :nom,
-                    mdp = :mdp,
+                    nb_vins_affiches = :nb_vins_affiches,
                     mail = :mail
                 WHERE
                     id = :id";
      
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':nom', $this->nom);
-        $stmt->bindParam(':mdp', $this->mdp);
         $stmt->bindParam(':mail', $this->mail);
+        $stmt->bindParam(':nb_vins_affiches', $this->nb_vins_affiches);
+        $stmt->bindParam(':id', $this->id);
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }else{
+            $errorInfo = $stmt->errorInfo();
+            $this->error = $errorInfo[2];
+            return false;
+        }
+    }    
+
+    // update the user
+    function updatePassword(){
+        if (!isset($this->id)) {
+            $this->error = "Utilisateur inconnu";
+            return false;
+        }
+        if (!isset($this->mdp)) {
+            $this->error = "Mot de passe obligatoire";
+            return false;
+        }
+        // User exist ? 
+        if (!$this->checkUserId()) {
+            $this->error = "Utilisateur inexistant";
+            return false;
+        }
+
+        $query = "UPDATE " . $this->table_name . " SET
+                    mdp = :mdp
+                WHERE
+                    id = :id";
+     
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':mdp', $this->mdp);
         $stmt->bindParam(':id', $this->id);
      
         // execute the query
@@ -188,7 +221,7 @@ class Utilisateur{
         }
     }
 
-    // count wines
+    // count users
     public function countAll(){
         $query = "SELECT count(*) as nb FROM " . $this->table_name;
         $stmt = $this->conn->prepare( $query );

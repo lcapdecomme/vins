@@ -16,7 +16,7 @@ ob_start('ob_gzhandler');
     <!-- some custom CSS -->
     <style>
     table#allVins .tablesorter-filter-row td:nth-child(4n+1) .tablesorter-filter {
-        width: 350px;
+        width: 320px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+2) .tablesorter-filter {
         width: 35px;
@@ -28,7 +28,7 @@ ob_start('ob_gzhandler');
         width: 35px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+5) .tablesorter-filter {
-        width: 100px;
+        width: 60px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+6) .tablesorter-filter {
         width: 60px;
@@ -37,10 +37,10 @@ ob_start('ob_gzhandler');
         width: 60px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+8) .tablesorter-filter {
-        width: 120px;
+        width: 100px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+9) .tablesorter-filter {
-        width: 60px;
+        width: 160px;
     }
     table#allVins .tablesorter-filter-row td:nth-child(4n+10) .tablesorter-filter {
         width: 120px;
@@ -138,7 +138,7 @@ ob_start('ob_gzhandler');
         margin: 0 10px !important;
     }
     .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
@@ -226,7 +226,6 @@ table tr td a, table tr td a:link, table tr td a:visited {
         </li>
       </ul>
 
-      <form action='index.php' method='POST' class="navbar-form " role="search" name="filtre">
          <?php
         if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
             ?>
@@ -234,7 +233,8 @@ table tr td a, table tr td a:link, table tr td a:visited {
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['nom_utilisateur']; ?> <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="mon_compte.php">Mon compte</a></li>
+                    <li><a href="mon_compte.php">Mes préférences</a></li>
+                    <li><a href="mon_mot_de_passe.php">Mot de passe</a></li>
                     <li><a href="emplacement.php">Mes emplacements</a></li>
                     <li><a href="export_csv.php">Export CSV</a></li>
                     <li role="separator" class="divider"></li>
@@ -248,7 +248,6 @@ table tr td a, table tr td a:link, table tr td a:visited {
             echo "<a href='login.php' class='btn btn-primary navbar-right'>Connexion</a>";
         }
         ?>
-      </form>
       
     </div><!-- /.navbar-collapse -->
 

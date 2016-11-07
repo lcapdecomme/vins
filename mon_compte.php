@@ -1,5 +1,5 @@
 <?php
-$page_title = "Connexion";
+$page_title = "Mon compte";
 include_once "header.php";
 
 // include database and object files
@@ -18,42 +18,47 @@ $login = new Utilisateur($db);
 $login->id = $_SESSION['id_utilisateur'];
 
 // POST && id and Pass ?
-if (isset($_POST['login']) && (isset($_POST['motDePasse']))) {  
+if (isset($_POST['login']) ) {  
     $login->nom = strip_tags (stripslashes ($_POST["login"]));
-    $login->mdp = strip_tags (stripslashes ($_POST["motDePasse"]));
     $login->mail = $_POST['mail'];
+    $login->nb_vins_affiches = $_POST['nb_vins_affiches'];
     // update User
     if ($login->update()) {
           $_SESSION["nom_utilisateur"]  = $login->nom;
+          $_SESSION["nb_vins_affiches"]  = $login->nb_vins_affiches;
           $op=true;
     }
 } else {
     $login->read();
+    if (isset($login) && isset($login->nb_vins_affiches)  && $login->nb_vins_affiches<1)  {
+      $login->nb_vins_affiches=10;
+    }
 }
 
 // Show forms
 ?>
 <div class='row'>
   <div  class='col-md-12'>
-    <h2 class="text-center">Mon compte</h2>
+    <h2 class="text-center">Mes préférences</h2>
     <form class="form-signin" action='mon_compte.php' method='POST'  >
         <div class="form-group">
-          <label for="login" class="sr-only">Login</label>
+          <label for="login">Login</label>
           <input name="login" type="text" id="login" class="form-control" placeholder="Login"  value='<?php if (isset($login)) { echo $login->nom; } ?>' required autofocus>
         </div>
 
         <div class="form-group">
-          <label for="motDePasse" class="sr-only">Mot de Passe</label>
-          <input name="motDePasse" type="password" id="motDePasse" class="form-control" placeholder="Mot de passe" required>
-        </div>
-        <div class="form-group">
-          <label for="motDePasse2" class="sr-only">Mot de Passe</label>
-          <input name="motDePasse2" type="password" id="motDePasse2" class="form-control" placeholder="Confirmation du mot de passe" required>
+          <label for="mail">Mail</label>
+          <input name="mail" type="mail" id="mail" class="form-control" placeholder="Mail si mot de passe perdu" value='<?php if (isset($login)) { echo $login->mail;} ?>' required>
         </div>
 
         <div class="form-group">
-          <label for="mail" class="sr-only">Mail</label>
-          <input name="mail" type="mail" id="mail" class="form-control" placeholder="Mail si mot de passe perdu" value='<?php if (isset($login)) { echo $login->mail;} ?>' required>
+          <label for="nb_vins_affiches">Nombre de vins par page</label>
+          <select  title='Nombre de vins / page' class='form-control' name='nb_vins_affiches' id='nb_vins_affiches'>
+            <option value='10' <?php  if (isset($login) && ($login->nb_vins_affiches==10)) { echo 'selected';} ?>>10</option>
+            <option value='20' <?php  if (isset($login) && ($login->nb_vins_affiches==20)) { echo 'selected';} ?>>20</option>
+            <option value='50' <?php  if (isset($login) && ($login->nb_vins_affiches==50)) { echo 'selected';} ?>>50</option>
+            <option value='100' <?php  if (isset($login) && ($login->nb_vins_affiches==100)) { echo 'selected';} ?>>100</option>
+          </select>
         </div>
 
         <button class="loginBtn btn btn-lg btn-primary btn-block" type="submit">Ok</button>
