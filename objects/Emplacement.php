@@ -8,41 +8,100 @@ class Emplacement{
     // object properties
     public $id;
     public $lieu;
- 
+    public $id_utilisateur;
+    public $error; 
+  
     public function __construct($db){
         $this->conn = $db;
     }
  
-    // Liste de tous les cépages
-    function read(){
-        //select all data
-        $query = "SELECT
-                    id, lieu
-                FROM
-                    " . $this->table_name . "
-                ORDER BY
-                    lieu"; 
- 
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
- 
-        return $stmt;
-    }
 
-    // Libellé d'un cépage pour un id donné
-    function readName(){
-         
-        $query = "SELECT lieu FROM " . $this->table_name . " WHERE id = ? limit 0,1";
-     
-        $stmt = $this->conn->prepare( $query );
-        $stmt->bindParam(1, $this->id);
-        $stmt->execute();
-     
+    // Retourne l'objet pour un ID donne
+    function read()
+    {
+      // Requete pour retrouver un objet pour un ID donné
+      $query = "select * from emplacement where id=:id LIMIT 0, 1";
+      $stmt = $this->conn->prepare( $query );
+      $stmt->bindParam(':id', $this->id);
+      $stmt->execute();
+      if ($stmt->rowCount()>0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-         
-        $this->lieu = $row['lieu'];
+        extract($row);
+        $this->id=$id;
+      $this->lieu=$lieu;
+      $this->id_utilisateur=$id_utilisateur;
+        return true;
+      }
+      return false;
     }
 
+   
+    // Retourne tous les objets pour un utilisateur
+    function readAll()
+    {
+      // Requete pour retrouver tous les objets dans l'ordre d'insertion en base
+      $query = "select * from emplacement where id_utilisateur=:id_utilisateur  order by lieu asc";
+      $stmt = $this->conn->prepare( $query );
+      $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
+      $stmt->execute();
+      return $stmt;
+    }
+
+    // Add storage
+    function create(){
+         try {
+          $query= "insert into emplacement (lieu,id_utilisateur) 
+                  values ( :lieu, :id_utilisateur)";
+         $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':lieu', $this->lieu);
+        $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
+        if ($stmt->execute()) {
+            return true;
+        }   else{
+            return $stmt->errorInfo();
+        }
+        }
+        catch(PDOException $exception) {
+            echo "Ajoute un objet emplacement : " . $this->host . " : " . $exception->getMessage();
+        }
+    }
+
+    // Update storage
+    function update(){ 
+        try {
+        $query = "update emplacement set
+                    lieu = :lieu
+                WHERE
+                    id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':lieu', $this->lieu);
+        if ($stmt->execute()) {
+            return true;
+        }   else{
+            return $stmt->errorInfo();
+        }
+        }catch(PDOException $exception){
+            echo "Modifie un objet emplacement : " . $this->host . " : " . $exception->getMessage();
+        }
+    }
+
+    // Delete a storage
+    function delete(){ 
+        try {
+        $query = "delete from emplacement where 
+                    id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        if ($stmt->execute()) {
+            return true;
+        }   else{
+            return $stmt->errorInfo();
+        }
+        }catch(PDOException $exception){
+            echo "Delete storage : " . $this->host . " : " . $exception->getMessage();
+        }
+    }
   
 }
 ?>

@@ -96,7 +96,7 @@ class Bouteille{
 
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
-            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, prixestime, achat, 
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
                         quantite, commentaire, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance, p.nom as nom_cepage
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
@@ -109,9 +109,9 @@ class Bouteille{
                         ON c.id = b.id_contenance
                         LEFT JOIN {$this->table_name_cepage} p
                         ON p.id = b.id_cepage
-                        WHERE id_utilisateur = ?" ;
+                        WHERE b.id_utilisateur = ?" ;
         }else {
-            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, id_utilisateur, prixachat, prixestime, achat, 
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_cepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
                         quantite, commentaire, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance, p.nom as nom_cepage
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
@@ -127,13 +127,18 @@ class Bouteille{
                         INNER JOIN {$this->table_name_utilisateur} u
                         ON b.id_utilisateur = u.id" ;
         }
-        $stmt = $this->conn->prepare( $query );
-        if (isset($_SESSION['id_utilisateur'])){
-            $stmt->bindParam(1, $_SESSION['id_utilisateur']);
-        }        
-        $stmt->execute();
-     
-        return $stmt;
+       try {
+            $stmt = $this->conn->prepare( $query );
+            if (isset($_SESSION['id_utilisateur'])){
+                $stmt->bindParam(1, $_SESSION['id_utilisateur']);
+            }        
+            $stmt->execute();
+         
+            return $stmt;
+        }catch(PDOException $exception){
+                echo "Create : " . $this->host . " : " . $exception->getMessage();
+        }
+        return null;
     }
 
 

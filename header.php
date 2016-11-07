@@ -235,6 +235,7 @@ table tr td a, table tr td a:link, table tr td a:visited {
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['nom_utilisateur']; ?> <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="mon_compte.php">Mon compte</a></li>
+                    <li><a href="emplacement.php">Mes emplacements</a></li>
                     <li><a href="export_csv.php">Export CSV</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="logout.php">Déconnexion</a></li>
