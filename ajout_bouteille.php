@@ -13,6 +13,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 
+
 if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
     header('Location: index.php');
 }
@@ -292,7 +293,32 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
         ?>
     </div>
   </div>
-   
+  
+  <?php 
+  // Emplacements
+  if (isset($_SESSION) && isset($_SESSION['emplacement']) && $_SESSION['emplacement']=='O' ) {
+      echo '<div class="form-group">';
+      echo '<label for="id_emplacement" class="col-sm-2 control-label">Emplacement</label>';
+      echo '<div class="col-sm-10">';
+      // Recherche des emplacements en BD
+      include_once 'objects/Emplacement.php';
+      // Recherche de tous les objets Emplacement
+      $emplacement = new Emplacement($db);
+      $emplacement->id_utilisateur = $_SESSION['id_utilisateur'];
+      $stmtEmplacment = $emplacement->readAll();
+      // Remplissage de la liste
+      echo "<select class='form-control' name='id_emplacement'>";
+          echo "<option>Choisir l'Emplacement ...</option>";
+
+          while ($row_emplacement = $stmtEmplacment->fetch(PDO::FETCH_ASSOC)) {
+              extract($row_emplacement);
+              echo "<option value='{$id}'>{$lieu}</option>";
+          }
+
+      echo "</select>";
+      echo '</div></div>';
+  }
+  ?>
 
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-primary">Ajouter</button>

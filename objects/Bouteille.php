@@ -55,6 +55,9 @@ class Bouteille{
         if (!is_numeric($this->id_aoc)) {
             $this->id_aoc=0;
         }
+        if (!is_numeric($this->id_emplacement)) {
+            $this->id_emplacement=0;
+        }
  
         try {
 
@@ -155,6 +158,9 @@ class Bouteille{
         }
         if (!is_numeric($this->id_aoc)) {
             $this->id_aoc=0;
+        }
+        if (!is_numeric($this->id_emplacement)) {
+            $this->id_emplacement=0;
         }
         $query = "UPDATE " . $this->table_name . " SET
                     nom = :nom,

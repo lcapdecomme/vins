@@ -28,6 +28,13 @@
 		$stmtEmplacment = $emplacement->readAll();
 		$total_emplacement = $stmtEmplacment->rowCount();
 	}
+	//set Session.Emplacement only here !
+	if ($total_emplacement>=1) {
+    	$_SESSION['emplacement']='O';
+	} else {
+    	$_SESSION['emplacement']='N';
+	}
+
 
     echo "<div class='row'>";
 	echo "<div  class='col-md-4'>";
@@ -97,7 +104,7 @@
 	            echo "<th class='filter-select filter-onlyAvail'>Apogée</th>";
 	            echo "<th class='filter-select filter-onlyAvail'>Achat</th>";
 	            echo "<th>AOC</th>";
-	            if ($total_emplacement>1) {
+	            if ($total_emplacement>=1) {
 	            	echo "<th>Emplacement</th>";
 	            } else {
 	            	echo "<th>Région</th>";
@@ -163,8 +170,8 @@
 	 
 	                // AOC
 	                echo "<td>{$appellation}</td>";
-			        // Emplacement de la bouteille
-		            if ($total_emplacement>1) {
+			        // Emplacement de la bouteille ou région ?
+		            if ($total_emplacement>=1) {
 		                echo "<td>{$lieu}</td>";
 		            } else {
 		                echo "<td>{$region}</td>";
@@ -392,7 +399,7 @@ $(document).ready(function() {
 	$(document).on('click', '.deleteOperation', function(){
 		var id = $(this).attr('delete-id');
 		var name = $(this).attr('update-name');
-		$("#modal_confirm_yes_no").html("Êtes-vous sûr de supprimer une bouteille de "+name+" ?");
+		$("#modal_confirm_yes_no").html("Êtes-vous sûr de supprimer le vin '"+name+"' ?");
 		$("#modal_confirm_yes_no").dialog({
 			autoOpen: true,
 			minHeight: 200,
@@ -431,12 +438,15 @@ $(document).ready(function() {
 		var name = $(this).attr('update-name');
 		var qte = $("#quantite_"+id).html()-1;
 		if (qte>0)	{
-			$temp="bouteilles";
+			$temp="Il restera "+qte+" bouteilles";
 		}
 		if (qte==1) {
-			$temp="bouteille";
+			$temp="Il restera "+qte+" bouteille";
 		}
-		$("#modal_confirm_yes_no").html("Confirmez-vous avoir consommé une bouteille de "+name+" ?<br>Il restera "+qte+" "+$temp);
+		if (qte==0) {
+			$temp="Il ne restera plus de bouteille";
+		}
+		$("#modal_confirm_yes_no").html("Confirmez-vous avoir consommé une bouteille de "+name+" ?<br>"+$temp);
 		$("#modal_confirm_yes_no").dialog({
 			autoOpen: true,
 			minHeight: 200,

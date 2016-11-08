@@ -154,8 +154,16 @@ ob_start('ob_gzhandler');
     margin-top: 10px;
     font-size: 10px;
 }
+.footer {
+    border-top: 1px solid #e7e7e7;
+}
 table tr td a, table tr td a:link, table tr td a:visited {
     color:white !important;
+}
+html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-header a.navbar-brand {
+    color: #7a7a7a;
+    font-weight: 700;
+    font-size: 20px;
 }
     </style>
  
@@ -208,7 +216,7 @@ table tr td a, table tr td a:link, table tr td a:visited {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.php">Ma cave</a>
+      <a class="navbar-brand" href="index.php">Mes vins</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -245,7 +253,9 @@ table tr td a, table tr td a:link, table tr td a:visited {
               <?php
         }
         else {
+            echo "<div class='navbar-form navbar-right'>";
             echo "<a href='login.php' class='btn btn-primary navbar-right'>Connexion</a>";
+            echo "</div>";
         }
         ?>
       

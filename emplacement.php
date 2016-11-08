@@ -25,7 +25,6 @@ echo "<div  class='col-md-12 right-button-margin'>";
     echo "<button type='button' class='btn btn-primary pull-right' id='AjouterEmplacement'>Ajouter un emplacement</button>";
 echo "</div>";
 echo "</div><br>";
-
 ?>
 
 
@@ -95,7 +94,7 @@ echo "</div><br>";
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="emplacementTitreOperationDelete">Suppression Emplacement</h4>
+        <h4 class="modal-title" id="emplacementTitreOperationDelete">Suppression</h4>
       </div>
       <div class="modal-body">
           <input type="hidden" class="form-control" id="idEmplacementDelete">
@@ -145,10 +144,8 @@ echo "</div><br>";
                 success : function( msg, status,xhr ) {
                     var p = msg.resultat;
                     if (p==true) {
-                        console.log("Modification enregistrée", "Emplacement");
-                        }   
-                        else {
-                        console.log(p, "Emplacement");
+                        $('#myEmplacementPopup').modal('hide');
+                        location.reload();
                         }           
                 },
                 error : function( msg, status,xhr ) {
@@ -172,11 +169,10 @@ echo "</div><br>";
                 success : function( msg, status,xhr ) {
                     var p = msg.resultat;
                     if (p==true) {
-                        console.log("Suppression effectuée", "Emplacement");
-                        }   
-                        else {
-                        console.log(p, "Emplacement");
-                        }
+                        $('#myEmplacementDeletePopup').modal('hide');
+                        location.reload();
+                    }   
+                       
                 },
                 error : function( msg, status,xhr ) {
                     console.log(msg + "("+status+")", "Emplacement");
@@ -221,7 +217,7 @@ echo "</div><br>";
                 var p = msg.resultat;
                 if (p==true) {
                         $('#idEmplacementDelete').val( msg.id);
-                        $('#idEmplacementDeleteTitre').html("Objet id : " + msg.id);
+                        $('#idEmplacementDeleteTitre').html("Emplacement : " + msg.emplacement);
                         $('#myEmplacementDeletePopup').modal();
                     }
                     else {
