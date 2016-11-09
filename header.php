@@ -138,12 +138,13 @@ ob_start('ob_gzhandler');
         margin: 0 10px !important;
     }
     .footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 50px;
-  background-color: #f5f5f5;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 50px;
+    background-color: #f5f5f5;
+    z-index: 99;
 }
 .footer > .container {
   padding-right: 15px;
@@ -233,6 +234,9 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
           </ul>
         </li>
       </ul>
+      <div class='navbar-form navbar-left'>
+            <button type="submit" class="btn btn-primary navbar-left reset">Effacer le filtre</button>
+      </div>
 
          <?php
         if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {

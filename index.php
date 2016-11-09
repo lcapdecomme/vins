@@ -194,7 +194,7 @@
 	 
 	        }
 	 
-	    echo "</tbody></table><br><br>";
+	    echo "</tbody></table>";
 
 
 	}
