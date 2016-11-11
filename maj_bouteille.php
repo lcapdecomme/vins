@@ -1,74 +1,74 @@
 <?php
 $page_title = "Mise à jour d'une bouteille";
 include_once "header.php";
-?>
 
+if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
+    header('Location: index.php');
+}
+//include database and object files
+include_once 'config/database.php';
+include_once 'objects/Bouteille.php';
+include_once 'objects/Cepage.php';     
+ 
+$database = new Database();
+$db = $database->getConnection();
+$cepage = new Cepage($db);
+$stmtcepage = $cepage->read();
 
+// prepare bouteille object
+$bouteille = new Bouteille($db);
+// get ID of the bouteille to be edited
+$id = isset($_GET['id']) ? $_GET['id'] : die("Erreur ! Il manque l'identifiant de la bouteille");
+// set ID property of bouteille to be edited
+$bouteille->id = $id;
+// read the details of bouteille to be edited
+$bouteille->readOne();
+// Annee courante
+$temp=date("Y");
 
-<?php
-	// get ID of the bouteille to be edited
-	$id = isset($_GET['id']) ? $_GET['id'] : die("Erreur ! Il manque l'identifiant de la bouteille");
-	//include database and object files
-	include_once 'config/database.php';
-	include_once 'objects/Bouteille.php';
-	if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
-	    header('Location: index.php');
-	}
-	// get database connection
-	$database = new Database();
-	$db = $database->getConnection();
-	// prepare bouteille object
-	$bouteille = new Bouteille($db);
-	// set ID property of bouteille to be edited
-	$bouteille->id = $id;
-	// read the details of bouteille to be edited
-	$bouteille->readOne();
-	// Annee courante
-	$temp=date("Y");
+// Si formulaire soumis et que utilisateur connecté 
+if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
+{           
+	// set bouteille property values
+	if (isset($_POST['nom']))   			$bouteille->nom = $_POST['nom'];
+	if (isset($_POST['quantite']))   		$bouteille->quantite = $_POST['quantite'];
+	if (isset($_POST['achat']))   		$bouteille->achat = $_POST['achat'];
+	if (isset($_POST['prixachat']))   	$bouteille->prixachat = $_POST['prixachat'];
+	if (isset($_POST['prixestime']))   	$bouteille->prixestime = $_POST['prixestime'];
+	if (isset($_POST['millesime']))   	$bouteille->millesime = $_POST['millesime'];
+	if (isset($_POST['apogee']))   		$bouteille->apogee = $_POST['apogee'];
+	if (isset($_POST['id_contenance']))   $bouteille->id_contenance = $_POST['id_contenance'];
+    if (isset($_POST['nomCepage']))   $bouteille->nomCepage = $_POST['nomCepage'];
+	if (isset($_POST['id_aoc']))   		$bouteille->id_aoc = $_POST['id_aoc'];
+	if (isset($_POST['id_type']))   		$bouteille->id_type = $_POST['id_type'];
+	if (isset($_POST['id_emplacement']))	$bouteille->id_emplacement = $_POST['id_emplacement'];
+	if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
 
-	// Si formulaire soumis et que utilisateur connecté 
-	if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
-	{           
-		// set bouteille property values
-		if (isset($_POST['nom']))   			$bouteille->nom = $_POST['nom'];
-		if (isset($_POST['quantite']))   		$bouteille->quantite = $_POST['quantite'];
-		if (isset($_POST['achat']))   		$bouteille->achat = $_POST['achat'];
-		if (isset($_POST['prixachat']))   	$bouteille->prixachat = $_POST['prixachat'];
-		if (isset($_POST['prixestime']))   	$bouteille->prixestime = $_POST['prixestime'];
-		if (isset($_POST['millesime']))   	$bouteille->millesime = $_POST['millesime'];
-		if (isset($_POST['apogee']))   		$bouteille->apogee = $_POST['apogee'];
-		if (isset($_POST['id_contenance']))   $bouteille->id_contenance = $_POST['id_contenance'];
-		if (isset($_POST['id_cepage']))   	$bouteille->id_cepage = $_POST['id_cepage'];
-		if (isset($_POST['id_aoc']))   		$bouteille->id_aoc = $_POST['id_aoc'];
-		if (isset($_POST['id_type']))   		$bouteille->id_type = $_POST['id_type'];
-		if (isset($_POST['id_emplacement']))	$bouteille->id_emplacement = $_POST['id_emplacement'];
-		if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
-
-		// update the bouteille
-		if($bouteille->update()){
-		echo "<div class=\"alert alert-success alert-dismissable\">";
-		    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-		    echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
-		echo "</div>";
-		}
-
-		// if unable to update the bouteille, tell the user
-		else{
-		echo "<div class=\"alert alert-danger alert-dismissable\">";
-		    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-		    echo "Problème de mise à jour du vin";
-		echo "</div>";
-		}
-	}
-
-	echo "<div class='row'>";
-	echo "<div class='col-md-12 right-button-margin'>";
-	echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des vins</a>";
-	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-		echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter un vin </a>";
-	}
+	// update the bouteille
+	if($bouteille->update()){
+	echo "<div class=\"alert alert-success alert-dismissable\">";
+	    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+	    echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
 	echo "</div>";
+	}
+
+	// if unable to update the bouteille, tell the user
+	else{
+	echo "<div class=\"alert alert-danger alert-dismissable\">";
+	    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+	    echo "Problème de mise à jour du vin";
 	echo "</div>";
+	}
+}
+
+echo "<div class='row'>";
+echo "<div class='col-md-12 right-button-margin'>";
+echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des vins</a>";
+if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+	echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter un vin </a>";
+}
+echo "</div>";
+echo "</div>";
 ?>
 
 <div class="row">
@@ -156,7 +156,7 @@ include_once "header.php";
 	<div class="col-sm-5">
 			<div class="input-group prix">
 			  <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"></span>
-			  <input type='text' name='prixestime'class='form-control' aria-describedby="sizing-addon2" value='<?php echo $bouteille->prixestime; ?>' >
+			  <input type='text' name='prixestime' class='form-control' aria-describedby="sizing-addon2" value='<?php echo $bouteille->prixestime; ?>' >
 			</div>
 	</div>
 	</div>
@@ -197,14 +197,13 @@ include_once "header.php";
 			echo "<label for='apogee' class='col-sm-2 control-label'>Apogée</label>";
 		}
 	?>
-	</label>
 	<div class="col-sm-5">
 	<?php 
 		if ($temp>=$bouteille->apogee) {
 			echo "<input type='text' name='apogee' id='apogee' class='form-control apogee' value='{$bouteille->apogee}' >";
 		}
 		else {
-			echo "<input type='text' name='apogee' id='apogee' class='form-control' value='{$bouteille->apogee}'' >";
+			echo "<input type='text' name='apogee' id='apogee' class='form-control' value='{$bouteille->apogee}' >";
 		}
 	?>
 
@@ -215,31 +214,13 @@ include_once "header.php";
 	</div>
 
 
-	<div class="form-group">
-	<label for="id_cepage" class="col-sm-2 control-label">Cépage</label>
-	<div class="col-sm-10">
-		<?php
-		// read the bouteille categories from the database
-		include_once 'objects/Cepage.php';
-		$cepage = new Cepage($db);
-		$stmt = $cepage->read();
-		// put them in a select drop-down
-		echo "<select class='form-control' name='id_cepage'>";
-		echo "<option>Choisir le cépage ...</option>";
-		while ($row_cepage = $stmt->fetch(PDO::FETCH_ASSOC)){
-			extract($row_cepage);
-			// current cepage of the product must be selected
-			if($bouteille->id_cepage==$id){
-			echo "<option value='$id' selected>";
-			}else{
-			echo "<option value='$id'>";
-			}
-			echo "$nom</option>";
-		}
-		echo "</select>";
-		?>
-	</div>
-	</div>
+   <div class="form-group">
+    <label for="nomCepage" class="col-sm-2 control-label">Cépage</label>
+    <div class="col-sm-10">
+     <textarea  rows="3" name='nomCepage' class="form-control" id="nomCepage" placeholder="Nom du cépage ..."><?php echo $bouteille->nomCepage; ?></textarea>
+    </div>
+  </div>
+  
     
 	<div class="form-group">
 	<label for="id_aoc" class="col-sm-2 control-label">Appellation</label>
@@ -311,6 +292,56 @@ include_once "header.php";
 
  <script type="text/javascript">
     $(document).ready(function() {
+
+  $( function() {
+    var availableTags = [
+          <?php
+            while ($row_cepage = $stmtcepage->fetch(PDO::FETCH_ASSOC)){
+                extract($row_cepage);
+                echo '"'.$nom.'",';
+            }
+          ?>
+    ];
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+ 
+    $( "#nomCepage" )
+      // don't navigate away from the field on tab when selecting an item
+      .on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            availableTags, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
+  } );
+
 
 		$("input[name='quantite']").TouchSpin({
 			min: 0,

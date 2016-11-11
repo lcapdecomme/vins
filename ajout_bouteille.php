@@ -8,11 +8,12 @@ include_once 'config/database.php';
 include_once 'objects/Bouteille.php';
 include_once 'objects/Referentiel.php';
 include_once 'objects/AOC.php';
+include_once 'objects/Cepage.php';     
  
 $database = new Database();
 $db = $database->getConnection();
-
-
+$cepage = new Cepage($db);
+$stmtcepage = $cepage->read();
 
 if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
     header('Location: index.php');
@@ -35,7 +36,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
               if (isset($_POST['millesime']))   $bouteille->millesime = $_POST['millesime'];
               if (isset($_POST['apogee']))   $bouteille->apogee = $_POST['apogee'];
               if (isset($_POST['id_contenance']))   $bouteille->id_contenance = $_POST['id_contenance'];
-              if (isset($_POST['id_cepage']))   $bouteille->id_cepage = $_POST['id_cepage'];
+              if (isset($_POST['nomCepage']))   $bouteille->nomCepage = $_POST['nomCepage'];
               if (isset($_POST['id_aoc']))   $bouteille->id_aoc = $_POST['id_aoc'];
               if (isset($_POST['id_type']))   $bouteille->id_type = $_POST['id_type'];
               if (isset($_POST['id_emplacement']))   $bouteille->id_emplacement = $_POST['id_emplacement'];
@@ -198,7 +199,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
     <div class="col-sm-5">
 				<div class="input-group prix">
 				  <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"></span>
-				  <input type='text' name='prixestime'class='form-control' aria-describedby="sizing-addon2" placeholder="Prix estimé">
+				  <input type='text' name='prixestime' class='form-control' aria-describedby="sizing-addon2" placeholder="Prix estimé">
 				</div>
      </div>
   </div>
@@ -247,27 +248,10 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
     </div>
   </div>
 
- 
    <div class="form-group">
-    <label for="id_cepage" class="col-sm-2 control-label">Cépage</label>
+    <label for="nomCepage" class="col-sm-2 control-label">Cépage</label>
     <div class="col-sm-10">
-		<?php
-		    // Recherche les divers cépages en BD
-		    include_once 'objects/Cepage.php';		 
-		    $cepage = new Cepage($db);
-		    $stmt = $cepage->read();
-		 
-        // Remplissage de la liste
-		    echo "<select class='form-control' name='id_cepage'>";
-		        echo "<option>Choisir le cépage ...</option>";
-		 
-		        while ($row_cepage = $stmt->fetch(PDO::FETCH_ASSOC)){
-		            extract($row_cepage);
-		            echo "<option value='{$id}'>{$nom}</option>";
-		        }
-		 
-		    echo "</select>";
-		    ?>
+     <textarea  rows="3" name='nomCepage' class="form-control" id="nomCepage" placeholder="Nom du cépage ..."></textarea>
     </div>
   </div>
   
@@ -331,6 +315,57 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
 
  <script type="text/javascript">
     $(document).ready(function() {
+
+
+  $( function() {
+    var availableTags = [
+          <?php
+            while ($row_cepage = $stmtcepage->fetch(PDO::FETCH_ASSOC)){
+                extract($row_cepage);
+                echo '"'.$nom.'",';
+            }
+          ?>
+    ];
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+ 
+    $( "#nomCepage" )
+      // don't navigate away from the field on tab when selecting an item
+      .on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            availableTags, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
+  } );
+
 
         $("input[name='quantite']").TouchSpin({
           min: 0,

@@ -2,15 +2,8 @@
 session_start();
 ini_set('zlib.output_compression_level', 6);
 ob_start('ob_gzhandler');
-
 header('Content-Type: application/json');
-
 // Script REST pour voir/modifier un objetemplacement
-
-// include database and object files
-include_once '../config/database.php';
-include_once '../objects/emplacement.php';
-
 if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
     $debug=false;
     if (isset($_GET['debug']))
@@ -18,7 +11,9 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
       // Mode debug
       $debug=true;
     }
-
+    // include database and object files
+    include_once '../config/database.php';
+    include_once '../objects/emplacement.php';
     // instantie la base
     $database = new Database();
     $db = $database->getConnection();

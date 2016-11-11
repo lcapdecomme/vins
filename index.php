@@ -470,15 +470,17 @@ $(document).ready(function() {
 			$.ajax({
 				valueId : valueId,
 				valueQte : valueQte,
-				url: "boire.php",
+				url: "scripts/wsBoire.php",
 				type: "POST",
 				data: {id : valueId, qte : valueQte},
 				success : function(msg) {
 					// -1 bottle
-					$("#quantite_"+this.valueId).html(this.valueQte);
-					$("#totalBouteilles").html($("#totalBouteilles").html()-1);
-					if ($("#totalBouteilles").html()<2) {
-						$("#titreBouteilles").html("bouteille");
+					if (msg.resultat) {
+						$("#quantite_"+valueId).html(valueQte-1);
+						$("#totalBouteilles").html($("#totalBouteilles").html()-1);
+						if ($("#totalBouteilles").html()<2) {
+							$("#titreBouteilles").html("bouteille");
+						}
 					}
 				}
 			});
