@@ -222,21 +222,27 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Nomenclatures <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="nomenc_cepage.php">Cépage</a></li>
-            <li><a href="nomenc_aoc.php">Appelation</a></li>
-            <li><a href="nomenc_contenance.php">Contenance</a></li>
-            <li class="divider"></li>
-            <li><a href="nomenc_vins.php">Vins</a></li>
-          </ul>
-        </li>
-      </ul>
-      <div class='navbar-form navbar-left'>
-            <button type="submit" class="btn btn-primary navbar-left reset">Effacer le filtre</button>
-      </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Nomenclatures <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="nomenc_cepage.php">Cépage</a></li>
+                <li><a href="nomenc_aoc.php">Appelation</a></li>
+                <li><a href="nomenc_contenance.php">Contenance</a></li>
+                <li class="divider"></li>
+                <li><a href="nomenc_vins.php">Vins</a></li>
+              </ul>
+            </li>
+        </ul>
+        <form class="navbar-form navbar-left"  method='GET' action='index.php'>
+            <div class="form-group">
+              <input type="text" class="form-control" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
+            </div>
+            <button type="submit" class="btn btn-primary">Recherche</button>
+        </form>
+        <form class="navbar-form navbar-left"  method='POST' action='index.php'>
+            <button type="submit" class="btn btn-primary reset">Effacer le filtre</button>
+        </form>
 
          <?php
         if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {

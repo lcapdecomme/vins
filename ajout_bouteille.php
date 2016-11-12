@@ -22,7 +22,6 @@ if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
 // Si formulaire soumis et que utilisateur connecté 
 if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']) )
 {
- 
         try{
               // Nouvel objet Bouteille
               $bouteille = new Bouteille($db);

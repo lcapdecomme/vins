@@ -124,6 +124,10 @@ class Bouteille{
                         INNER JOIN {$this->table_name_utilisateur} u
                         ON b.id_utilisateur = u.id" ;
         }
+        // Recherche dans la zone commentaire
+        if (isset($this->commentaire)) {
+            $query = $query . " and b.commentaire like '%" . $this->commentaire . "%'";
+        }
        try {
             $stmt = $this->conn->prepare( $query );
             if (isset($_SESSION['id_utilisateur'])){
@@ -200,7 +204,8 @@ class Bouteille{
         if($stmt->execute()){
             return true;
         }else{
-            print_r($stmt->errorInfo());
+            $errorInfo = $stmt->errorInfo();
+            $this->error = $errorInfo[2];
             return false;
         }
     }
@@ -228,12 +233,9 @@ class Bouteille{
 
     // delete the wine
     function delete(){
-     
         $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
-     
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->id);
-     
         if($result = $stmt->execute()){
             return true;
         }else{
@@ -246,8 +248,12 @@ class Bouteille{
         if (isset($_SESSION['id_utilisateur'])){
             $query = "SELECT count(*) as nb FROM " . $this->table_name. " WHERE id_utilisateur = ?" ;
         }else {
-            $query = "SELECT count(*) as nb FROM " . $this->table_name;
+            $query = "SELECT count(*) as nb FROM " . $this->table_name. " where 1";
         }
+        // Recherche dans la zone commentaire
+        if (isset($this->commentaire)) {
+            $query = $query . " and commentaire like '%" . $this->commentaire . "%'";
+        }       
         $stmt = $this->conn->prepare( $query );
         if (isset($_SESSION['id_utilisateur'])){
             $stmt->bindParam(1, $_SESSION['id_utilisateur']);
@@ -263,8 +269,12 @@ class Bouteille{
         if (isset($_SESSION['id_utilisateur'])){
             $query = "SELECT sum(quantite) total FROM " . $this->table_name. " WHERE id_utilisateur = ?" ;
         }else {
-            $query = "SELECT sum(quantite) total FROM " . $this->table_name;
+            $query = "SELECT sum(quantite) total FROM " . $this->table_name. " where 1";
         }
+        // Recherche dans la zone commentaire
+        if (isset($this->commentaire)) {
+            $query = $query . " and commentaire like '%" . $this->commentaire . "%'";
+        }       
         $stmt = $this->conn->prepare( $query );
         if (isset($_SESSION['id_utilisateur'])){
             $stmt->bindParam(1, $_SESSION['id_utilisateur']);
@@ -292,7 +302,6 @@ class Bouteille{
         $stmt->bindParam(1, $this->id);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-     
         $this->nom = $row['nom'];
         $this->quantite = $row['quantite'];
         $this->prixachat = $row['prixachat'];
@@ -311,12 +320,10 @@ class Bouteille{
 
     }
 
-
     // used for the 'created' field when creating a product
     function getTimestamp(){
         $this->timestamp = date('Y-m-d');
     }
-
-
+    
 }
 ?>

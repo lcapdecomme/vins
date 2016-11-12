@@ -22,12 +22,15 @@
 	$db = $database->getConnection();
 	$login = new Utilisateur($db);	 
 	$bouteille = new Bouteille($db);
-
+	// Si formulaire Recherche soumis et commentaire
+	if($_GET && isset($_GET['comment']))
+	{
+		$bouteille->commentaire=$_GET['comment'];
+	}
 	// show page header
 	$total_users = $login->countAll();
 	$total_rows = $bouteille->countAll();
 	$sum = $bouteille->sumAll();
-
 	// Recherche de tous les objets Emplacement
 	$total_emplacement = 0;
 	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
@@ -42,8 +45,7 @@
 	} else {
     	$_SESSION['emplacement']='N';
 	}
-
-
+	// Début de construction de la page
     echo "<div class='row'>";
 	echo "<div  class='col-md-4'>";
 	echo "<h2><span id='totalVins'>{$total_rows}</span> vin";
@@ -72,7 +74,6 @@
 		echo "</h2></div>";
 	}
 	echo "</div><br>";
-
 	// query bottles
 	$stmt = $bouteille->readAll();
 	if ($debug)
