@@ -129,9 +129,15 @@ class Bouteille{
             if (isset($_SESSION['id_utilisateur'])){
                 $stmt->bindParam(1, $_SESSION['id_utilisateur']);
             }        
-            $stmt->execute();
-         
-            return $stmt;
+            if($stmt->execute()){
+                return $stmt;
+            }
+            else{
+                $errorInfo = $stmt->errorInfo();
+                $this->error = $errorInfo[2];
+                return false;
+            }
+                    
         }catch(PDOException $exception){
                 echo "Create : " . $this->host . " : " . $exception->getMessage();
         }
@@ -286,6 +292,7 @@ class Bouteille{
         $stmt->bindParam(1, $this->id);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+     
         $this->nom = $row['nom'];
         $this->quantite = $row['quantite'];
         $this->prixachat = $row['prixachat'];

@@ -8,7 +8,15 @@
 	include_once 'objects/Type.php';
 	include_once 'objects/Utilisateur.php';
 	include_once 'objects/Emplacement.php';
-	 
+	
+	// debug mode ?  
+	$debug=false;
+    if (isset($_GET['debug']))
+    {
+      // Mode debug
+      $debug=true;
+    }
+
 	// instantiate database and product object
 	$database = new Database();
 	$db = $database->getConnection();
@@ -67,13 +75,21 @@
 
 	// query bottles
 	$stmt = $bouteille->readAll();
-	$num = $stmt->rowCount();
+	if ($debug)
+	{
+			echo "Retour recherche : {$bouteille->error}<br>";
+			echo "Nb Bouteilles : {$stmt->rowCount()}<br>";
+			print_r($stmt);
+			echo "<br>";
+	}
+
 ?>
+
 
 
 <?php
 	// display the products if there are any
-	if($num>0)
+	if($total_rows>0)
 	{
 	    echo "<div class='pager'>";
 		echo "<img src='lib/tablesorter/addons/pager/icons/first.png' class='first' alt='First' />";
@@ -476,7 +492,7 @@ $(document).ready(function() {
 				success : function(msg) {
 					// -1 bottle
 					if (msg.resultat) {
-						$("#quantite_"+valueId).html(valueQte-1);
+						$("#quantite_"+valueId).html(valueQte);
 						$("#totalBouteilles").html($("#totalBouteilles").html()-1);
 						if ($("#totalBouteilles").html()<2) {
 							$("#titreBouteilles").html("bouteille");

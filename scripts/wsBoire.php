@@ -14,7 +14,7 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
     }
 	// include database and object files
 	include_once '../config/database.php';
-	include_once 'objects/Bouteille.php';
+	include_once '../objects/Bouteille.php';
 	$database = new Database();
 	$db = $database->getConnection();
 	// Des données ont-elles été envoyées par POST ? 
