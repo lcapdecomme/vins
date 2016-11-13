@@ -101,10 +101,6 @@ ob_start('ob_gzhandler');
         max-width: 330px;
         padding: 15px;
     }
-    .navbar a.btn {
-        color: #fff !important;
-        font-weight: 700;
-    }
     h2 {
         margin-top: 0px !important;
     }
@@ -264,7 +260,7 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
         }
         else {
             echo "<div class='navbar-form navbar-right'>";
-            echo "<a href='login.php' class='btn btn-primary navbar-right'>Connexion</a>";
+            echo "<a href='login.php' class='btn btn-success navbar-right'>Connexion</a>";
             echo "</div>";
         }
         ?>
