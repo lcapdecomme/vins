@@ -18,19 +18,29 @@ $db = $database->getConnection();
 $emplacement = new Emplacement($db);
 $emplacement->id_utilisateur = $_SESSION['id_utilisateur'];
 $stmt = $emplacement->readAll();
-$num = $stmt->rowCount();
-
-echo "<div class='row'>";
-echo "<div  class='col-md-12 right-button-margin'>";
-    echo "<button type='button' class='btn btn-primary pull-right' id='AjouterEmplacement'>Ajouter un emplacement</button>";
-echo "</div>";
-echo "</div><br>";
+$errorInfo = $stmt->errorInfo();
+if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
+    $num = 0;
+    echo "<div class='row'>";
+    echo "<div  class='col-sm-12 text-warning text-left' id='messageRecherche'>";
+    echo "Erreur : " . $errorInfo[2];
+    echo "</div>";
+    echo "</div><br>";    
+} else {
+    $num = $stmt->rowCount();
+    echo "<div class='row'>";
+    echo "<div  class='col-sm-12 text-warning text-left' id='messageRecherche'></div></div>";
+    echo "<div class='row'>";
+    echo "<div  class='col-md-12 right-button-margin'>";
+        echo "<button type='button' class='btn btn-primary pull-right' id='AjouterEmplacement'>Ajouter un emplacement</button>";
+    echo "</div>";
+    echo "</div><br>";    
+}
 ?>
 
 
 <!-- /.row -->
 <div class="row">
-    <label id="messageRecherche" class="warning text-left"></label>
     <div class="col-lg-12">
         <table class='table table-striped table-hover table-responsive'>
             <tr>
@@ -81,7 +91,7 @@ echo "</div><br>";
                 </div>
             </div>
             <div class="form-group">
-                <p class="control-label col-sm-12 warning text-left" id="messageModification"></p>
+                <p class="col-sm-12 text-warning text-left" id="messageModification"></p>
             </div>
          </div>
          <div class="modal-footer">
@@ -104,7 +114,7 @@ echo "</div><br>";
           <input type="hidden" class="form-control" id="idEmplacementDelete">
           <p id="idEmplacementDeleteTitre"></p>
             <div class="form-group">
-                <p class="control-label col-sm-12 warning text-left" id="messageSuppression"></p>
+                <p class="col-sm-12 text-warning text-left" id="messageSuppression"></p>
             </div>
       </div>
       <div class="modal-footer">
@@ -154,7 +164,7 @@ echo "</div><br>";
                         location.reload();
                     }
                     else {
-                        $('#messageModification').html(msg.message);
+                        $('#messageModification').html('Erreur : ' + msg.message);
                     }           
                 },
                 error : function( msg, status,xhr ) {
@@ -181,7 +191,7 @@ echo "</div><br>";
                         location.reload();
                     }   
                     else {
-                        $('#messageSuppression').html(msg.message);
+                        $('#messageSuppression').html('Erreur : ' + msg.message);
                     }           
                 },
                 error : function( msg, status,xhr ) {
@@ -207,11 +217,11 @@ echo "</div><br>";
                         $('#myEmplacementPopup').modal();
                     }
                     else {
-                        $('#messageRecherche').html(msg.message);
+                        $('#messageRecherche').html('Erreur : ' + msg.message);
                     }    
             },
             error : function( msg, status,xhr ) {
-                console.log(msg + "("+status+")", "Emplacement");
+                $('#messageRecherche').html('Erreur : ' + msg + "("+status+")"+ "("+xhr+")");
             }
         });         
     });
@@ -232,7 +242,7 @@ echo "</div><br>";
                         $('#myEmplacementDeletePopup').modal();
                     }
                     else {
-                        $('#messageSuppression').html(msg.message);
+                        $('#messageSuppression').html('Erreur : ' + msg.message);
                     }
             },
             error : function( msg, status,xhr ) {

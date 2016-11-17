@@ -3,6 +3,7 @@ session_start();
 ini_set('zlib.output_compression_level', 6);
 ob_start('ob_gzhandler');
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
 // Script REST pour voir/modifier un objetemplacement
 if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
     $debug=false;
@@ -13,7 +14,7 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
     }
     // include database and object files
     include_once '../config/database.php';
-    include_once '../objects/emplacement.php';
+    include_once '../objects/Emplacement.php';
     // instantie la base
     $database = new Database();
     $db = $database->getConnection();
@@ -33,6 +34,7 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
         $json["resultat"]=true;
         $json["id"]=$emplacement->id;
         $json["emplacement"]=$emplacement->lieu;
+        $json["message"]="";
       }
       else {
         $json["resultat"]=false;
@@ -49,8 +51,14 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
       {
         echo "Modification de l'objet Emplacement {$emplacement->id}<br>";
       }
-      $json["resultat"]=$emplacement->update();
-      $json["message"]=$emplacement->error;
+      if ($emplacement->update()) {
+        $json["resultat"]=true;
+        $json["message"]="";
+      }
+      else {
+        $json["resultat"]=false;
+        $json["message"]=$emplacement->error;
+      }
     }
     // Suppression (POST) -> OP=D et ID non nul
     else if ( isset($_POST['op']) && $_POST['op']=='D' && isset($_POST['id']) && strlen($_POST['id'])>0  )
@@ -60,7 +68,14 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
       {
         echo "Suppression de l'objet Emplacement {$emplacement->id}<br>";
       }
-      $json["resultat"]=$emplacement->delete();
+      if ($emplacement->delete()) {
+        $json["resultat"]=true;
+        $json["message"]="";
+      }
+      else {
+        $json["resultat"]=false;
+        $json["message"]=$emplacement->error;
+      }
     }
     // Ajout (POST) -> OP=M et peut importe l'id
     else if ( isset($_POST['op']) && $_POST['op']=='M' )
@@ -74,8 +89,14 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
       {
         echo "Ajout de l'objet Emplacement {$emplacement->id}<br>";
       }
-      $json["resultat"]=$emplacement->create();
-      $json["message"]=$emplacement->error;
+      if ($emplacement->create()) {
+        $json["resultat"]=true;
+        $json["message"]="";
+      }
+      else {
+        $json["resultat"]=false;
+        $json["message"]=$emplacement->error;
+      }
   }
     // Autre cas -> Erreur
     else {
@@ -88,8 +109,7 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
 else
 {
   $json["resultat"]=false;
-  $json["commentaire"]="Pas connecté !";
+  $json["message"]="Pas connecté !";
 }
-
 echo json_encode($json);
 ?>

@@ -1,4 +1,6 @@
 <?php
+
+
 class Emplacement{
  
     // database connection and table name
@@ -19,18 +21,23 @@ class Emplacement{
     // Retourne l'objet pour un ID donne
     function read()
     {
-      // Requete pour retrouver un objet pour un ID donné
-      $query = "select * from emplacement where id=:id LIMIT 0, 1";
-      $stmt = $this->conn->prepare( $query );
-      $stmt->bindParam(':id', $this->id);
-      $stmt->execute();
-      if ($stmt->rowCount()>0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        extract($row);
-        $this->id=$id;
-      $this->lieu=$lieu;
-      $this->id_utilisateur=$id_utilisateur;
-        return true;
+      try {
+        // Requete pour retrouver un objet pour un ID donné
+        $query = "select * from emplacement where id=:id LIMIT 0, 1";
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        if ($stmt->rowCount()>0) {
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          extract($row);
+          $this->id=$id;
+          $this->lieu=$lieu;
+          $this->id_utilisateur=$id_utilisateur;
+          return true;
+        }
+      }
+      catch(PDOException $exception) {
+        $this->error =  $exception->getMessage();
       }
       return false;
     }
@@ -50,18 +57,18 @@ class Emplacement{
     // Add storage
     function create(){
          try {
-          $query= "insert into emplacement (lieu,id_utilisateur) 
-                  values ( :lieu, :id_utilisateur)";
-         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':lieu', $this->lieu);
-        $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
-        if ($stmt->execute()) {
-            return true;
-        }   else{
-            $errorInfo = $stmt->errorInfo();
-            $this->error = $errorInfo[2];
-            return false;
-        }
+            $query= "insert into emplacement (lieu,id_utilisateur) 
+                    values ( :lieu, :id_utilisateur)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':lieu', $this->lieu);
+            $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
+            if ($stmt->execute()) {
+              return true;
+            }   else{
+              $errorInfo = $stmt->errorInfo();
+              $this->error = $errorInfo[2];
+              return false;
+            }
         }
         catch(PDOException $exception) {
           $this->error =  $exception->getMessage();
@@ -111,6 +118,7 @@ class Emplacement{
             return false;
         }
     }
+
   
 }
 ?>

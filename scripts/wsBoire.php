@@ -3,6 +3,7 @@ session_start();
 ini_set('zlib.output_compression_level', 6);
 ob_start('ob_gzhandler');
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
 // Script REST pour boitre une bouteille
 $json["resultat"]=false;
 if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
