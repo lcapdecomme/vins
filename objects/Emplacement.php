@@ -58,11 +58,14 @@ class Emplacement{
         if ($stmt->execute()) {
             return true;
         }   else{
-            return $stmt->errorInfo();
+            $errorInfo = $stmt->errorInfo();
+            $this->error = $errorInfo[2];
+            return false;
         }
         }
         catch(PDOException $exception) {
-            echo "Ajoute un objet emplacement : " . $this->host . " : " . $exception->getMessage();
+          $this->error =  $exception->getMessage();
+          return false;
         }
     }
 
@@ -79,10 +82,13 @@ class Emplacement{
         if ($stmt->execute()) {
             return true;
         }   else{
-            return $stmt->errorInfo();
+                $errorInfo = $stmt->errorInfo();
+                $this->error = $errorInfo[2];
+                return false;
         }
         }catch(PDOException $exception){
-            echo "Modifie un objet emplacement : " . $this->host . " : " . $exception->getMessage();
+            $this->error =  $exception->getMessage();
+            return false;
         }
     }
 
@@ -96,10 +102,13 @@ class Emplacement{
         if ($stmt->execute()) {
             return true;
         }   else{
-            return $stmt->errorInfo();
+              $errorInfo = $stmt->errorInfo();
+              $this->error = $errorInfo[2];
+              return false;
         }
         }catch(PDOException $exception){
-            echo "Delete storage : " . $this->host . " : " . $exception->getMessage();
+            $this->error =  $exception->getMessage();
+            return false;
         }
     }
   

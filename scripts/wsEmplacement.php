@@ -36,7 +36,7 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
       }
       else {
         $json["resultat"]=false;
-        $json["commentaire"]="Emplacement introuvable";
+        $json["message"]=$emplacement->error;
       }
     }
     // Modification (POST) -> OP=M et ID non nul
@@ -50,6 +50,7 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
         echo "Modification de l'objet Emplacement {$emplacement->id}<br>";
       }
       $json["resultat"]=$emplacement->update();
+      $json["message"]=$emplacement->error;
     }
     // Suppression (POST) -> OP=D et ID non nul
     else if ( isset($_POST['op']) && $_POST['op']=='D' && isset($_POST['id']) && strlen($_POST['id'])>0  )
@@ -74,11 +75,12 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
         echo "Ajout de l'objet Emplacement {$emplacement->id}<br>";
       }
       $json["resultat"]=$emplacement->create();
-    }
+      $json["message"]=$emplacement->error;
+  }
     // Autre cas -> Erreur
     else {
       $json["resultat"]=false;
-      $json["commentaire"]="Parametres absents";      
+      $json["message"]="Parametres absents";      
     }
 
 } 

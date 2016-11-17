@@ -30,6 +30,7 @@ echo "</div><br>";
 
 <!-- /.row -->
 <div class="row">
+    <label id="messageRecherche" class="warning text-left"></label>
     <div class="col-lg-12">
         <table class='table table-striped table-hover table-responsive'>
             <tr>
@@ -79,6 +80,9 @@ echo "</div><br>";
                    <input type="text" class="form-control" id="emplacementEmplacement">
                 </div>
             </div>
+            <div class="form-group">
+                <p class="control-label col-sm-12 warning text-left" id="messageModification"></p>
+            </div>
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
@@ -99,6 +103,9 @@ echo "</div><br>";
       <div class="modal-body">
           <input type="hidden" class="form-control" id="idEmplacementDelete">
           <p id="idEmplacementDeleteTitre"></p>
+            <div class="form-group">
+                <p class="control-label col-sm-12 warning text-left" id="messageSuppression"></p>
+            </div>
       </div>
       <div class="modal-footer">
        	<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
@@ -142,11 +149,13 @@ echo "</div><br>";
                 data: { op : 'M', id : idEmplacement, emplacement : emplacement },
                 url : "scripts/wsEmplacement.php",
                 success : function( msg, status,xhr ) {
-                    var p = msg.resultat;
-                    if (p==true) {
+                    if (msg && msg.resultat==true) {
                         $('#myEmplacementPopup').modal('hide');
                         location.reload();
-                        }           
+                    }
+                    else {
+                        $('#messageModification').html(msg.message);
+                    }           
                 },
                 error : function( msg, status,xhr ) {
                     console.log(msg + "("+status+")", "Emplacement");
@@ -167,12 +176,13 @@ echo "</div><br>";
                 data: { op : 'D', id : idEmplacement },
                 url : "scripts/wsEmplacement.php",
                 success : function( msg, status,xhr ) {
-                    var p = msg.resultat;
-                    if (p==true) {
+                    if (msg && msg.resultat==true) {
                         $('#myEmplacementDeletePopup').modal('hide');
                         location.reload();
                     }   
-                       
+                    else {
+                        $('#messageSuppression').html(msg.message);
+                    }           
                 },
                 error : function( msg, status,xhr ) {
                     console.log(msg + "("+status+")", "Emplacement");
@@ -191,12 +201,14 @@ echo "</div><br>";
             data: { op : 'R', id : idEmplacement },
             url : "scripts/wsEmplacement.php",
             success : function( msg, status,xhr ) {
-                var p = msg.resultat;
-                if (p==true) {
+                if (msg && msg.resultat==true) {
                         $('#idEmplacement').val(msg.id);
                         $('#emplacementEmplacement').val(msg.emplacement);
                         $('#myEmplacementPopup').modal();
                     }
+                    else {
+                        $('#messageRecherche').html(msg.message);
+                    }    
             },
             error : function( msg, status,xhr ) {
                 console.log(msg + "("+status+")", "Emplacement");
@@ -214,15 +226,13 @@ echo "</div><br>";
             data: { op : 'R', id : idEmplacement },
             url : "scripts/wsEmplacement.php",
             success : function( msg, status,xhr ) {
-                var p = msg.resultat;
-                if (p==true) {
+                if (msg && msg.resultat==true) {
                         $('#idEmplacementDelete').val( msg.id);
                         $('#idEmplacementDeleteTitre').html("Emplacement : " + msg.emplacement);
                         $('#myEmplacementDeletePopup').modal();
                     }
                     else {
-                        var c = msg.commentaire;
-                        console.log(c, "Emplacement");
+                        $('#messageSuppression').html(msg.message);
                     }
             },
             error : function( msg, status,xhr ) {
