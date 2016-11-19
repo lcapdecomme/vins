@@ -61,7 +61,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	}
 }
 
-echo "<div class='row'>";
+echo "<div class='row hidden-sm hidden-xs'>";
 echo "<div class='col-md-12 right-button-margin'>";
 echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des vins</a>";
 if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
@@ -72,8 +72,8 @@ echo "</div>";
 ?>
 
 <div class="row">
-<div class="col-md-4"><img src="img/fond.png" alt="verre"></div>
-<div class="col-md-8">
+<div class="col-md-4 hidden-sm hidden-xs"><img src="img/fond.png" alt="verre"></div>
+<div class="col-md-8 col-sm-12 col-xs-12">
 <!-- Formulaire d'ajout d'une bouteille  -->
 <form action='maj_bouteille.php?id=<?php echo $id; ?>' method='post'  class="form-horizontal">
 
@@ -85,8 +85,8 @@ echo "</div>";
 	</div>
 
 	<div class="form-group">
-	<label for="id_type" class="col-sm-2 control-label">Type</label>
-	<div class="col-sm-10">
+	<label for="id_type" class="col-sm-2 col-xs-4 control-label">Type</label>
+	<div class="col-sm-10 col-xs-8">
 		<?php
 		// read the bouteille categories from the database
 		include_once 'objects/Type.php';
@@ -112,8 +112,8 @@ echo "</div>";
 
  
 	<div class="form-group">
-	<label for="id_contenance" class="col-sm-2 control-label">Contenance</label>
-	<div class="col-sm-10">
+	<label for="id_contenance" class="col-sm-2 col-xs-4 control-label">Contenance</label>
+	<div class="col-sm-10 col-xs-8">
 	<?php
 		// read the bouteille categories from the database
 		include_once 'objects/Contenance.php';
@@ -139,21 +139,21 @@ echo "</div>";
 	</div>
 
 	<div class="form-group">
-	<label for="quantite" class="col-sm-2 control-label">Quantité</label>
-	<div class="col-sm-10">
+	<label for="quantite" class="col-sm-2  col-xs-4 control-label">Quantité</label>
+	<div class="col-sm-10 col-xs-8">
 	<input type="text"  name='quantite' class="form-control" id="quantite" value='<?php echo $bouteille->quantite; ?>'  >
 	</div>
 	</div>
 
 	<div class="form-group">
-	<label for="prix" class="col-sm-2 control-label">Prix achat / estimé</label>
-	<div class="col-sm-5">
+	<label for="prix" class="col-sm-2 col-xs-4 control-label">Prix</label>
+	<div class="col-sm-5  col-xs-4 ">
 			<div class="input-group prix">
 			  <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"></span>
 			  <input type='text' name="prixachat" class='form-control' aria-describedby="sizing-addon2" value='<?php echo $bouteille->prixachat; ?>'>
 			</div>
 	</div>
-	<div class="col-sm-5">
+	<div class="col-sm-5  col-xs-4 ">
 			<div class="input-group prix">
 			  <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"></span>
 			  <input type='text' name='prixestime' class='form-control' aria-describedby="sizing-addon2" value='<?php echo $bouteille->prixestime; ?>' >
@@ -169,21 +169,21 @@ echo "</div>";
 	</div>
 
 	<div class="form-group">
-		<label for="achat" class="col-sm-2 control-label">Achat</label>
-		<div class="col-sm-5">
+		<label for="achat" class="col-sm-2 col-xs-4 control-label">Achat</label>
+		<div class="col-sm-5 col-xs-8">
 				<input type='text' name="achat" id="achat" class='form-control' value='<?php echo $bouteille->achat; ?>' >
 		</div>
-		<div class="col-sm-5">
+		<div class="col-sm-5 hidden-xs">
 			<input type='text' id="sliderAchat" data-slider-min="2000" data-slider-max="2050" data-slider-step="1" data-slider-value="<?php echo $bouteille->achat; ?>" >
 		</div>
 	</div>
 
 	<div class="form-group">
-		<label for="millesime" class="col-sm-2 control-label">Millésime</label>
-		<div class="col-sm-5">
+		<label for="millesime" class="col-sm-2 col-xs-4 control-label">Millésime</label>
+		<div class="col-sm-5 col-xs-8">
 				<input type='text' name="millesime" id="millesime" class='form-control' value='<?php echo $bouteille->millesime; ?>' >
 		</div>
-		<div class="col-sm-5">
+		<div class="col-sm-5  hidden-xs">
 			<input type='text' id="sliderMillesime" data-slider-min="2000" data-slider-max="2050" data-slider-step="1" data-slider-value="<?php echo $bouteille->millesime; ?>" >
 		</div>
 	</div>
@@ -191,13 +191,13 @@ echo "</div>";
 	<div class="form-group">
 	<?php 
 		if ($temp>=$bouteille->apogee) {
-			echo "<label for='apogee' class='col-sm-2 control-label apogee'>Apogée</label>";
+			echo "<label for='apogee' class='col-sm-2 col-xs-4 control-label apogee'>Apogée</label>";
 		}
 		else {
-			echo "<label for='apogee' class='col-sm-2 control-label'>Apogée</label>";
+			echo "<label for='apogee' class='col-sm-2 col-xs-4 control-label'>Apogée</label>";
 		}
 	?>
-	<div class="col-sm-5">
+	<div class="col-sm-5 col-xs-8">
 	<?php 
 		if ($temp>=$bouteille->apogee) {
 			echo "<input type='text' name='apogee' id='apogee' class='form-control apogee' value='{$bouteille->apogee}' >";
@@ -208,7 +208,7 @@ echo "</div>";
 	?>
 
 	</div>
-	<div class="col-sm-5">
+	<div class="col-sm-5 hidden-xs">
 		<input type='text' id="sliderApogee" data-slider-min="2000" data-slider-max="2050" data-slider-step="1" data-slider-value="<?php echo $bouteille->apogee; ?>" >
 	</div>
 	</div>
@@ -288,6 +288,7 @@ echo "</div>";
 </form>
   </div>
 </div>
+<br>
 
 
  <script type="text/javascript">

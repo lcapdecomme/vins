@@ -9,6 +9,7 @@
 	include_once 'objects/Utilisateur.php';
 	include_once 'objects/Emplacement.php';
 	
+    $dateSysteme=date("Y");
 	// debug mode ?  
 	$debug=false;
     if (isset($_GET['debug']))
@@ -47,11 +48,11 @@
 	}
 	// Début de construction de la page
     echo "<div class='row'>";
-	echo "<div  class='col-md-4'>";
+	echo "<div  class='col-md-4 col-sm-4 col-xs-3'>";
 	echo "<h2><span id='totalVins'>{$total_rows}</span> vin";
 	if ($total_rows>1) {   echo "s";  }
 	echo "</h2></div>";
-	echo "<div  class='col-md-4'>";
+	echo "<div  class='col-md-4 col-sm-4 col-xs-6'>";
 	echo "<h2 class='text-center'><span id='totalBouteilles'>{$sum}</span> ";
 	if ($sum>1) {
 		echo "<span id='titreBouteilles'>bouteilles</span> ";
@@ -59,20 +60,21 @@
 		echo "<span id='titreBouteilles'>bouteille</span> ";
 	}
 	echo "</h2></div>";
+    echo "<div  class='col-md-4 col-sm-4 col-xs-3'>";
 	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-        echo "<div  class='col-md-4'><div class='right-button-margin'>";
+        echo "<div class='right-button-margin'>";
 		echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter un vin</a>";
-		echo "</div></div>";
+		echo "</div>";
 	}else {
-        echo "<div  class='col-md-4'>";
 		echo "<h2 style='text-align:right'><span id='totalUsers'>{$total_users}</span>&nbsp;";
 		if ($total_users>1) {
 			echo "utilisateurs";
 		}else{
 			echo "utilisateur ";
 		}
-		echo "</h2></div>";
+		echo "</h2>";
 	}
+	echo "</div>";
 	echo "</div><br>";
 	// query bottles
 	$stmt = $bouteille->readAll();
@@ -114,17 +116,17 @@
 
 	        echo "<thead><tr>";
 	            echo "<th>Nom</th>";
-	            echo "<th class='colMagnum'>&nbsp;</th>";
+	            echo "<th class='colMagnum hidden-sm hidden-md hidden-xs'>&nbsp;</th>";
 	            echo "<th>Qté</th>";
-	            echo "<th class='colCouleur'>Type</th>";
-	            echo "<th class='filter-select filter-onlyAvail'>Millesime</th>";
-	            echo "<th class='filter-select filter-onlyAvail'>Apogée</th>";
-	            echo "<th class='filter-select filter-onlyAvail'>Achat</th>";
-	            echo "<th>AOC</th>";
+	            echo "<th class='colCouleur hidden-xs'>Type</th>";
+	            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Millesime</th>";
+	            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Apogée</th>";
+	            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-md hidden-xs'>Achat</th>";
+	            echo "<th class='hidden-sm hidden-xs'>AOC</th>";
 	            if ($total_emplacement>=1) {
-	            	echo "<th>Emplacement</th>";
+	            	echo "<th class='hidden-sm hidden-md hidden-xs'>Emplacement</th>";
 	            } else {
-	            	echo "<th>Région</th>";
+	            	echo "<th class='hidden-sm hidden-md hidden-xs'>Région</th>";
 	            }
 				if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 		            echo "<th class='titreOperations'>Opérations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>";
@@ -142,12 +144,12 @@
 	 
 	            echo "<tr>";
 	                echo "<td>{$nomb}</td>";
-	                echo "<td class='textAndImg colMagnum'>";
+	                echo "<td class='textAndImg colMagnum hidden-sm hidden-md hidden-xs'>";
 	                    if ($id_contenance==3)	echo "0&nbsp;&nbsp;<img src='img/logo_magnum.png' title='Magnum' />";
 	                    else	echo "1&nbsp;&nbsp;";
 	                echo "</td>";
 	                echo "<td class='colQuantite' id='quantite_{$id}' style='text-align:center;'>{$quantite}</td>";
-	                echo "<td class='textAndImg colCouleur'>";
+	                echo "<td class='textAndImg colCouleur hidden-xs'>";
 	                    $type->id = $id_type;
 	                    if ($id_type==1)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_rouge.png' title='Rouge' />";
 	                    if ($id_type==2)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_blanc.png' title='Blanc' />";
@@ -158,40 +160,39 @@
 	                echo "</td>";
 
 	                if ($millesime<>0) {
-	                	echo "<td style='text-align:center;'>{$millesime}</td>";
+	                	echo "<td class='hidden-xs' style='text-align:center;'>{$millesime}</td>";
 	                }
 	                else {
-	                	echo "<td></td>";
+	                	echo "<td class='hidden-xs'></td>";
 	                }
 
 	                if ($apogee<>0) {
-		                $temp=date("Y");
-						if ($temp>=$apogee) {
-		                	echo "<td style='text-align:center;'><span class='apogee'>{$apogee}</span></td>";
+						if ($dateSysteme>=$apogee) {
+		                	echo "<td class='hidden-sm hidden-xs' style='text-align:center;'><span class='apogee'>{$apogee}</span></td>";
 	                	}
 	                	else {
-		                	echo "<td style='text-align:center;'>{$apogee}</td>";
+		                	echo "<td class='hidden-sm hidden-xs' style='text-align:center;'>{$apogee}</td>";
 						}
 	                }
 	                else {
-	                	echo "<td></td>";
+	                	echo "<td class='hidden-sm hidden-xs'></td>";
 	                }
 	                
 	                         		
 	                if ($achat<>0) {
-	                	echo "<td style='text-align:center;'>{$achat}</td>";
+	                	echo "<td class='hidden-sm hidden-md hidden-xs' style='text-align:center;'>{$achat}</td>";
 	                }
 	                else {
-	                	echo "<td></td>";
+	                	echo "<td class='hidden-sm hidden-md hidden-xs' ></td>";
 	                }
 	 
 	                // AOC
-	                echo "<td>{$appellation}</td>";
+	                echo "<td class='hidden-sm hidden-xs'>{$appellation}</td>";
 			        // Emplacement de la bouteille ou région ?
 		            if ($total_emplacement>=1) {
-		                echo "<td>{$lieu}</td>";
+		                echo "<td class='hidden-sm hidden-md hidden-xs' >{$lieu}</td>";
 		            } else {
-		                echo "<td>{$region}</td>";
+		                echo "<td class='hidden-sm hidden-md hidden-xs' >{$region}</td>";
 		            }
 
 					if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {

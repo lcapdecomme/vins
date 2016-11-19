@@ -10,39 +10,88 @@ ob_start('ob_gzhandler');
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Wine cellar application">
+<meta name="author" content="Lionel C.">
+
 
 <title><?php echo $page_title; ?></title>
  
     <!-- some custom CSS -->
     <style>
-    table#allVins .tablesorter-filter-row td:nth-child(4n+1) .tablesorter-filter {
-        width: 320px;
+    @media (min-width:1px)and (max-width:767px) {
+        table#allVins .tablesorter-filter-row td:nth-child(1) .tablesorter-filter {
+            width: 280px !important;
+            overflow: hidden !important;;
+        }
+        tr.ui-widget-content:nth-child(2) > td:nth-child(1) {
+            overflow: hidden !important;
+        }
+        .tablesorter-filter-row > td:nth-child(2),
+        .tablesorter-filter-row > td:nth-child(4),
+        .tablesorter-filter-row > td:nth-child(5),
+        .tablesorter-filter-row > td:nth-child(6),
+        .tablesorter-filter-row > td:nth-child(7),
+        .tablesorter-filter-row > td:nth-child(8),
+        .tablesorter-filter-row > td:nth-child(9) {
+            border: 1px solid red;
+            display: none !important;
+            width: 0px;
+        };
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+2) .tablesorter-filter {
+    @media (min-width:768px)and (max-width:991px) {
+        .tablesorter-filter-row > td:nth-child(2),
+        .tablesorter-filter-row > td:nth-child(6),
+        .tablesorter-filter-row > td:nth-child(7),
+        .tablesorter-filter-row > td:nth-child(8),
+        .tablesorter-filter-row > td:nth-child(9) {
+            border: 1px solid red;
+            display: none !important;
+            width: 0px;
+        };
+    }
+    @media (min-width:992px)and (max-width:1199px) {
+        .tablesorter-filter-row > td:nth-child(2),
+        .tablesorter-filter-row > td:nth-child(7),
+        .tablesorter-filter-row > td:nth-child(9) {
+            border: 1px solid red;
+            display: none !important;
+            width: 0px;
+        };
+    }
+    table#allVins .tablesorter-filter-row td:nth-child(1) .tablesorter-filter {
+        width: 380px;
+    }
+    table#allVins .tablesorter-filter-row td:nth-child(2) .tablesorter-filter {
         width: 35px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+3) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(3) .tablesorter-filter {
         width: 40px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+4) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(4) .tablesorter-filter {
         width: 35px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+5) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(5) .tablesorter-filter {
         width: 60px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+6) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(6) .tablesorter-filter {
         width: 60px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+7) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(7) .tablesorter-filter {
         width: 60px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+8) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(8) .tablesorter-filter {
         width: 100px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+9) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(9) .tablesorter-filter {
         width: 160px;
     }
-    table#allVins .tablesorter-filter-row td:nth-child(4n+10) .tablesorter-filter {
+    table#allVins .tablesorter-filter-row td:nth-child(10) .tablesorter-filter {
         width: 120px;
     }
     table#allVins tbody tr td a.btn.btn-primary {
@@ -79,8 +128,6 @@ ob_start('ob_gzhandler');
     }
     .right-button-margin {
         float: right;
-        margin: 0 0 1em;
-        overflow: hidden;
         width: 40%;
     }
     html body div.container div.row div.col-md-4 img {
@@ -218,7 +265,7 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav hidden-sm">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Nomenclatures <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
