@@ -2,6 +2,8 @@
 session_start();
 ini_set('zlib.output_compression_level', 6);
 ob_start('ob_gzhandler');
+include_once 'config/util.php';
+isCookieOk();
 ?>
 <!DOCTYPE html>
 <html>

@@ -1,14 +1,11 @@
 <?php 
+	// Remove session
 	session_start();
-	// pour la buter
 	session_unset();
 	session_destroy();
-	// Définition du nom du cookie
-	$nom_cookie = 'auth';
-
-	// suppression du cookie
-	setcookie($nom_cookie,'',0,'/');
-	
-	// On redirige vers la page principale
+	include_once 'config/util.php';
+	// Delete cookie
+	deleteCookie();
+	// Redirect main page
 	header('Location: index.php');
 ?>

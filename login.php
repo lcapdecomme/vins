@@ -10,6 +10,7 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse'])))
 {  
     // include database and object files
     include_once 'config/database.php';
+    include_once 'config/util.php';
     include_once 'objects/Utilisateur.php';
 
     // instantiate database and product object
@@ -37,12 +38,9 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse'])))
           $_SESSION["nom_utilisateur"]  = $login->nom;
           $_SESSION["nb_vins_affiches"]  = $login->nb_vins_affiches;
           // Connection auto ?
-          if (isset($_POST['auto']))
-          {
+          if (isset($_POST['auto'])) {
               // Define cookie
-              $nom_cookie = 'auth';
-              $sepCookie  = 'aicd45ez432dsf43d432';
-              setcookie($nom_cookie,$login->nom.$sepCookie.sha1($login->nom).$sepCookie.sha1($_SERVER['REMOTE_ADDR']), time() + 10*24*3600,'/');
+          		addCookie($login->id, $login->nom, $login->nb_vins_affiches);
           }             
           // Authentificate Ok ! 
           $authentification= true;
