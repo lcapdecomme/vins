@@ -27,74 +27,36 @@ isCookieOk();
     <!-- some custom CSS -->
     <style>
     @media (min-width:1px)and (max-width:767px) {
-        table#allVins .tablesorter-filter-row td:nth-child(1) .tablesorter-filter {
-            width: 280px !important;
-            overflow: hidden !important;;
-        }
-        tr.ui-widget-content:nth-child(2) > td:nth-child(1) {
-            overflow: hidden !important;
-        }
+
         .tablesorter-filter-row > td:nth-child(2),
+        .tablesorter-filter-row > td:nth-child(3),
         .tablesorter-filter-row > td:nth-child(4),
         .tablesorter-filter-row > td:nth-child(5),
         .tablesorter-filter-row > td:nth-child(6),
         .tablesorter-filter-row > td:nth-child(7),
-        .tablesorter-filter-row > td:nth-child(8),
-        .tablesorter-filter-row > td:nth-child(9) {
-            border: 1px solid red;
+        .tablesorter-filter-row > td:nth-child(8)
+         {
             display: none !important;
-            width: 0px;
         };
     }
     @media (min-width:768px)and (max-width:991px) {
-        .tablesorter-filter-row > td:nth-child(2),
+        .tablesorter-filter-row > td:nth-child(5),
         .tablesorter-filter-row > td:nth-child(6),
         .tablesorter-filter-row > td:nth-child(7),
-        .tablesorter-filter-row > td:nth-child(8),
-        .tablesorter-filter-row > td:nth-child(9) {
+        .tablesorter-filter-row > td:nth-child(8)
+         {
             border: 1px solid red;
             display: none !important;
             width: 0px;
         };
     }
     @media (min-width:992px)and (max-width:1199px) {
-        .tablesorter-filter-row > td:nth-child(2),
-        .tablesorter-filter-row > td:nth-child(7),
-        .tablesorter-filter-row > td:nth-child(9) {
+        .tablesorter-filter-row > td:nth-child(6),
+        .tablesorter-filter-row > td:nth-child(8) {
             border: 1px solid red;
             display: none !important;
             width: 0px;
         };
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(1) .tablesorter-filter {
-        width: 380px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(2) .tablesorter-filter {
-        width: 35px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(3) .tablesorter-filter {
-        width: 40px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(4) .tablesorter-filter {
-        width: 35px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(5) .tablesorter-filter {
-        width: 60px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(6) .tablesorter-filter {
-        width: 60px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(7) .tablesorter-filter {
-        width: 60px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(8) .tablesorter-filter {
-        width: 100px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(9) .tablesorter-filter {
-        width: 160px;
-    }
-    table#allVins .tablesorter-filter-row td:nth-child(10) .tablesorter-filter {
-        width: 120px;
     }
     table#allVins tbody tr td a.btn.btn-primary {
         color: white;
@@ -107,13 +69,6 @@ isCookieOk();
     overflow: hidden;
     text-indent: -22px;
     }
-    table#allVins tbody tr th span {
-        width:10px;
-        border: none;
-        background: none;
-        display:inline;
-    }
-
     table#allVins tbody tr th {
         cursor: pointer;
     }
@@ -177,11 +132,58 @@ isCookieOk();
     color: #808080;
     }
     .pager {
-        background-color: #F3F3F3;
+        background-color: #e6eeee;
     }
-    .pager img, .pager select {
-        margin: 0 10px !important;
+.pager {
+  padding: 5px;
+}
+/* pager wrapper, in thead/tfoot */
+td.pager {
+  background-color: #e6eeee;
+}
+/* pager navigation arrows */
+.pager img {
+  vertical-align: middle;
+  margin-right: 2px;
+}
+/* pager output text */
+.pager .pagedisplay {
+  font-size: 11px;
+  padding: 0 5px 0 5px;
+  width: 50px;
+  text-align: center;
+}
+.tablesorter-headerRow {
+        height: 34px;
     }
+.tablesorter-ignoreRow {
+        height: 24px;
+    }
+.tablesorter-ignoreRow td.pager{
+        padding: 2px;
+    }
+.pagerSavedHeightSpacer {
+	display:none;
+	height:0px;
+}
+/*** loading ajax indeterminate progress indicator ***/
+#tablesorterPagerLoading {
+  background: rgba(255,255,255,0.8) url(icons/loading.gif) center center no-repeat;
+  position: absolute;
+  z-index: 1000;
+}
+
+/*** css used when "updateArrows" option is true ***/
+/* the pager itself gets a disabled class when the number of rows is less than the size */
+.pager.disabled {
+  display: none;
+}
+/* hide or fade out pager arrows when the first or last row is visible */
+.pager img.disabled {
+  /* visibility: hidden */
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
     .footer {
     position: fixed;
     bottom: 0;
@@ -203,6 +205,9 @@ isCookieOk();
 .footer {
     border-top: 1px solid #e7e7e7;
 }
+#allVins {
+	width: 100% !important;
+}
 table tr td a, table tr td a:link, table tr td a:visited {
     color:white !important;
 }
@@ -221,7 +226,7 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
     <link rel="stylesheet" href="lib/datepicker/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="lib/jquery/jquery-ui.min.css">
     <link rel="stylesheet" href="lib/jquery/bootstrap-slider.min.css">
-    <link rel="stylesheet" href="lib/tablesorter/css/theme.dropbox.min.css">
+    <link rel="stylesheet" href="lib/tablesorter/css/theme.blue.min.css">
     <link rel="stylesheet" href="lib/tablesorter/addons/pager/jquery.tablesorter.pager.css">
 
  
@@ -279,16 +284,25 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
               </ul>
             </li>
         </ul>
-        <form class="navbar-form navbar-left"  method='GET' action='index.php'>
+        <form class="navbar-form navbar-left visible-lg visible-md"  method='GET' action='index.php'>
             <div class="form-group">
               <input type="text" class="form-control" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
             </div>
-            <button type="submit" class="btn btn-primary">Recherche</button>
+            <button type="submit" class="btn btn-primary">Rechercher</button>
         </form>
-        <form class="navbar-form navbar-left"  method='POST' action='index.php'>
+        <form class="navbar-form navbar-left visible-xs visible-sm"  method='GET' action='index.php'>
+            <div class="form-group">
+              <input type="text" class="form-control input-sm" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">Rechercher</button>
+        </form>
+        <form class="navbar-form navbar-left visible-lg visible-md"  method='POST' action='index.php'>
             <button type="submit" class="btn btn-primary reset">Effacer le filtre</button>
         </form>
-
+        <form class="navbar-form navbar-left visible-xs visible-sm"  method='POST' action='index.php'>
+            <button type="submit" class="btn btn-sm btn-primary reset">Effacer</button>
+        </form>
+ 
          <?php
         if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
             ?>
@@ -309,7 +323,8 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
         }
         else {
             echo "<div class='navbar-form navbar-right'>";
-            echo "<a href='login.php' class='btn btn-success navbar-right'>Connexion</a>";
+            echo "<a href='login.php' class='btn btn-success navbar-right visible-lg visible-md'>Connexion</a>";
+            echo "<a href='login.php' class='btn btn-sm btn-success navbar-right visible-xs visible-sm'>Connexion</a>";
             echo "</div>";
         }
         ?>
@@ -318,6 +333,28 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
 
   </div><!-- /.container-fluid -->
 </nav>
+
+
+<script type="text/javascript">
+	(function($) {
+	'use strict';
+		function initWines() {
+		// Bug Safari sur iphone : 
+		//http://stackoverflow.com/questions/2898740/iphone-safari-web-app-opens-links-in-new-window
+		$("a").click(function (event) {
+		    event.preventDefault();
+	    	window.location = $(this).attr("href");
+		});
+		}
+		$(document).ready(initWines);
+	})(jQuery);
+
+
+
+  </script>
+
+
+
 <!-- container -->
 <div class="container">
-    <br><br><br><br>
+    <br><br><br>

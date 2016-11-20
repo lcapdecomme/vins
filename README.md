@@ -1,5 +1,7 @@
 # Gestion de cave à vins / Wine Cellar Application #
-Démo here : *http://macave.byethost10.com*
+Demo  : *http://macave.byethost10.com*
+
+User to test : *test/test*
 
 
 ## Set Up
