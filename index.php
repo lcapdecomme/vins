@@ -207,9 +207,9 @@
 					if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 						// edit and delete button is here
 						echo "<td><a href='maj_bouteille.php?id={$id}' class='btn btn-xs btn-primary left-margin' title='Modification'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></a>&nbsp;";
-						echo "<a delete-id='{$id}' update-name='{$nomb}' class='btn btn-xs btn-danger deleteOperation' title='Suppression'><span class='glyphicon glyphicon-remove aria-hidden='true'></span></a>&nbsp;";
+						echo "<a href='#' delete-id='{$id}' update-name='{$nomb}' class='btn btn-xs btn-danger deleteOperation' title='Suppression'><span class='glyphicon glyphicon-remove aria-hidden='true'></span></a>&nbsp;";
 						if ($quantite>0) {
-							echo "<a update-id='{$id}' update-name='{$nomb}' class='btn btn-xs btn-success drinkOperation right-margin' title='Boire'><span class='glyphicon glyphicon-glass aria-hidden='true'></span></a>";
+							echo "<a href='#' update-id='{$id}' update-name='{$nomb}' class='btn btn-xs btn-success drinkOperation right-margin' title='Boire'><span class='glyphicon glyphicon-glass aria-hidden='true'></span></a>";
 						} 
 						echo "</td>";
 					}
