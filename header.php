@@ -216,6 +216,9 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
     font-weight: 700;
     font-size: 20px;
 }
+.navbar-right {
+    margin-right: -7px !important;
+}
     </style>
  
  
@@ -272,6 +275,9 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+         <?php
+        if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+            ?>
         <ul class="nav navbar-nav hidden-sm">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Nomenclatures <span class="caret"></span></a>
@@ -303,9 +309,6 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
             <button type="submit" class="btn btn-sm btn-primary reset">Effacer</button>
         </form>
  
-         <?php
-        if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-            ?>
                 <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['nom_utilisateur']; ?> <span class="caret"></span></a>
@@ -320,12 +323,6 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
                 </li>
                 </ul>
               <?php
-        }
-        else {
-            echo "<div class='navbar-form navbar-right'>";
-            echo "<a href='login.php' class='btn btn-success navbar-right visible-lg visible-md'>Connexion</a>";
-            echo "<a href='login.php' class='btn btn-sm btn-success navbar-right visible-xs visible-sm'>Connexion</a>";
-            echo "</div>";
         }
         ?>
       

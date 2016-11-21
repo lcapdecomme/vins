@@ -1,159 +1,164 @@
 <?php
 	$page_title = "Mes bouteilles";
 	include_once "header.php";
-
 	// include database and object files
 	include_once 'config/database.php';
+	include_once 'config/util.php';
 	include_once 'objects/Bouteille.php';
-	include_once 'objects/Type.php';
 	include_once 'objects/Utilisateur.php';
-	include_once 'objects/Emplacement.php';
-	
-    $dateSysteme=date("Y");
+
 	// debug mode ?  
 	$debug=false;
     if (isset($_GET['debug']))
     {
-      // Mode debug
-      $debug=true;
+    	// Mode debug
+    	$debug=true;
     }
 
-	// instantiate database and product object
-	$database = new Database();
-	$db = $database->getConnection();
-	$login = new Utilisateur($db);	 
-	$bouteille = new Bouteille($db);
 	// Si formulaire Recherche soumis et commentaire
 	if($_GET && isset($_GET['comment']))
 	{
 		$bouteille->commentaire=$_GET['comment'];
 	}
+	// instantiate database and product object
+	$database = new Database();
+	$db = $database->getConnection();
+	$bouteille = new Bouteille($db);
+	$login = new Utilisateur($db);	 
+
 	// show page header
 	$total_users = $login->countAll();
-	$total_rows = $bouteille->countAll();
-	$sum = $bouteille->sumAll();
-	// Recherche de tous les objets Emplacement
-	$total_emplacement = 0;
-	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+	$total_wines = $bouteille->countAll();
+	$total_bottles = $bouteille->sumAll();
+
+	if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
+		echo "<div class='jumbotron'>";
+		if (isLocalhost()) {
+	       	// mode loacalhost
+			echo "<h1>Gestion de ma cave à vin</h1><br>";
+			echo "<p class='lead'>La connexion est nécessaire pour utiliser l'application</p>";
+		} else {
+	      	// mode SAAS 
+			echo "<h1>Bienvenue</h1><br>";
+			echo "<p class='lead'>Bienvenue sur l'application de gestion de votre cave à vins. A ce jour, déjà ";
+			echo "<span id='totalUsers'>{$total_users}</span>&nbsp;utilisateur";
+			if ($total_users>1) { echo "s"; }
+			echo " utilisent l'application pour gérer <span id='totalVins'>{$total_wines}</span>&nbsp;vin";
+			if ($total_wines>1) {   echo "s";  }
+			echo " soit <span id='totalBouteilles'>{$total_bottles}</span>&nbsp;bouteille";
+			if ($total_bottles>1) {   echo "s";  }
+			echo "</span>.";
+			echo "<p>Vous pouvez tester l'application en vous connectant le compte <b><i>test</b></i> et le mot de passe <b><i>test</b></i> </p>";
+		}
+	       echo "<br><a href='login.php' class='btn btn-lg btn-success pull-right'>Connexion</a>";	
+		echo "<br><br></div>"; 
+    } else   {
+		include_once 'objects/Type.php';
+		include_once 'objects/Emplacement.php';
+    	$dateSysteme=date("Y");
+		// Recherche de tous les objets Emplacement
+		$total_emplacement = 0;
 		$emplacement = new Emplacement($db);
 		$emplacement->id_utilisateur = $_SESSION['id_utilisateur'];
 		$stmtEmplacment = $emplacement->readAll();
 		$total_emplacement = $stmtEmplacment->rowCount();
-	}
-	//set Session.Emplacement only here !
-	if ($total_emplacement>=1) {
-    	$_SESSION['emplacement']='O';
-	} else {
-    	$_SESSION['emplacement']='N';
-	}
-	// Row except smartphone
-    echo "<div class='row hidden-xs'>";
-	echo "<div  class='col-md-4 col-sm-4'>";
-	echo "<h2><span id='totalVins'>{$total_rows}</span> vin";
-	if ($total_rows>1) {   echo "s";  }
-	echo "</h2></div>";
-	echo "<div  class='col-md-4 col-sm-4'>";
-	echo "<h2 class='text-center'><span id='totalBouteilles'>{$sum}</span> ";
-	if ($sum>1) {
-		echo "<span id='titreBouteilles'>bouteilles</span> ";
-	}else{
-		echo "<span id='titreBouteilles'>bouteille</span> ";
-	}
-	echo "</h2></div>";
-    echo "<div  class='col-md-4 col-sm-4'>";
-	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-        echo "<div class='right-button-margin'>";
-		echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter un vin</a>";
-		echo "</div>";
-	}else {
-		echo "<h2 style='text-align:right'><span id='totalUsers'>{$total_users}</span>&nbsp;";
-		if ($total_users>1) {
-			echo "utilisateurs";
-		}else{
-			echo "utilisateur ";
+		//set Session.Emplacement only here !
+		if ($total_emplacement>=1) {
+	    	$_SESSION['emplacement']='O';
+		} else {
+	    	$_SESSION['emplacement']='N';
 		}
-		echo "</h2>";
-	}
-	echo "</div></div>";
-	// Row for smartphone
-    echo "<div class='row show-xs hidden-sm  hidden-md  hidden-lg'>";
-	echo "<div  class='col-xs-4'>";
-	echo "<h4><span id='totalVins'>{$total_rows}</span> vin";
-	if ($total_rows>1) {   echo "s";  }
-	echo "</h4></div>";
-	echo "<div  class='col-xs-5'>";
-	echo "<h4><span id='totalBouteilles'>{$sum}</span> bout.</h4></div>";
-    echo "<div  class='col-xs-3'>";
-	if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-        echo "<div><a href='ajout_bouteille.php' class='btn btn-primary pull-right'>Ajouter</a></div>";
-	}else {
-		echo "<h4><span id='totalUsers'>{$total_users}</span>&nbsp;util.</h4>";
-	}
-	echo "<br></div></div>";
-	// query bottles
-	$stmt = $bouteille->readAll();
-	if ($debug)
-	{
-			echo "Retour recherche : {$bouteille->error}<br>";
-			echo "Nb Bouteilles : {$stmt->rowCount()}<br>";
-			print_r($stmt);
-			echo "<br>";
-	}
+		// Row except smartphone
+	    echo "<div class='row hidden-xs'>";
+		echo "<div  class='col-md-4 col-sm-4'>";
+		echo "<h2><span id='totalVins'>{$total_wines}</span>&nbsp;vin";
+		if ($total_wines>1) 			{   echo "s";  }
+		echo "</h2></div>";
+		echo "<div  class='col-md-4 col-sm-4'>";
+		echo "<h2 class='text-center'><span id='totalBouteilles'>{$total_bottles}</span>&nbsp;bouteille";
+		if ($total_bottles>1) 			{  echo "s</span> "; }
+		echo "</h2></div>";
+	    echo "<div  class='col-md-4 col-sm-4'>";
+		if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+	        echo "<div class='right-button-margin'>";
+			echo "<a href='ajout_bouteille.php' class='btn  btn-primary pull-right'>Ajouter un vin</a>";
+			echo "</div>";
+		} else {
+			echo "<h2 style='text-align:right'><span id='totalUsers'>{$total_users}</span>&nbsp;utilisateur";
+			if ($total_users>1) 		{  echo "s";  }
+			echo "</h2>";
+		}
+		echo "</div></div>";
+		// Row for smartphone
+	    echo "<div class='row show-xs hidden-sm  hidden-md  hidden-lg'>";
+		echo "<div  class='col-xs-4'>";
+		echo "<h4><span id='totalVins'>{$total_wines}</span>&nbsp;vin";
+		if ($total_wines>1) 		{   echo "s";  }
+		echo "</h4></div>";
+		echo "<div  class='col-xs-5'>";
+		echo "<h4><span id='totalBouteilles'>{$total_bottles}</span> bout.</h4></div>";
+	    echo "<div  class='col-xs-3'>";
+		if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+	        echo "<div><a href='ajout_bouteille.php' class='btn btn-primary pull-right'>Ajouter</a></div>";
+		} else {
+			echo "<h4><span id='totalUsers'>{$total_users}</span>&nbsp;util.</h4>";
+		}
+		echo "<br></div></div>";
+		// query bottles
+		$stmt = $bouteille->readAll();
+		if ($debug)
+		{
+				echo "Retour recherche : {$bouteille->error}<br>";
+				echo "Nb Bouteilles : {$stmt->rowCount()}<br>";
+				print_r($stmt);
+				echo "<br>";
+		}
 
-?>
-
-
-
-<?php
-	// display the products if there are any
-	if($total_rows>0)
-	{
-	    $type = new Type($db);
-		echo "<div id='modal_confirm_yes_no' title='Confirm'></div>";
-	    echo "<table class='table table-striped table-hover table-responsive tablesorter' id='allVins' style='width:auto'>";
-				echo "<thead>";
-				echo "<tr class='tablesorter-ignoreRow'>";
-				echo "<td class='pager' colspan='9'>";
-				echo "<img src='lib/tablesorter/addons/pager/icons/first.png' class='first'/>";
-				echo "<img src='lib/tablesorter/addons/pager/icons/prev.png' class='prev'/>";
-				echo "<span class='pagedisplay'></span>";
-				echo "<img src='lib/tablesorter/addons/pager/icons/next.png' class='next'/>";
-				echo "<img src='lib/tablesorter/addons/pager/icons/last.png' class='last'/>";
-				echo "<select class='pagesize'>";
-				echo "<option value='10'>10</option>";
-				echo "<option value='20'>20</option>";
-				echo "<option value='50'>50</option>";
-				echo "<option value='100'>100</option>";
-				echo "</select>";
-				echo "</td>";
-				echo "</tr>";
-				echo "<tr>";
-	            echo "<th>Nom</th>";
-	            echo "<th class='hidden-xs'>Qté</th>";
-	            echo "<th class='colCouleur hidden-xs'>Type</th>";
-	            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Millesime</th>";
-	            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Apogée</th>";
-	            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-md hidden-xs'>Achat</th>";
-	            echo "<th class='hidden-sm hidden-xs'>AOC</th>";
-	            if ($total_emplacement>=1) {
-	            	echo "<th class='hidden-sm hidden-md hidden-xs'>Emplacement</th>";
-	            } else {
-	            	echo "<th class='hidden-sm hidden-md hidden-xs'>Région</th>";
-	            }
-				if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
-		            echo "<th class='titreOperations filter-false'>Opérations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>";
-				} else {
-		            echo "<th class='titreCavistes'>Caviste&nbsp;&nbsp;&nbsp;&nbsp;</th>";
-				}
-	        echo "</tr></thead>";
-
-
-	        echo "<tbody>";
-	 
-	        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-	 
+		// display the products if there are any
+		if($total_wines>0)
+		{
+		    $type = new Type($db);
+			echo "<div id='modal_confirm_yes_no' title='Confirm'></div>";
+		    echo "<table class='table table-striped table-hover table-responsive tablesorter' id='allVins' style='width:auto'>";
+			echo "<thead>";
+			echo "<tr class='tablesorter-ignoreRow'>";
+			echo "<td class='pager' colspan='9'>";
+			echo "<img src='lib/tablesorter/addons/pager/icons/first.png' class='first'/>";
+			echo "<img src='lib/tablesorter/addons/pager/icons/prev.png' class='prev'/>";
+			echo "<span class='pagedisplay'></span>";
+			echo "<img src='lib/tablesorter/addons/pager/icons/next.png' class='next'/>";
+			echo "<img src='lib/tablesorter/addons/pager/icons/last.png' class='last'/>";
+			echo "<select class='pagesize'>";
+			echo "<option value='10'>10</option>";
+			echo "<option value='20'>20</option>";
+			echo "<option value='50'>50</option>";
+			echo "<option value='100'>100</option>";
+			echo "</select>";
+			echo "</td>";
+			echo "</tr>";
+			echo "<tr>";
+            echo "<th>Nom</th>";
+            echo "<th class='hidden-xs'>Qté</th>";
+            echo "<th class='colCouleur hidden-xs'>Type</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Millesime</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Apogée</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-md hidden-xs'>Achat</th>";
+            echo "<th class='hidden-sm hidden-xs'>AOC</th>";
+            if ($total_emplacement>=1) {
+            	echo "<th class='hidden-sm hidden-md hidden-xs'>Emplacement</th>";
+            } else {
+            	echo "<th class='hidden-sm hidden-md hidden-xs'>Région</th>";
+            }
+			if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+	            echo "<th class='titreOperations filter-false'>Opérations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>";
+			} else {
+	            echo "<th class='titreCavistes'>Caviste&nbsp;&nbsp;&nbsp;&nbsp;</th>";
+			}
+        	echo "</tr></thead>";
+        	echo "<tbody>";
+		 
+	        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	            extract($row);
-	 
 	            echo "<tr>";
 	                echo "<td>{$nomb}</td>";
 	               
@@ -216,15 +221,12 @@
 	                else {
 	                	echo "<td>".$nomu."</td>";
 	                }
-	 
 	            echo "</tr>";
-	 
 	        }
-	 
-	    echo "</tbody></table>";
+	    	echo "</tbody></table>";
+		}
+		// End display the products if there are any
 
-
-	}
 ?>
 
 
@@ -532,5 +534,6 @@ $(document).ready(function() {
 
 
 <?php
+}
 include_once "footer.php";
 ?>
