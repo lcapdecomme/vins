@@ -46,8 +46,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
 
 	// Upload image 
-	print_r($_FILES);
-	if (isset($_FILES) && isset($_FILES['file'])) {
+	if (isset($_FILES) && isset($_FILES['file']) && isset($_FILES['file']['name'])  && strlen($_FILES['file']['name'])>0 ) {
 		$name     = $_FILES['file']['name'];
 		$tmpName  = $_FILES['file']['tmp_name'];
 		$error    = $_FILES['file']['error'];
@@ -160,7 +159,14 @@ echo "</div>";
         <label class="btn btn-sm btn-primary btn-file">
           Sélection de l'image <input type="file" name="file" style="display: none;" onchange="$('#upload-file-info').html($(this).val());">
         </label>
-        <span class='label label-info' id="upload-file-info"><?php echo $bouteille->nomPhoto; ?></span>
+        <?php
+        	$tmp="";
+        	if (strlen($bouteille->nomPhoto)>0) {
+	        	$tmpPhoto = explode("-", $bouteille->nomPhoto);
+	        	$tmp=$tmpPhoto[2];
+			}        	
+		    echo "<span class='label label-info' id='upload-file-info'>".$tmp."</span>";
+        ?>
     </div>
   </div>
 

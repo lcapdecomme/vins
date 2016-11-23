@@ -51,7 +51,7 @@ if($_POST )
                 echo "</div>";
 
               // Upload image 
-              if (isset($_FILES) && isset($_FILES['file'])) {
+              if (isset($_FILES) && isset($_FILES['file']) && isset($_FILES['file']['name'])  && strlen($_FILES['file']['name'])>0 ) {
                   $name     = $_FILES['file']['name'];
                   $tmpName  = $_FILES['file']['tmp_name'];
                   $error    = $_FILES['file']['error'];

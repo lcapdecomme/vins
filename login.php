@@ -33,6 +33,8 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse'])))
 
     if ($resultat)
     {
+          // Read user's information 
+          $login->read();
           // Create session 
           $_SESSION["id_utilisateur"]   = $login->id;
           $_SESSION["nom_utilisateur"]  = $login->nom;

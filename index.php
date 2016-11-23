@@ -31,6 +31,7 @@
 	$total_wines = $bouteille->countAll();
 	$total_bottles = $bouteille->sumAll();
 
+
 	if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
 		echo "<div class='jumbotron'>";
 		if (isLocalhost()) {
@@ -76,7 +77,7 @@
 		echo "</h2></div>";
 		echo "<div  class='col-md-4 col-sm-4'>";
 		echo "<h2 class='text-center'><span id='totalBouteilles'>{$total_bottles}</span>&nbsp;bouteille";
-		if ($total_bottles>1) 			{  echo "s</span> "; }
+		if ($total_bottles>1) 			{  echo "s</span>"; }
 		echo "</h2></div>";
 	    echo "<div  class='col-md-4 col-sm-4'>";
 		if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
@@ -230,7 +231,6 @@
 		}
 		// End display the products if there are any
 
-
 ?>
 
 
@@ -243,10 +243,10 @@
         <h4 class="modal-title" id="myModalLabel">Aperçu</h4>
       </div>
       <div class="modal-body">
-        <img src="#" id="imagepreview" style="width: 400px; height: 264px;" >
+        <img src="#" id="imagepreview" style="width: 400px; height: 300px;" class="img-responsive center-block">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>
@@ -420,13 +420,14 @@ $(document).ready(function() {
 		widthFixed	   : false
 	})
 	.tablesorterPager(pagerOptions)
-	.bind('filterEnd', function(event, data){
-	$('#totalVins').html( data.filteredRows );
-	var totalRows=0;
-	$("table tr:not(.filtered) td.colQuantite").each(function() {
-		totalRows=totalRows+parseInt($(this).text());
-		});
-	$('#totalBouteilles').html( totalRows );
+	.bind('filterEnd', function(event, data) {
+		$('#totalVins').html( data.filteredRows );
+		var totalRows=0;
+		$("table tr:not(.filtered) td.colQuantite").each(function() {
+			totalRows=totalRows + (parseInt($(this).text())|| 0);
+			console.log(parseInt($(this).text()));
+			});
+		$('#totalBouteilles').html( totalRows );
 	});
 
     });
@@ -530,6 +531,7 @@ $(document).ready(function() {
 	   $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
 	});
 
+	
 	/**
 	 * Initialisation de la page 
 	 * 
@@ -541,8 +543,10 @@ $(document).ready(function() {
      	<?php
      		if ( isset($_SESSION) && isset($_SESSION["nb_vins_affiches"]) ) { 
      			echo "$('table').trigger('pageSize', ";
-     			echo $_SESSION['nb_vins_affiches'];
+  				echo $_SESSION["nb_vins_affiches"];
      			echo ");";
+     		} else  {
+    			echo "$('table').trigger('pageSize', 10);";
      		}
      	?>
 	    /*var s = $(".titreOperations div").html();
@@ -551,7 +555,8 @@ $(document).ready(function() {
 		}*/
 	}
 
-	
+
+
 	/**
 	 * Initialisation de l'application dÃ¨s que le DOM est chargÃ©
 	 */
