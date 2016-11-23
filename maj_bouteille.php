@@ -9,6 +9,7 @@ if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
 include_once 'config/database.php';
 include_once 'objects/Bouteille.php';
 include_once 'objects/Cepage.php';     
+include_once 'config/util.php';
  
 $database = new Database();
 $db = $database->getConnection();
@@ -44,6 +45,75 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	if (isset($_POST['id_emplacement']))	$bouteille->id_emplacement = $_POST['id_emplacement'];
 	if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
 
+	// Upload image 
+	print_r($_FILES);
+	if (isset($_FILES) && isset($_FILES['file'])) {
+		$name     = $_FILES['file']['name'];
+		$tmpName  = $_FILES['file']['tmp_name'];
+		$error    = $_FILES['file']['error'];
+		$size     = $_FILES['file']['size'];
+		$ext      = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+		$response = "";
+		$success=false;
+		switch ($error) {
+	      case UPLOAD_ERR_OK:
+	          $valid = true;
+	          //validate file extensions
+	          if ( !in_array($ext, array('jpg','jpeg','png','gif')) ) {
+	              $valid = false;
+	              $response = 'Invalid file extension.';
+	          }
+	          //validate file size
+	          if ( $size/1024/1024 > 2 ) {
+	              $valid = false;
+	              $response = 'File size is exceeding maximum allowed size.';
+	          }
+	          //upload file
+	          if ($valid) {
+	              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-'.wd_remove_accents($name);
+	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+	              $success=move_uploaded_file($tmpName,$targetPath);
+	          }
+	          break;
+	      case UPLOAD_ERR_INI_SIZE:
+	          $response = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
+	          break;
+	      case UPLOAD_ERR_FORM_SIZE:
+	          $response = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';
+	          break;
+	      case UPLOAD_ERR_PARTIAL:
+	          $response = 'The uploaded file was only partially uploaded.';
+	          break;
+	      case UPLOAD_ERR_NO_FILE:
+	          $response = 'No file was uploaded.';
+	          break;
+	      case UPLOAD_ERR_NO_TMP_DIR:
+	          $response = 'Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.';
+	          break;
+	      case UPLOAD_ERR_CANT_WRITE:
+	          $response = 'Failed to write file to disk. Introduced in PHP 5.1.0.';
+	          break;
+	      case UPLOAD_ERR_EXTENSION:
+	          $response = 'File upload stopped by extension. Introduced in PHP 5.2.0.';
+	          break;
+	      default:
+	          $response = 'Unknown error';
+	      break;
+	  	}
+		if (!$success) {
+			// Affichage d'un message d'erreur suite à l'upload de la photo
+			echo "<div class=\"alert alert-danger alert-dismissable\">";
+			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+			echo $response;                   
+			echo "</div>";
+		} else  {
+			echo "<div class=\"alert alert-success alert-dismissable\">";
+			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+			  echo "La photo de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
+			echo "</div>";			
+			$bouteille->nomPhoto = $nomPhoto;
+		}
+	}
 	// update the bouteille
 	if($bouteille->update()){
 	echo "<div class=\"alert alert-success alert-dismissable\">";
@@ -51,7 +121,6 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	    echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
 	echo "</div>";
 	}
-
 	// if unable to update the bouteille, tell the user
 	else{
 	echo "<div class=\"alert alert-danger alert-dismissable\">";
@@ -72,10 +141,10 @@ echo "</div>";
 ?>
 
 <div class="row">
-<div class="col-md-4 hidden-sm hidden-xs"><img src="img/fond.png" alt="verre"></div>
-<div class="col-md-8 col-sm-12 col-xs-12">
+<div class="col-md-3 hidden-sm hidden-xs"><img src="img/fond.png" alt="verre"></div>
+<div class="col-md-9 col-sm-12 col-xs-12">
 <!-- Formulaire d'ajout d'une bouteille  -->
-<form action='maj_bouteille.php?id=<?php echo $id; ?>' method='post'  class="form-horizontal">
+<form action='maj_bouteille.php?id=<?php echo $id; ?>' method='post'  class="form-horizontal"  enctype="multipart/form-data">
 
 	<div class="form-group">
 		<label for="nomBouteille" class="col-sm-2 control-label">Nom</label>
@@ -83,6 +152,18 @@ echo "</div>";
 		<input type="text"  name='nom' class="form-control" id="nomBouteille" value='<?php echo $bouteille->nom; ?>' >
 		</div>
 	</div>
+
+
+  <div class="form-group">
+      <label for="file" class="col-sm-2 control-label">Etiquettes</label>
+      <div class="col-sm-10">
+        <label class="btn btn-sm btn-primary btn-file">
+          Sélection de l'image <input type="file" name="file" style="display: none;" onchange="$('#upload-file-info').html($(this).val());">
+        </label>
+        <span class='label label-info' id="upload-file-info"><?php echo $bouteille->nomPhoto; ?></span>
+    </div>
+  </div>
+
 
 	<div class="form-group">
 	<label for="id_type" class="col-sm-2 col-xs-4 control-label">Type</label>

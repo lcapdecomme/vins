@@ -26,6 +26,7 @@ class Bouteille{
     public $id_contenance;
     public $id_aoc;
     public $id_type;
+    public $nomPhoto;
     public $id_emplacement;
     public $id_utilisateur;
     public $timestamp;
@@ -58,38 +59,37 @@ class Bouteille{
         }
  
         try {
+            //write query
+            $query = "INSERT INTO `" . $this->table_name . "` (nom, quantite, achat, prixachat, prixestime, millesime, apogee, 
+                            commentaire, id_contenance, nomCepage, id_aoc, id_type, id_emplacement, id_utilisateur, ajout) 
+                            values (:nom, :quantite, :achat, :prixachat, :prixestime, :millesime, :apogee, 
+                            :commentaire, :id_contenance, :nomCepage, :id_aoc, :id_type, :id_emplacement, :id_utilisateur, :ajout)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':nom', $this->nom);
+            $stmt->bindParam(':quantite', $this->quantite);
+            $stmt->bindParam(':prixachat', $this->prixachat);
+            $stmt->bindParam(':prixestime', $this->prixestime);
+            $stmt->bindParam(':millesime', $this->millesime);
+            $stmt->bindParam(':achat', $this->achat );
+            $stmt->bindParam(':apogee', $this->apogee);
+            $stmt->bindParam(':commentaire', $this->commentaire);
+            $stmt->bindParam(':id_contenance', $this->id_contenance);
+            $stmt->bindParam(':nomCepage', $this->nomCepage);
+            $stmt->bindParam(':id_aoc', $this->id_aoc);
+            $stmt->bindParam(':id_type', $this->id_type);
+            $stmt->bindParam(':id_emplacement', $this->id_emplacement);
+            $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
+            $stmt->bindParam(':ajout', $this->timestamp);
 
-        //write query
-        $query = "INSERT INTO `" . $this->table_name . "` (nom, quantite, achat, prixachat, prixestime, millesime, apogee, 
-                        commentaire, id_contenance, nomCepage, id_aoc, id_type, id_emplacement, id_utilisateur, ajout) 
-                        values (:nom, :quantite, :achat, :prixachat, :prixestime, :millesime, :apogee, 
-                        :commentaire, :id_contenance, :nomCepage, :id_aoc, :id_type, :id_emplacement, :id_utilisateur, :ajout)";
- 
-        $stmt = $this->conn->prepare($query);
-     
-        $stmt->bindParam(':nom', $this->nom);
-        $stmt->bindParam(':quantite', $this->quantite);
-        $stmt->bindParam(':prixachat', $this->prixachat);
-        $stmt->bindParam(':prixestime', $this->prixestime);
-        $stmt->bindParam(':millesime', $this->millesime);
-        $stmt->bindParam(':achat', $this->achat );
-        $stmt->bindParam(':apogee', $this->apogee);
-        $stmt->bindParam(':commentaire', $this->commentaire);
-        $stmt->bindParam(':id_contenance', $this->id_contenance);
-        $stmt->bindParam(':nomCepage', $this->nomCepage);
-        $stmt->bindParam(':id_aoc', $this->id_aoc);
-        $stmt->bindParam(':id_type', $this->id_type);
-        $stmt->bindParam(':id_emplacement', $this->id_emplacement);
-        $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
-        $stmt->bindParam(':ajout', $this->timestamp);
-
-        if ($stmt->execute()) {
-            return true;
-        }   else{
-            return false;
-        }
-
-        }catch(PDOException $exception){
+            if ($stmt->execute()) {
+                $this->id = $this->conn->lastInsertId();
+                return true;
+            } else {
+                $errorInfo = $stmt->errorInfo();
+                $this->error = $errorInfo[2];
+                return false;
+            }
+        } catch(PDOException $exception) {
             echo "Create : " . $this->host . " : " . $exception->getMessage();
         }
  
@@ -98,7 +98,7 @@ class Bouteille{
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance
+                        quantite, commentaire, nomPhoto, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
@@ -111,7 +111,7 @@ class Bouteille{
                         WHERE b.id_utilisateur = ?" ;
         }else {
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance
+                        quantite, commentaire, nomPhoto, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
@@ -176,6 +176,7 @@ class Bouteille{
                     nomCepage  = :nomCepage,
                     id_aoc  = :id_aoc,
                     id_type  = :id_type,
+                    nomPhoto = :nomPhoto,
                     id_emplacement  = :id_emplacement,
                     id_utilisateur  = :id_utilisateur
                 WHERE
@@ -195,6 +196,7 @@ class Bouteille{
         $stmt->bindParam(':id_contenance', $this->id_contenance);
         $stmt->bindParam(':nomCepage', $this->nomCepage);
         $stmt->bindParam(':id_aoc', $this->id_aoc);
+        $stmt->bindParam(':nomPhoto', $this->nomPhoto);
         $stmt->bindParam(':id_type', $this->id_type);
         $stmt->bindParam(':id_emplacement', $this->id_emplacement);
         $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
@@ -291,7 +293,7 @@ class Bouteille{
     function readOne(){
         $query = "SELECT
                 nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, nomCepage, id_aoc, 
-                id_type, id_emplacement, id_utilisateur, ajout
+                id_type, id_emplacement, id_utilisateur, nomPhoto, ajout
             FROM
                 " . $this->table_name . "
             WHERE
@@ -313,6 +315,7 @@ class Bouteille{
         $this->id_contenance = $row['id_contenance'];
         $this->nomCepage = $row['nomCepage'];
         $this->id_aoc = $row['id_aoc'];
+        $this->nomPhoto = $row['nomPhoto'];
         $this->id_type = $row['id_type'];
         $this->id_emplacement = $row['id_emplacement'];
         $this->id_utilisateur = $row['id_utilisateur'];

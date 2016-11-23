@@ -208,7 +208,7 @@ td.pager {
 #allVins {
 	width: 100% !important;
 }
-table tr td a, table tr td a:link, table tr td a:visited {
+table tr td a.btn, table tr td a.btn:link, table tr td a.btn:visited {
     color:white !important;
 }
 html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-header a.navbar-brand {
@@ -219,6 +219,11 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
 .navbar-right {
     margin-right: -7px !important;
 }
+#allVins tbody a.enlarge span {
+    color: #286090 !important;
+}
+
+
     </style>
  
  
@@ -277,37 +282,40 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
          <?php
         if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
+            // Liste des nomenclatures et critères de recherche uniquement sur la page d'accueil
+            if (basename($_SERVER['PHP_SELF'])=="index.php") {
             ?>
-        <ul class="nav navbar-nav hidden-sm">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Nomenclatures <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="nomenc_cepage.php">Cépage</a></li>
-                <li><a href="nomenc_aoc.php">Appelation</a></li>
-                <li><a href="nomenc_contenance.php">Contenance</a></li>
-                <li class="divider"></li>
-                <li><a href="nomenc_vins.php">Vins</a></li>
-              </ul>
-            </li>
-        </ul>
-        <form class="navbar-form navbar-left visible-lg visible-md"  method='GET' action='index.php'>
-            <div class="form-group">
-              <input type="text" class="form-control" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
-            </div>
-            <button type="submit" class="btn btn-primary">Rechercher</button>
-        </form>
-        <form class="navbar-form navbar-left visible-xs visible-sm"  method='GET' action='index.php'>
-            <div class="form-group">
-              <input type="text" class="form-control input-sm" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
-            </div>
-            <button type="submit" class="btn btn-sm btn-primary">Rechercher</button>
-        </form>
-        <form class="navbar-form navbar-left visible-lg visible-md"  method='POST' action='index.php'>
-            <button type="submit" class="btn btn-primary reset">Effacer le filtre</button>
-        </form>
-        <form class="navbar-form navbar-left visible-xs visible-sm"  method='POST' action='index.php'>
-            <button type="submit" class="btn btn-sm btn-primary reset">Effacer</button>
-        </form>
+                <ul class="nav navbar-nav hidden-sm">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Nomenclatures <span class="caret"></span></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="nomenc_cepage.php">Cépage</a></li>
+                        <li><a href="nomenc_aoc.php">Appelation</a></li>
+                        <li><a href="nomenc_contenance.php">Contenance</a></li>
+                        <li class="divider"></li>
+                        <li><a href="nomenc_vins.php">Vins</a></li>
+                      </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left visible-lg visible-md"  method='GET' action='index.php'>
+                    <div class="form-group">
+                      <input type="text" class="form-control" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </form>
+                <form class="navbar-form navbar-left visible-xs visible-sm"  method='GET' action='index.php'>
+                    <div class="form-group">
+                      <input type="text" class="form-control input-sm" name='comment' placeholder="Commentaires" value='<?php if($_GET && isset($_GET['comment'])) echo $_GET['comment']; ?>'>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Rechercher</button>
+                </form>
+                <form class="navbar-form navbar-left visible-lg visible-md"  method='POST' action='index.php'>
+                    <button type="submit" class="btn btn-primary reset">Effacer le filtre</button>
+                </form>
+                <form class="navbar-form navbar-left visible-xs visible-sm"  method='POST' action='index.php'>
+                    <button type="submit" class="btn btn-sm btn-primary reset">Effacer</button>
+                </form>
+            <?php  } ?>
  
                 <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -322,9 +330,7 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
                   </ul>
                 </li>
                 </ul>
-              <?php
-        }
-        ?>
+        <?php } ?>
       
     </div><!-- /.navbar-collapse -->
 

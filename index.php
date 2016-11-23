@@ -160,7 +160,12 @@
 	        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	            extract($row);
 	            echo "<tr>";
-	                echo "<td>{$nomb}</td>";
+	                echo "<td>{$nomb}";
+	                if (isset($nomPhoto) && strlen($nomPhoto)>0) {
+	                	$nomComplet=  'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+	                	echo "&nbsp;<a href='#' class='enlarge' data-src='".$nomComplet."'><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
+	                }
+	                echo "</td>";
 	               
 	                echo "<td class='colQuantite hidden-xs' id='quantite_{$id}' style='text-align:center;'>{$quantite}</td>";
 	                echo "<td class='textAndImg colCouleur hidden-xs'>";
@@ -173,13 +178,19 @@
 	                    if ($id_type==6)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_aperitifs.png' title='Apéritifs' />";
 	                echo "</td>";
 
+	                         		
+	                if ($achat<>0) {
+	                	echo "<td class='hidden-sm hidden-md hidden-xs' style='text-align:center;'>{$achat}</td>";
+	                }
+	                else {
+	                	echo "<td class='hidden-sm hidden-md hidden-xs' ></td>";
+	                }
 	                if ($millesime<>0) {
 	                	echo "<td class='hidden-xs' style='text-align:center;'>{$millesime}</td>";
 	                }
 	                else {
 	                	echo "<td class='hidden-xs'></td>";
 	                }
-
 	                if ($apogee<>0) {
 						if ($dateSysteme>=$apogee) {
 		                	echo "<td class='hidden-sm hidden-xs' style='text-align:center;'><span class='apogee'>{$apogee}</span></td>";
@@ -191,15 +202,7 @@
 	                else {
 	                	echo "<td class='hidden-sm hidden-xs'></td>";
 	                }
-	                
-	                         		
-	                if ($achat<>0) {
-	                	echo "<td class='hidden-sm hidden-md hidden-xs' style='text-align:center;'>{$achat}</td>";
-	                }
-	                else {
-	                	echo "<td class='hidden-sm hidden-md hidden-xs' ></td>";
-	                }
-	 
+
 	                // AOC
 	                echo "<td class='hidden-sm hidden-xs'>{$appellation}</td>";
 			        // Emplacement de la bouteille ou région ?
@@ -227,7 +230,29 @@
 		}
 		// End display the products if there are any
 
+
 ?>
+
+
+<!-- Creates the bootstrap modal where the image will appear -->
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Aperçu</h4>
+      </div>
+      <div class="modal-body">
+        <img src="#" id="imagepreview" style="width: 400px; height: 264px;" >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
  <script type="text/javascript">
@@ -498,6 +523,11 @@ $(document).ready(function() {
 			});
 		}
 		return false;
+	});
+
+	$("a.enlarge").on("click", function() {
+	   $('#imagepreview').attr('src', $(this).attr('data-src')); // here asign the image to the modal when the user click the enlarge link
+	   $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
 	});
 
 	/**
