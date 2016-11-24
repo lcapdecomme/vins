@@ -141,9 +141,9 @@
             echo "<th>Nom</th>";
             echo "<th class='hidden-xs'>Qté</th>";
             echo "<th class='colCouleur hidden-xs'>Type</th>";
-            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Millesime</th>";
-            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Apogée</th>";
-            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-md hidden-xs'>Achat</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Achat</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Millesime</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-md hidden-xs'>Apogée</th>";
             echo "<th class='hidden-sm hidden-xs'>AOC</th>";
             if ($total_emplacement>=1) {
             	echo "<th class='hidden-sm hidden-md hidden-xs'>Emplacement</th>";
