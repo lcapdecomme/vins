@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Sam 05 Novembre 2016 à 17:26
+-- Généré le :  Jeu 24 Novembre 2016 à 03:12
 -- Version du serveur :  5.7.14
 -- Version de PHP :  5.6.25
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `vins`
 --
-CREATE DATABASE IF NOT EXISTS `vins` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `vins`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +26,6 @@ USE `vins`;
 -- Structure de la table `aoc`
 --
 
-DROP TABLE IF EXISTS `aoc`;
 CREATE TABLE `aoc` (
   `id` int(10) NOT NULL,
   `appellation` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -340,7 +337,6 @@ INSERT INTO `aoc` (`id`, `appellation`, `region`, `sousdivision`) VALUES
 -- Structure de la table `bouteille`
 --
 
-DROP TABLE IF EXISTS `bouteille`;
 CREATE TABLE `bouteille` (
   `id` int(11) NOT NULL,
   `nom` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
@@ -349,7 +345,6 @@ CREATE TABLE `bouteille` (
   `id_contenance` int(10) DEFAULT NULL,
   `id_aoc` int(10) DEFAULT NULL,
   `id_emplacement` int(10) DEFAULT NULL,
-  `id_cepage` int(10) DEFAULT NULL,
   `id_type` int(10) DEFAULT NULL,
   `id_utilisateur` int(10) NOT NULL,
   `prixachat` decimal(10,2) DEFAULT NULL,
@@ -357,16 +352,15 @@ CREATE TABLE `bouteille` (
   `achat` int(4) DEFAULT NULL,
   `quantite` int(5) DEFAULT NULL,
   `commentaire` text COLLATE utf8_unicode_ci,
-  `ajout` date DEFAULT NULL
+  `ajout` date DEFAULT NULL,
+  `nomCepage` varchar(300) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nomPhoto` varchar(1000) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
 
 --
 -- Structure de la table `cepage`
 --
 
-DROP TABLE IF EXISTS `cepage`;
 CREATE TABLE `cepage` (
   `id` int(10) NOT NULL,
   `superficie` int(10) NOT NULL,
@@ -454,7 +448,6 @@ INSERT INTO `cepage` (`id`, `superficie`, `nom`, `couleur`, `origine`, `annee`) 
 -- Structure de la table `contenance`
 --
 
-DROP TABLE IF EXISTS `contenance`;
 CREATE TABLE `contenance` (
   `id` int(10) NOT NULL,
   `ordre` int(5) NOT NULL,
@@ -489,27 +482,16 @@ INSERT INTO `contenance` (`id`, `ordre`, `nom`, `volume`, `equivalence`) VALUES
 -- Structure de la table `emplacement`
 --
 
-DROP TABLE IF EXISTS `emplacement`;
 CREATE TABLE `emplacement` (
   `id` int(10) NOT NULL,
-  `lieu` varchar(100) NOT NULL
+  `lieu` varchar(100) NOT NULL,
+  `id_utilisateurg` int(10) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Contenu de la table `emplacement`
---
-
-INSERT INTO `emplacement` (`id`, `lieu`) VALUES
-(1, 'Toulouse'),
-(2, 'Gaillac');
-
--- --------------------------------------------------------
 
 --
 -- Structure de la table `referentiel`
 --
 
-DROP TABLE IF EXISTS `referentiel`;
 CREATE TABLE `referentiel` (
   `id` int(10) NOT NULL,
   `nom` varchar(100) NOT NULL,
@@ -16008,7 +15990,6 @@ INSERT INTO `referentiel` (`id`, `nom`, `region`, `id_type`) VALUES
 -- Structure de la table `type`
 --
 
-DROP TABLE IF EXISTS `type`;
 CREATE TABLE `type` (
   `id` int(10) NOT NULL,
   `libelle` varchar(50) COLLATE utf8_unicode_ci NOT NULL
@@ -16032,14 +16013,23 @@ INSERT INTO `type` (`id`, `libelle`) VALUES
 -- Structure de la table `utilisateur`
 --
 
-DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE `utilisateur` (
   `id` int(11) NOT NULL,
   `nom` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
   `mdp` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
   `mail` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `nb_vins_affiches` int(5) DEFAULT NULL,
   `ajout` date DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Contenu de la table `utilisateur`
+--
+
+INSERT INTO `utilisateur` (`id`, `nom`, `mdp`, `mail`, `nb_vins_affiches`, `ajout`) VALUES
+(14, 'lionel', 'e', 'lion@gmail.com', 20, '2016-11-06'),
+(13, 'test', 'h', 'test2@canaillou.fr', NULL, '2016-11-05'),
+(15, 'a', 'a', 'a@freE.fr', 50, '2016-11-11');
 
 --
 -- Index pour les tables exportées
@@ -16112,7 +16102,7 @@ ALTER TABLE `aoc`
 -- AUTO_INCREMENT pour la table `bouteille`
 --
 ALTER TABLE `bouteille`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT pour la table `cepage`
 --
@@ -16127,7 +16117,7 @@ ALTER TABLE `contenance`
 -- AUTO_INCREMENT pour la table `emplacement`
 --
 ALTER TABLE `emplacement`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT pour la table `referentiel`
 --
@@ -16142,7 +16132,7 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

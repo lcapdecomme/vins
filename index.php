@@ -164,7 +164,10 @@
 	                echo "<td>{$nomb}";
 	                if (isset($nomPhoto) && strlen($nomPhoto)>0) {
 	                	$nomComplet=  'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
-	                	echo "&nbsp;<a href='#' class='enlarge' data-src='".$nomComplet."'><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
+	                	if (file_exists($nomComplet) ) {
+	                		list($width, $height) = getimagesize($nomComplet);
+	                		echo "&nbsp;<a href='#' class='enlarge' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."'><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
+	                }	
 	                }
 	                echo "</td>";
 	               
@@ -243,7 +246,7 @@
         <h4 class="modal-title" id="myModalLabel">Aperçu</h4>
       </div>
       <div class="modal-body">
-        <img src="#" id="imagepreview" style="width: 400px; height: 300px;" class="img-responsive center-block">
+        <img src="#" id="imagepreview" class="img-responsive center-block">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
@@ -425,7 +428,6 @@ $(document).ready(function() {
 		var totalRows=0;
 		$("table tr:not(.filtered) td.colQuantite").each(function() {
 			totalRows=totalRows + (parseInt($(this).text())|| 0);
-			console.log(parseInt($(this).text()));
 			});
 		$('#totalBouteilles').html( totalRows );
 	});
@@ -508,7 +510,7 @@ $(document).ready(function() {
 			$.ajax({
 				valueId : valueId,
 				valueQte : valueQte,
-												url: "scripts/wsBoire.php",
+				url: "scripts/wsBoire.php",
 				type: "POST",
 				data: {id : valueId, qte : valueQte},
 				success : function(msg) {
@@ -528,6 +530,11 @@ $(document).ready(function() {
 
 	$("a.enlarge").on("click", function() {
 	   $('#imagepreview').attr('src', $(this).attr('data-src')); // here asign the image to the modal when the user click the enlarge link
+	   if ($(this).attr('data-width')>$(this).attr('data-height')) {
+		   	$('#imagepreview').css('width', '400px'); // Landscape view
+	   } else {
+		   	$('#imagepreview').css('width', '300px'); // Portrait view
+	   }
 	   $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
 	});
 

@@ -13,6 +13,7 @@ User to test : *test/test*
 
 ## Versions
 
+* v0.6 : Upload picture
 * v0.5 : Multiple cepage
 * v0.4 : Storage Managment
 * v0.3 : Preference page, export CSV

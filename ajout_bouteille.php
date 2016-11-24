@@ -65,43 +65,49 @@ if($_POST )
                           //validate file extensions
                           if ( !in_array($ext, array('jpg','jpeg','png','gif')) ) {
                               $valid = false;
-                              $response = 'Invalid file extension.';
+                              $response = "L'extension du fichier est invalide.";
                           }
                           //validate file size
                           if ( $size/1024/1024 > 2 ) {
                               $valid = false;
-                              $response = 'File size is exceeding maximum allowed size.';
+                              $response = "La taille du fichier a dépassé la taille autorisée.";
                           }
                           //upload file
                           if ($valid) {
+                              // Replace - by _
+                              $name=str_replace('-', '_', $name);
+                              // Length limit of name file on this server is 20 car. (minus id user and id wine = 10 ) !!!!
+                              if (!isLocalhost()) {
+                                  $name=substr( $name, 0, 10);
+                              }
                               $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-'.wd_remove_accents($name);
                               $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
                               $success=move_uploaded_file($tmpName,$targetPath);
                           }
                           break;
                       case UPLOAD_ERR_INI_SIZE:
-                          $response = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
+                          $response = "La taille du fichier dépasse la taille autorisée par le fichier php.ini.";
                           break;
                       case UPLOAD_ERR_FORM_SIZE:
-                          $response = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';
+                          $response = "La taille du fichier dépasse la directive MAX_FILE_SIZE du formulaire.";
                           break;
                       case UPLOAD_ERR_PARTIAL:
-                          $response = 'The uploaded file was only partially uploaded.';
+                          $response = "Le fichier a été partiellement téléchargé.";
                           break;
                       case UPLOAD_ERR_NO_FILE:
-                          $response = 'No file was uploaded.';
+                          $response = "Aucun fichier n'a été téléchargé.";
                           break;
                       case UPLOAD_ERR_NO_TMP_DIR:
-                          $response = 'Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.';
+                          $response = "Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.";
                           break;
                       case UPLOAD_ERR_CANT_WRITE:
-                          $response = 'Failed to write file to disk. Introduced in PHP 5.1.0.';
+                          $response = "Erreur d'écriture du fichier sur le disque (PHP 5.1.0).";
                           break;
                       case UPLOAD_ERR_EXTENSION:
-                          $response = 'File upload stopped by extension. Introduced in PHP 5.2.0.';
+                          $response = "Le fichier téléchargé a été stoppé par son extension (PHP 5.2.0).";
                           break;
                       default:
-                          $response = 'Unknown error';
+                          $response = "Erreur inconnu";
                       break;
                   }
                   if (!$success) {
@@ -207,7 +213,7 @@ if($_POST )
   </div>
 
   <div class="form-group">
-      <label for="file" class="col-sm-2 control-label">Etiquettes</label>
+      <label for="file" class="col-sm-2 control-label">Etiquette</label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
           Sélection de l'image <input type="file" name="file" style="display: none;" onchange="$('#upload-file-info').html($(this).val());">
