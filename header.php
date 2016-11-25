@@ -20,7 +20,8 @@ isCookieOk();
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="description" content="Wine cellar application">
 <meta name="author" content="Lionel C.">
-
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<link rel="icon" href="img/favicon.ico" type="image/x-icon">
 
 <title><?php echo $page_title; ?></title>
  
