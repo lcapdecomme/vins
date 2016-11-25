@@ -98,7 +98,8 @@ class Bouteille{
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, nomPhoto, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance
+                        quantite, commentaire, nomPhoto, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin
+                        , c.nom as type_contenance, c.volume as type_volume
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
@@ -111,7 +112,8 @@ class Bouteille{
                         WHERE b.id_utilisateur = ?" ;
         }else {
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, nomPhoto, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, c.nom as type_contenance
+                        quantite, commentaire, nomPhoto, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, 
+                        c.nom as type_contenance, c.volume as type_volume
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement

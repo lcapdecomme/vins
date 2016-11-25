@@ -25,7 +25,6 @@ isCookieOk();
 
 <title><?php echo $page_title; ?></title>
  
-    <!-- some custom CSS -->
     <style>
     @media (min-width:1px)and (max-width:767px) {
 
@@ -35,16 +34,18 @@ isCookieOk();
         .tablesorter-filter-row > td:nth-child(5),
         .tablesorter-filter-row > td:nth-child(6),
         .tablesorter-filter-row > td:nth-child(7),
-        .tablesorter-filter-row > td:nth-child(8)
+        .tablesorter-filter-row > td:nth-child(8),
+        .tablesorter-filter-row > td:nth-child(9)
          {
             display: none !important;
         };
     }
     @media (min-width:768px)and (max-width:991px) {
+        .tablesorter-filter-row > td:nth-child(3),
         .tablesorter-filter-row > td:nth-child(5),
         .tablesorter-filter-row > td:nth-child(6),
-        .tablesorter-filter-row > td:nth-child(7),
-        .tablesorter-filter-row > td:nth-child(8)
+        .tablesorter-filter-row > td:nth-child(8),
+        .tablesorter-filter-row > td:nth-child(9)
          {
             border: 1px solid red;
             display: none !important;
@@ -52,12 +53,16 @@ isCookieOk();
         };
     }
     @media (min-width:992px)and (max-width:1199px) {
-        .tablesorter-filter-row > td:nth-child(6),
+        .tablesorter-filter-row > td:nth-child(5),
         .tablesorter-filter-row > td:nth-child(8) {
             border: 1px solid red;
             display: none !important;
             width: 0px;
         };
+    }
+    /* La colonne Opérations (10) a une taille minimum pour que les icones restent alignées */
+    .tablesorter-filter-row > td:nth-child(10) {
+        min-width: 110px;
     }
     table#allVins tbody tr td a.btn.btn-primary {
         color: white;

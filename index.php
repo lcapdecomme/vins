@@ -69,6 +69,7 @@
 		} else {
 	    	$_SESSION['emplacement']='N';
 		}
+		echo "<br class='row hidden-xs'>";
 		// Row except smartphone
 	    echo "<div class='row hidden-xs'>";
 		echo "<div  class='col-md-4 col-sm-4'>";
@@ -91,7 +92,7 @@
 		}
 		echo "</div></div>";
 		// Row for smartphone
-	    echo "<div class='row show-xs hidden-sm  hidden-md  hidden-lg'>";
+	    echo "<div class='row show-xs hidden-sm hidden-md  hidden-lg'>";
 		echo "<div  class='col-xs-4'>";
 		echo "<h4><span id='totalVins'>{$total_wines}</span>&nbsp;vin";
 		if ($total_wines>1) 		{   echo "s";  }
@@ -114,7 +115,7 @@
 				print_r($stmt);
 				echo "<br>";
 		}
-
+		echo "<br class='row hidden-xs'>";
 		// display the products if there are any
 		if($total_wines>0)
 		{
@@ -123,7 +124,7 @@
 		    echo "<table class='table table-striped table-hover table-responsive tablesorter' id='allVins' style='width:auto'>";
 			echo "<thead>";
 			echo "<tr class='tablesorter-ignoreRow'>";
-			echo "<td class='pager' colspan='9'>";
+			echo "<td class='pager' colspan='10'>";
 			echo "<img src='lib/tablesorter/addons/pager/icons/first.png' class='first'/>";
 			echo "<img src='lib/tablesorter/addons/pager/icons/prev.png' class='prev'/>";
 			echo "<span class='pagedisplay'></span>";
@@ -140,10 +141,11 @@
 			echo "<tr>";
             echo "<th>Nom</th>";
             echo "<th class='hidden-xs'>Qté</th>";
+            echo "<th class='hidden-sm hidden-xs'>Vol.</th>";
             echo "<th class='colCouleur hidden-xs'>Type</th>";
-            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Achat</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-md hidden-sm hidden-xs'>Achat</th>";
             echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Millesime</th>";
-            echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-md hidden-xs'>Apogée</th>";
+            echo "<th class='filter-select filter-onlyAvail hidden-xs'>Apogée</th>";
             echo "<th class='hidden-sm hidden-xs'>AOC</th>";
             if ($total_emplacement>=1) {
             	echo "<th class='hidden-sm hidden-md hidden-xs'>Emplacement</th>";
@@ -170,9 +172,9 @@
 	                }	
 	                }
 	                echo "</td>";
-	               
 	                echo "<td class='colQuantite hidden-xs' id='quantite_{$id}' style='text-align:center;'>{$quantite}</td>";
-	                echo "<td class='textAndImg colCouleur hidden-xs'>";
+	                echo "<td class='hidden-sm hidden-xs' style='text-align:center;'>{$type_volume}</td>";
+	                echo "<td class='textAndImg colCouleur hidden-xs'  style='text-align:center;'> ";
 	                    $type->id = $id_type;
 	                    if ($id_type==1)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_rouge.png' title='Rouge' />";
 	                    if ($id_type==2)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_blanc.png' title='Blanc' />";
@@ -190,17 +192,17 @@
 	                	echo "<td class='hidden-sm hidden-md hidden-xs' ></td>";
 	                }
 	                if ($millesime<>0) {
-	                	echo "<td class='hidden-xs' style='text-align:center;'>{$millesime}</td>";
+	                	echo "<td class='hidden-sm hidden-xs' style='text-align:center;'>{$millesime}</td>";
 	                }
 	                else {
-	                	echo "<td class='hidden-xs'></td>";
+	                	echo "<td class='hidden-sm hidden-xs'></td>";
 	                }
 	                if ($apogee<>0) {
 						if ($dateSysteme>=$apogee) {
-		                	echo "<td class='hidden-sm hidden-xs' style='text-align:center;'><span class='apogee'>{$apogee}</span></td>";
+		                	echo "<td class='hidden-xs' style='text-align:center;'><span class='apogee'>{$apogee}</span></td>";
 	                	}
 	                	else {
-		                	echo "<td class='hidden-sm hidden-xs' style='text-align:center;'>{$apogee}</td>";
+		                	echo "<td class='hidden-xs' style='text-align:center;'>{$apogee}</td>";
 						}
 	                }
 	                else {
@@ -232,10 +234,9 @@
 	        }
 	    	echo "</tbody></table>";
 		}
+		echo "<br class='row hidden-xs'>";
 		// End display the products if there are any
-
 ?>
-
 
 <!-- Creates the bootstrap modal where the image will appear -->
 <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -410,7 +411,6 @@ $(document).ready(function() {
         // widths will not be saved. Previous saved values will be restored
         // on page reload
         resizable: true,
-        resizable_widths : [ '20%', '5%', '15%', '5%', '5%', '5%', '5%', '5%', '15%'],
         // saveSort widget: If this option is set to false, new sorts will
         // not be saved. Any previous saved sort will be restored on page
         // reload.
