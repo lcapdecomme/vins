@@ -16023,15 +16023,6 @@ CREATE TABLE `utilisateur` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Contenu de la table `utilisateur`
---
-
-INSERT INTO `utilisateur` (`id`, `nom`, `mdp`, `mail`, `nb_vins_affiches`, `ajout`) VALUES
-(14, 'lionel', 'e', 'lion@gmail.com', 20, '2016-11-06'),
-(13, 'test', 'h', 'test2@canaillou.fr', NULL, '2016-11-05'),
-(15, 'a', 'a', 'a@freE.fr', 50, '2016-11-11');
-
---
 -- Index pour les tables exportées
 --
 
@@ -16102,7 +16093,7 @@ ALTER TABLE `aoc`
 -- AUTO_INCREMENT pour la table `bouteille`
 --
 ALTER TABLE `bouteille`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT pour la table `cepage`
 --
@@ -16117,7 +16108,7 @@ ALTER TABLE `contenance`
 -- AUTO_INCREMENT pour la table `emplacement`
 --
 ALTER TABLE `emplacement`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT pour la table `referentiel`
 --
@@ -16132,7 +16123,7 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

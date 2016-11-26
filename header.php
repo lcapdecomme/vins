@@ -228,7 +228,10 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
 #allVins tbody a.enlarge span {
     color: #286090 !important;
 }
-
+.cacheca {
+    position: relative;
+    left:-350px;
+}
 
     </style>
  

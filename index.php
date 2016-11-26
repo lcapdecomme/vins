@@ -49,7 +49,7 @@
 			echo " soit <span id='totalBouteilles'>{$total_bottles}</span>&nbsp;bouteille";
 			if ($total_bottles>1) {   echo "s";  }
 			echo "</span>.";
-			echo "<p>Vous pouvez tester l'application en vous connectant le compte <b><i>test</b></i> et le mot de passe <b><i>test</b></i> </p>";
+			echo "<p>Vous pouvez tester l'application avec le compte <b><i>test</b></i> et le mot de passe <b><i>test</b></i> </p>";
 		}
 	       echo "<br><a href='login.php' class='btn btn-lg btn-success pull-right'>Connexion</a>";	
 		echo "<br><br></div>"; 
@@ -176,12 +176,12 @@
 	                echo "<td class='hidden-sm hidden-xs' style='text-align:center;'>{$type_volume}</td>";
 	                echo "<td class='textAndImg colCouleur hidden-xs'  style='text-align:center;'> ";
 	                    $type->id = $id_type;
-	                    if ($id_type==1)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_rouge.png' title='Rouge' />";
-	                    if ($id_type==2)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_blanc.png' title='Blanc' />";
-	                    if ($id_type==3)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_rose.png' title='Rosé' />";
-	                    if ($id_type==4)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_doux.png' title='Vin doux / moelleux' />";
-	                    if ($id_type==5)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_effervescent.png' title='Vin effervescent / champagne' />";
-	                    if ($id_type==6)	echo "$id_type&nbsp;&nbsp;<img src='img/logo_aperitifs.png' title='Apéritifs' />";
+	                    if ($id_type==1)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_rouge.png' title='Rouge' />";
+	                    if ($id_type==3)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_rose.png' title='Rosé' />";
+	                    if ($id_type==4)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_doux.png' title='Vin doux / moelleux' />";
+	                    if ($id_type==5)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_effervescent.png' title='Vin effervescent / champagne' />";
+	                    if ($id_type==6)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_aperitifs.png' title='Apéritifs' />";
+	                    if ($id_type==2)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_blanc.png' title='Blanc' />";
 	                echo "</td>";
 
 	                         		
