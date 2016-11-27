@@ -62,7 +62,7 @@ isCookieOk();
     }
     /* La colonne Opérations (10) a une taille minimum pour que les icones restent alignées */
     .tablesorter-filter-row > td:nth-child(10) {
-        min-width: 110px;
+        min-width: 120px;
     }
     table#allVins tbody tr td a.btn.btn-primary {
         color: white;
@@ -232,9 +232,17 @@ html body nav.navbar.navbar-default.navbar-fixed-top div.container div.navbar-he
     position: relative;
     left:-350px;
 }
-
-    </style>
- 
+/* Liens sur le nom des bouteilles dans le tableau toujours en bleu et en gras */
+a.linkBottle, a.linkBottle:link, a.linkBottle:visited {
+    color: #1c94c4;
+    text-decoration: none;
+    font-weight: 900;
+}
+/* Photos de la bouteille sur la page de la maj prennent 100% de l'espace dédié */
+img.viewBottle {
+    width:100%;
+}
+</style>
  
  
     <!-- Bootstrap -->

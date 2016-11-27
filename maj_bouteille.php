@@ -11,6 +11,14 @@ include_once 'objects/Bouteille.php';
 include_once 'objects/Cepage.php';     
 include_once 'config/util.php';
  
+	// debug mode ?  
+	$debug=false;
+    if (isset($_GET['debug']))
+    {
+    	// Mode debug
+    	$debug=true;
+    }
+
 $database = new Database();
 $db = $database->getConnection();
 $cepage = new Cepage($db);
@@ -33,19 +41,30 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	// set bouteille property values
 	if (isset($_POST['nom']))   			$bouteille->nom = $_POST['nom'];
 	if (isset($_POST['quantite']))   		$bouteille->quantite = $_POST['quantite'];
-	if (isset($_POST['achat']))   		$bouteille->achat = $_POST['achat'];
-	if (isset($_POST['prixachat']))   	$bouteille->prixachat = $_POST['prixachat'];
-	if (isset($_POST['prixestime']))   	$bouteille->prixestime = $_POST['prixestime'];
-	if (isset($_POST['millesime']))   	$bouteille->millesime = $_POST['millesime'];
-	if (isset($_POST['apogee']))   		$bouteille->apogee = $_POST['apogee'];
-	if (isset($_POST['id_contenance']))   $bouteille->id_contenance = $_POST['id_contenance'];
-    if (isset($_POST['nomCepage']))   $bouteille->nomCepage = $_POST['nomCepage'];
-	if (isset($_POST['id_aoc']))   		$bouteille->id_aoc = $_POST['id_aoc'];
+	if (isset($_POST['achat']))   			$bouteille->achat = $_POST['achat'];
+	if (isset($_POST['prixachat']))   		$bouteille->prixachat = $_POST['prixachat'];
+	if (isset($_POST['prixestime']))   		$bouteille->prixestime = $_POST['prixestime'];
+	if (isset($_POST['millesime']))   		$bouteille->millesime = $_POST['millesime'];
+	if (isset($_POST['apogee']))   			$bouteille->apogee = $_POST['apogee'];
+	if (isset($_POST['id_contenance']))   	$bouteille->id_contenance = $_POST['id_contenance'];
+    if (isset($_POST['nomCepage']))   		$bouteille->nomCepage = $_POST['nomCepage'];
+	if (isset($_POST['id_aoc']))   			$bouteille->id_aoc = $_POST['id_aoc'];
 	if (isset($_POST['id_type']))   		$bouteille->id_type = $_POST['id_type'];
 	if (isset($_POST['id_emplacement']))	$bouteille->id_emplacement = $_POST['id_emplacement'];
+	if (isset($_POST['empl_x']))			$bouteille->empl_x = $_POST['empl_x'];
+	if (isset($_POST['empl_y']))			$bouteille->empl_y = $_POST['empl_y'];
 	if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
 
+
 	// Upload image 
+	if ($_POST['debug']) {
+		print_r($_FILES);
+		print_r($_FILES['file']);
+		print_r("name:".$_FILES['file']['name']."<br>");
+		print_r("temp name:".$_FILES['file']['tmp_name']."<br>");
+		print_r("error:".$_FILES['file']['error']."<br>");
+		print_r("size:".$_FILES['file']['size']."<br>");
+	}
 	if (isset($_FILES) && isset($_FILES['file']) && isset($_FILES['file']['name'])  && strlen($_FILES['file']['name'])>0 ) {
 		$name     = $_FILES['file']['name'];
 		$tmpName  = $_FILES['file']['tmp_name'];
@@ -105,6 +124,9 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                   $response = "Erreur inconnu";
 	      break;
 	  	}
+	if ($_POST['debug']) {
+		print_r("success:".$success."<br>");
+	}
 		if (!$success) {
 			// Affichage d'un message d'erreur suite à l'upload de la photo
 			echo "<div class=\"alert alert-danger alert-dismissable\">";
@@ -146,7 +168,15 @@ echo "</div><br>";
 ?>
 
 <div class="row">
-<div class="col-md-3 hidden-sm hidden-xs"><img src="img/fond.png" alt="verre"></div>
+<div class="col-md-3 hidden-sm hidden-xs">
+	<?php
+		if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
+			echo "<img src='uploads/{$bouteille->nomPhoto}' alt='{$bouteille->nom}' class='viewBottle'>";
+		} else {
+			echo "<img src='img/fond.png' alt='verre' class='viewBottle'>";
+		}
+	?>
+</div>	
 <div class="col-md-9 col-sm-12 col-xs-12">
 <!-- Formulaire d'ajout d'une bouteille  -->
 <form action='maj_bouteille.php?id=<?php echo $id; ?>' method='post'  class="form-horizontal"  enctype="multipart/form-data">
@@ -155,6 +185,7 @@ echo "</div><br>";
 		<label for="nomBouteille" class="col-sm-2 control-label">Nom</label>
 		<div class="col-sm-10">
 		<input type="text"  name='nom' class="form-control" id="nomBouteille" value='<?php echo $bouteille->nom; ?>' >
+		<input type="hidden"  name='debug' class="form-control" id="nomBouteille" value='<?php echo $debug; ?>' >
 		</div>
 	</div>
 
@@ -167,7 +198,7 @@ echo "</div><br>";
         </label>
         <?php
         	$tmp="";
-        	if (strlen($bouteille->nomPhoto)>0) {
+        	if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
 	        	$tmpPhoto = explode("-", $bouteille->nomPhoto);
 	        	$tmp=$tmpPhoto[2];
 			}        	
@@ -369,6 +400,23 @@ echo "</div><br>";
       }
       echo "</select>";
       echo '</div></div>';
+      ?>
+      <div class="form-group">
+		<label class="col-sm-2 col-xs-4 control-label">Position</label>
+		<div class="col-sm-5  col-xs-4 ">
+			<div class="input-group">
+			  <span class="input-group-addon" aria-hidden="true">X</span>
+			  <input type='text' name="empl_x" class='form-control' aria-describedby="sizing-addon2" value='<?php echo $bouteille->empl_x; ?>'>
+			</div>
+		</div>
+		<div class="col-sm-5  col-xs-4 ">
+			<div class="input-group">
+			  <span class="input-group-addon" aria-hidden="true">Y</span>
+			  <input type='text' name='empl_y' class='form-control' aria-describedby="sizing-addon2" value='<?php echo $bouteille->empl_y; ?>' >
+			</div>
+		</div>
+	</div>
+	<?php
   }
   ?>
 

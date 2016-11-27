@@ -28,19 +28,21 @@ if($_POST )
             $bouteille = new Bouteille($db);
          
             // Valeurs des propriétés de la bouteille
-            if (isset($_POST['nom']))   $bouteille->nom = $_POST['nom'];
-            if (isset($_POST['quantite']))   $bouteille->quantite = $_POST['quantite'];
-            if (isset($_POST['achat']))   $bouteille->achat = $_POST['achat'];
-            if (isset($_POST['prixachat']))   $bouteille->prixachat = $_POST['prixachat'];
-            if (isset($_POST['prixestime']))   $bouteille->prixestime = $_POST['prixestime'];
-            if (isset($_POST['millesime']))   $bouteille->millesime = $_POST['millesime'];
-            if (isset($_POST['apogee']))   $bouteille->apogee = $_POST['apogee'];
-            if (isset($_POST['id_contenance']))   $bouteille->id_contenance = $_POST['id_contenance'];
-            if (isset($_POST['nomCepage']))   $bouteille->nomCepage = $_POST['nomCepage'];
-            if (isset($_POST['id_aoc']))   $bouteille->id_aoc = $_POST['id_aoc'];
-            if (isset($_POST['id_type']))   $bouteille->id_type = $_POST['id_type'];
-            if (isset($_POST['id_emplacement']))   $bouteille->id_emplacement = $_POST['id_emplacement'];
-            if (isset($_POST['commentaire']))   $bouteille->commentaire = $_POST['commentaire'];
+            if (isset($_POST['nom']))                 $bouteille->nom = $_POST['nom'];
+            if (isset($_POST['quantite']))            $bouteille->quantite = $_POST['quantite'];
+            if (isset($_POST['achat']))               $bouteille->achat = $_POST['achat'];
+            if (isset($_POST['prixachat']))           $bouteille->prixachat = $_POST['prixachat'];
+            if (isset($_POST['prixestime']))          $bouteille->prixestime = $_POST['prixestime'];
+            if (isset($_POST['millesime']))           $bouteille->millesime = $_POST['millesime'];
+            if (isset($_POST['apogee']))              $bouteille->apogee = $_POST['apogee'];
+            if (isset($_POST['id_contenance']))       $bouteille->id_contenance = $_POST['id_contenance'];
+            if (isset($_POST['nomCepage']))           $bouteille->nomCepage = $_POST['nomCepage'];
+            if (isset($_POST['id_aoc']))              $bouteille->id_aoc = $_POST['id_aoc'];
+            if (isset($_POST['id_type']))             $bouteille->id_type = $_POST['id_type'];
+            if (isset($_POST['id_emplacement']))      $bouteille->id_emplacement = $_POST['id_emplacement'];
+            if (isset($_POST['commentaire']))         $bouteille->commentaire = $_POST['commentaire'];
+            if (isset($_POST['empl_x']))              $bouteille->empl_x = $_POST['empl_x'];
+            if (isset($_POST['empl_y']))              $bouteille->empl_y = $_POST['empl_y'];
             if (isset($_SESSION['id_utilisateur']))   $bouteille->id_utilisateur = $_SESSION['id_utilisateur'];
          
             // Ajout d'une bouteille
@@ -181,7 +183,7 @@ if($_POST )
             else{
                 echo "<div class=\"alert alert-danger alert-dismissable\">";
                     echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                    echo "Impossible d'ajouter ce vin ".$_POST['nom'];
+                    echo "Impossible d'ajouter ce vin ".$_POST['nom']. ' ('.$bouteille->error.')';
                 echo "</div>";
             }
 
@@ -397,6 +399,23 @@ if($_POST )
 
       echo "</select>";
       echo '</div></div>';
+      ?>
+      <div class="form-group">
+        <label class="col-sm-2 col-xs-4 control-label">Position</label>
+        <div class="col-sm-5  col-xs-4 ">
+          <div class="input-group">
+            <span class="input-group-addon" aria-hidden="true">X</span>
+            <input type='text' name="empl_x" class='form-control' aria-describedby="sizing-addon2">
+          </div>
+        </div>
+        <div class="col-sm-5  col-xs-4 ">
+          <div class="input-group">
+            <span class="input-group-addon" aria-hidden="true">Y</span>
+            <input type='text' name='empl_y' class='form-control' aria-describedby="sizing-addon2">
+          </div>
+        </div>
+      </div>
+      <?php
   }
   ?>
 

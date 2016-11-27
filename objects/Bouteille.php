@@ -31,6 +31,8 @@ class Bouteille{
     public $id_utilisateur;
     public $timestamp;
     public $error;
+    public $empl_x;
+    public $empl_y;
 
  
     public function __construct($db){
@@ -61,9 +63,9 @@ class Bouteille{
         try {
             //write query
             $query = "INSERT INTO `" . $this->table_name . "` (nom, quantite, achat, prixachat, prixestime, millesime, apogee, 
-                            commentaire, id_contenance, nomCepage, id_aoc, id_type, id_emplacement, id_utilisateur, ajout) 
+                            commentaire, id_contenance, nomCepage, id_aoc, id_type, id_emplacement, id_utilisateur, ajout, empl_x, empl_y) 
                             values (:nom, :quantite, :achat, :prixachat, :prixestime, :millesime, :apogee, 
-                            :commentaire, :id_contenance, :nomCepage, :id_aoc, :id_type, :id_emplacement, :id_utilisateur, :ajout)";
+                            :commentaire, :id_contenance, :nomCepage, :id_aoc, :id_type, :id_emplacement, :id_utilisateur, :ajout, :empl_x, :empl_y)";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':nom', $this->nom);
             $stmt->bindParam(':quantite', $this->quantite);
@@ -80,6 +82,8 @@ class Bouteille{
             $stmt->bindParam(':id_emplacement', $this->id_emplacement);
             $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
             $stmt->bindParam(':ajout', $this->timestamp);
+            $stmt->bindParam(':empl_x', $this->empl_x);
+            $stmt->bindParam(':empl_y', $this->empl_y);
 
             if ($stmt->execute()) {
                 $this->id = $this->conn->lastInsertId();
@@ -99,7 +103,7 @@ class Bouteille{
        if (isset($_SESSION['id_utilisateur'])){
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
                         quantite, commentaire, nomPhoto, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin
-                        , c.nom as type_contenance, c.volume as type_volume
+                        , c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
@@ -113,7 +117,7 @@ class Bouteille{
         }else {
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
                         quantite, commentaire, nomPhoto, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, 
-                        c.nom as type_contenance, c.volume as type_volume
+                        c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
@@ -126,9 +130,10 @@ class Bouteille{
                         INNER JOIN {$this->table_name_utilisateur} u
                         ON b.id_utilisateur = u.id" ;
         }
-        // Recherche dans la zone commentaire
+        // Recherche dans la zone commentaire et le nom de la bouteille 
         if (isset($this->commentaire)) {
-            $query = $query . " and b.commentaire like '%" . $this->commentaire . "%'";
+            $query = $query . " and (lower(b.nom) like '%" . strtolower($this->commentaire) . "%'"
+                            . " or lower(b.commentaire) like '%" . strtolower($this->commentaire) . "%')";
         }
        try {
             $stmt = $this->conn->prepare( $query );
@@ -180,7 +185,9 @@ class Bouteille{
                     id_type  = :id_type,
                     nomPhoto = :nomPhoto,
                     id_emplacement  = :id_emplacement,
-                    id_utilisateur  = :id_utilisateur
+                    id_utilisateur  = :id_utilisateur,
+                    empl_x  = :empl_x,
+                    empl_y  = :empl_y
                 WHERE
                     id = :id";
      
@@ -203,6 +210,8 @@ class Bouteille{
         $stmt->bindParam(':id_emplacement', $this->id_emplacement);
         $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
         $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':empl_x', $this->empl_x);
+        $stmt->bindParam(':empl_y', $this->empl_y);
      
         // execute the query
         if($stmt->execute()){
@@ -256,7 +265,8 @@ class Bouteille{
         }
         // Recherche dans la zone commentaire
         if (isset($this->commentaire)) {
-            $query = $query . " and commentaire like '%" . $this->commentaire . "%'";
+            $query = $query . " and (lower(nom) like '%" . strtolower($this->commentaire) . "%'"
+                            . " or lower(commentaire) like '%" . strtolower($this->commentaire) . "%')";
         }       
         $stmt = $this->conn->prepare( $query );
         if (isset($_SESSION['id_utilisateur'])){
@@ -277,7 +287,8 @@ class Bouteille{
         }
         // Recherche dans la zone commentaire
         if (isset($this->commentaire)) {
-            $query = $query . " and commentaire like '%" . $this->commentaire . "%'";
+            $query = $query . " and (lower(nom) like '%" . strtolower($this->commentaire) . "%'"
+                            . " or lower(commentaire) like '%" . strtolower($this->commentaire) . "%')";
         }       
         $stmt = $this->conn->prepare( $query );
         if (isset($_SESSION['id_utilisateur'])){
@@ -295,7 +306,7 @@ class Bouteille{
     function readOne(){
         $query = "SELECT
                 nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, nomCepage, id_aoc, 
-                id_type, id_emplacement, id_utilisateur, nomPhoto, ajout
+                id_type, id_emplacement, id_utilisateur, nomPhoto, ajout, empl_x, empl_y
             FROM
                 " . $this->table_name . "
             WHERE
@@ -322,6 +333,8 @@ class Bouteille{
         $this->id_emplacement = $row['id_emplacement'];
         $this->id_utilisateur = $row['id_utilisateur'];
         $this->ajout = $row['ajout'];
+        $this->empl_x = $row['empl_x'];
+        $this->empl_y = $row['empl_y'];
 
     }
 

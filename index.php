@@ -15,17 +15,18 @@
     	$debug=true;
     }
 
-	// Si formulaire Recherche soumis et commentaire
-	if($_GET && isset($_GET['comment']))
-	{
-		$bouteille->commentaire=$_GET['comment'];
-	}
 	// instantiate database and product object
 	$database = new Database();
 	$db = $database->getConnection();
 	$bouteille = new Bouteille($db);
 	$login = new Utilisateur($db);	 
 
+	// Si formulaire Recherche soumis et commentaire
+	if($_GET && isset($_GET['comment']))
+	{
+		$bouteille->commentaire=$_GET['comment'];
+	}
+	
 	// show page header
 	$total_users = $login->countAll();
 	$total_wines = $bouteille->countAll();
@@ -163,12 +164,12 @@
 	        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	            extract($row);
 	            echo "<tr>";
-	                echo "<td>{$nomb}";
+	                echo "<td><a href='maj_bouteille.php?id={$id}' class='linkBottle'>{$nomb}</a>";
 	                if (isset($nomPhoto) && strlen($nomPhoto)>0) {
 	                	$nomComplet=  'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
 	                	if (file_exists($nomComplet) ) {
 	                		list($width, $height) = getimagesize($nomComplet);
-	                		echo "&nbsp;<a href='#' class='enlarge' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."'><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
+	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."'><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
 	                }	
 	                }
 	                echo "</td>";
