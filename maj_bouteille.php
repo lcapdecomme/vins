@@ -2,7 +2,12 @@
 $page_title = "Mise à jour d'une bouteille";
 include_once "header.php";
 
+// user connected ? 
 if (!$_SESSION || !isset($_SESSION['id_utilisateur']) ) {
+    header('Location: index.php');
+}
+// id bottle ? 
+if (!$_GET || !isset($_GET['id'])  ) {
     header('Location: index.php');
 }
 //include database and object files
@@ -11,13 +16,13 @@ include_once 'objects/Bouteille.php';
 include_once 'objects/Cepage.php';     
 include_once 'config/util.php';
  
-	// debug mode ?  
-	$debug=false;
-    if (isset($_GET['debug']))
-    {
-    	// Mode debug
-    	$debug=true;
-    }
+// debug mode ?  
+$debug=false;
+if (isset($_GET['debug']))
+{
+	// Mode debug
+	$debug=true;
+}
 
 $database = new Database();
 $db = $database->getConnection();
@@ -27,11 +32,15 @@ $stmtcepage = $cepage->read();
 // prepare bouteille object
 $bouteille = new Bouteille($db);
 // get ID of the bouteille to be edited
-$id = isset($_GET['id']) ? $_GET['id'] : die("Erreur ! Il manque l'identifiant de la bouteille");
+$id = $_GET['id'];
 // set ID property of bouteille to be edited
 $bouteille->id = $id;
 // read the details of bouteille to be edited
 $bouteille->readOne();
+// Really owner of the bottle ? 
+if ($_SESSION['id_utilisateur'] != $bouteille->id_utilisateur ) {
+    header('Location: index.php');
+}
 // Annee courante
 $temp=date("Y");
 
