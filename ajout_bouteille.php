@@ -78,11 +78,13 @@ if($_POST )
                           if ($valid) {
                               // Replace - by _
                               $name=str_replace('-', '_', $name);
-                              // Length limit of name file on this server is 20 car. (minus id user and id wine = 10 ) !!!!
+                              // replace accents
+                              $name=wd_remove_accents($name);
+                              // Hebergeur bloque tous les fichiers dont le nom contient 'chat'
                               if (!isLocalhost()) {
-                                  $name=substr( $name, 0, 10);
+                                  $name = str_replace("chat", "ch_at", $name);
                               }
-                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-'.wd_remove_accents($name);
+                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-'.$name;
                               $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
                               $success=move_uploaded_file($tmpName,$targetPath);
                           }
