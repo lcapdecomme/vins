@@ -498,7 +498,7 @@ echo "</div><br>";
 
 		$("input[name='quantite']").TouchSpin({
 			min: 0,
-			max: 120,
+			max: 240,
 			boostat: 5,
 			maxboostedstep: 10,
 			postfix: 'Bouteilles(s)'

@@ -243,11 +243,17 @@ a.linkBottle, a.linkBottle:link, a.linkBottle:visited {
 }
 /* Photos de la bouteille sur la page de la maj prennent 100% de l'espace dédié */
 img.viewBottle {
-    width:100%;
+  width:100%;
+  border: 10px solid #fff;
+  -webkit-box-shadow: 3px 3px 3px #777;
+     -moz-box-shadow: 3px 3px 3px #777;
+          box-shadow: 3px 3px 3px #777;
 }
+.modal-body {
+    background-color: #f5f5f5;
+
 </style>
- 
- 
+  
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">

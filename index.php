@@ -248,7 +248,7 @@
         <h4 class="modal-title" id="myModalLabel">Aperçu</h4>
       </div>
       <div class="modal-body">
-        <img src="#" id="imagepreview" class="img-responsive center-block">
+        	<img src="#" id="imagepreview" class="img-responsive center-block viewBottle">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
