@@ -5,8 +5,9 @@ include_once "header.php";
 // Not authenticate 
 $authentification= false;
 
-// id and Pass ?
-if (isset($_POST['login']) && (isset($_POST['motDePasse']))) 
+// id, action and Pass ?
+if ( isset($_POST['login']) && isset($_POST['action']) && 
+  (isset($_POST['motDePasse']) || isset($_POST['newMotDePasse'])) ) 
 {  
     // include database and object files
     include_once 'config/database.php';
@@ -18,17 +19,24 @@ if (isset($_POST['login']) && (isset($_POST['motDePasse'])))
     $db = $database->getConnection();
     $login = new Utilisateur($db);
     $login->nom = strip_tags (stripslashes ($_POST["login"]));
-    $login->mdp = strip_tags (stripslashes ($_POST["motDePasse"]));
 
     $resultat=false;
     if (isset($_POST['action']) && ($_POST['action']=="login")) {
         // check user and pass
+        $login->mdp = strip_tags (stripslashes ($_POST["motDePasse"]));
         $resultat = $login->checkUserPassword();
     }
     if (isset($_POST['action']) && ($_POST['action']=="register")) {
-        // check user and pass
-        $login->mail = $_POST['mail'];
-        $resultat = $login->addUser();
+        // check pass
+        $pass1 = strip_tags (stripslashes ($_POST["newMotDePasse"]));
+        $pass2 = strip_tags (stripslashes ($_POST["newMotDePasse2"]));
+        if ($pass1 != $pass2) {
+          $login->error="Mots de passe différents";
+        } else {
+          $login->mail = $_POST['mail'];
+          $login->mdp = $pass1;
+          $resultat = $login->addUser();
+        }
     }
 
     if ($resultat)
@@ -97,12 +105,13 @@ else
         </div>
 
         <div class="form-group">
-          <label for="motDePasse" class="sr-only">Mot de Passe</label>
-          <input name="motDePasse" type="password" id="motDePasse" class="form-control" placeholder="Mot de passe" required>
+          <label for="newMotDePasse" class="sr-only">Mot de Passe</label>
+          <input name="newMotDePasse" type="password" id="newMotDePasse" class="form-control" placeholder="Mot de passe" required>
         </div>
         <div class="form-group">
-          <label for="motDePasse2" class="sr-only">Mot de Passe</label>
-          <input name="motDePasse2" type="password" id="motDePasse2" class="form-control" placeholder="Confirmation du mot de passe" required>
+          <label for="newMotDePasse2" class="sr-only">Mot de Passe</label>
+          <input name="newMotDePasse2" type="password" id="newMotDePasse2" class="form-control" placeholder="Confirmation du mot de passe" required onkeyup="checkPass(); return false;" >
+          <span id="confirmMessage" class="confirmMessage"></span>
         </div>
 
         <div class="form-group">
@@ -124,3 +133,19 @@ else
 }
 include_once "footer.php";
 ?>
+
+<script>
+    function checkPass()
+    {
+        var pass1 = $('#newMotDePasse');
+        var pass2 =  $('#newMotDePasse2');
+        if(pass1.val() == pass2.val()){
+            pass1.addClass("passWordOk").removeClass("passWordKo");
+            pass2.addClass("passWordOk").removeClass("passWordKo");
+        } else {
+            pass1.addClass("passWordKo").removeClass("passWordOk");
+            pass2.addClass("passWordKo").removeClass("passWordOk");
+        }
+    }  
+
+</script>

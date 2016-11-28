@@ -251,7 +251,14 @@ img.viewBottle {
 }
 .modal-body {
     background-color: #f5f5f5;
-
+}
+/* New Passwords Ok or Not */
+.passWordKo {
+    background-color: #F2DEDE !important;
+}
+.passWordOk {
+    background-color: #DFF0D8 !important;
+}
 </style>
   
     <!-- Bootstrap -->
