@@ -1,0 +1,1 @@
+ALTER TABLE `bouteille` ADD `nomPhoto2` VARCHAR(1000) NULL AFTER `nomPhoto`;

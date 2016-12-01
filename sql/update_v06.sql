@@ -1,1 +1,1 @@
-ALTER TABLE bouteille ADD nomPhoto varchar(1000);
+ALTER TABLE bouteille ADD nomPhoto varchar(1000) NULL;

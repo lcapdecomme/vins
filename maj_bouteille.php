@@ -74,11 +74,11 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 		print_r("error:".$_FILES['file']['error']."<br>");
 		print_r("size:".$_FILES['file']['size']."<br>");
 	}
-	if (isset($_FILES) && isset($_FILES['file']) && isset($_FILES['file']['name'])  && strlen($_FILES['file']['name'])>0 ) {
-		$name     = $_FILES['file']['name'];
-		$tmpName  = $_FILES['file']['tmp_name'];
-		$error    = $_FILES['file']['error'];
-		$size     = $_FILES['file']['size'];
+	if (isset($_FILES) && isset($_FILES['file1']) && isset($_FILES['file1']['name'])  && strlen($_FILES['file1']['name'])>0 ) {
+		$name     = $_FILES['file1']['name'];
+		$tmpName  = $_FILES['file1']['tmp_name'];
+		$error    = $_FILES['file1']['error'];
+		$size     = $_FILES['file1']['size'];
 		$ext      = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 		$response = "";
 		$success=false;
@@ -105,7 +105,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                   if (!isLocalhost()) {
                       $name = str_replace("chat", "ch_at", $name);
                   }
-                  $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-'.$name;
+                  $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
 	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
 	              $success=move_uploaded_file($tmpName,$targetPath);
 	          }
@@ -152,6 +152,86 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 			$bouteille->nomPhoto = $nomPhoto;
 		}
 	}
+
+	if (isset($_FILES) && isset($_FILES['file2']) && isset($_FILES['file2']['name'])  && strlen($_FILES['file2']['name'])>0 ) {
+		$name     = $_FILES['file2']['name'];
+		$tmpName  = $_FILES['file2']['tmp_name'];
+		$error    = $_FILES['file2']['error'];
+		$size     = $_FILES['file2']['size'];
+		$ext      = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+		$response = "";
+		$success=false;
+		switch ($error) {
+	      case UPLOAD_ERR_OK:
+	          $valid = true;
+              //validate file extensions
+              if ( !in_array($ext, array('jpg','jpeg','png','gif')) ) {
+                  $valid = false;
+                  $response = "L'extension du fichier est invalide.";
+              }
+              //validate file size
+              if ( $size/1024/1024 > 2 ) {
+                  $valid = false;
+                  $response = "La taille du fichier a dépassé la taille autorisée.";
+              }
+	          //upload file
+	          if ($valid) {
+	          	  // Replace - by _
+	          	  $name=str_replace('-', '_', $name);
+	          	  // replace accents
+	          	  $name=wd_remove_accents($name);
+                  // Hebergeur bloque tous les fichiers dont le nom contient 'chat'
+                  if (!isLocalhost()) {
+                      $name = str_replace("chat", "ch_at", $name);
+                  }
+                  $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-2-'.$name;
+	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+	              $success=move_uploaded_file($tmpName,$targetPath);
+	          }
+	          break;
+              case UPLOAD_ERR_INI_SIZE:
+                  $response = "La taille du fichier dépasse la taille autorisée par le fichier php.ini.";
+                  break;
+              case UPLOAD_ERR_FORM_SIZE:
+                  $response = "La taille du fichier dépasse la directive MAX_FILE_SIZE du formulaire.";
+                  break;
+              case UPLOAD_ERR_PARTIAL:
+                  $response = "Le fichier a été partiellement téléchargé.";
+                  break;
+              case UPLOAD_ERR_NO_FILE:
+                  $response = "Aucun fichier n'a été téléchargé.";
+                  break;
+              case UPLOAD_ERR_NO_TMP_DIR:
+                  $response = "Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.";
+                  break;
+              case UPLOAD_ERR_CANT_WRITE:
+                  $response = "Erreur d'écriture du fichier sur le disque (PHP 5.1.0).";
+                  break;
+              case UPLOAD_ERR_EXTENSION:
+                  $response = "Le fichier téléchargé a été stoppé par son extension (PHP 5.2.0).";
+                  break;
+              default:
+                  $response = "Erreur inconnu";
+	      break;
+	  	}
+	if ($_POST['debug']) {
+		print_r("success:".$success."<br>");
+	}
+		if (!$success) {
+			// Affichage d'un message d'erreur suite à l'upload de la photo
+			echo "<div class=\"alert alert-danger alert-dismissable\">";
+			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+			echo $response;                   
+			echo "</div>";
+		} else  {
+			echo "<div class=\"alert alert-success alert-dismissable\">";
+			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+			  echo "La photo de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
+			echo "</div>";			
+			$bouteille->nomPhoto2 = $nomPhoto;
+		}
+	}
+
 	// update the bouteille
 	if($bouteille->update()){
 	echo "<div class=\"alert alert-success alert-dismissable\">";
@@ -181,9 +261,17 @@ echo "</div><br>";
 <div class="row">
 <div class="col-md-3 hidden-sm hidden-xs">
 	<?php
+		$showDefault=true;
 		if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
-			echo "<img src='uploads/{$bouteille->nomPhoto}' alt='{$bouteille->nom}' class='viewBottle'>";
-		} else {
+			echo "<img src='uploads/{$bouteille->nomPhoto}' alt='{$bouteille->nomPhoto}' class='viewBottle'><br><br><br>";
+			$showDefault=false;
+		} 
+		if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
+			echo "<img src='uploads/{$bouteille->nomPhoto2}' alt='{$bouteille->nomPhoto2}' class='viewBottle'>";
+			$showDefault=false;
+		} 
+		if ( $showDefault )
+		{
 			echo "<img src='img/fond.png' alt='verre' class='viewBottle'>";
 		}
 	?>
@@ -205,15 +293,32 @@ echo "</div><br>";
       <label for="file" class="col-sm-2 control-label">Etiquette</label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-          Sélection de l'image <input type="file" name="file" style="display: none;" onchange="$('#upload-file-info').html($(this).val());">
+          Recto<input type="file" name="file1" style="display: none;" onchange="$('#upload-file-info1').html($(this).val());">
         </label>
         <?php
         	$tmp="";
         	if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
 	        	$tmpPhoto = explode("-", $bouteille->nomPhoto);
-	        	$tmp=$tmpPhoto[2];
+	        	$tmp=$tmpPhoto[3];
 			}        	
-		    echo "<span class='label label-info' id='upload-file-info'>".$tmp."</span>";
+		    echo "<span class='label label-info' id='upload-file-info1'>".$tmp."</span>";
+        ?>
+    </div>
+  </div>
+
+  <div class="form-group">
+      <label for="file" class="col-sm-2 control-label"></label>
+      <div class="col-sm-10">
+        <label class="btn btn-sm btn-primary btn-file">
+         Verso<input type="file" name="file2" style="display: none;" onchange="$('#upload-file-info2').html($(this).val());">
+        </label>
+        <?php
+        	$tmp="";
+        	if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
+	        	$tmpPhoto = explode("-", $bouteille->nomPhoto2);
+	        	$tmp=$tmpPhoto[3];
+			}        	
+		    echo "<span class='label label-info' id='upload-file-info2'>".$tmp."</span>";
         ?>
     </div>
   </div>

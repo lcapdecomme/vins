@@ -63,6 +63,14 @@ ini_set('display_errors', 1);
             width: 0px;
         };
     }
+    /* Fond blanc cassé pour toutes les pages du site */
+    body {
+        background-color: #f7f7f7 !important;
+    }
+    /* Du fait régle précédente, on force la couleur des lignes impaires des tables */
+    .table-striped > tbody > tr:nth-of-type(2n+1) {
+        background-color: #e6e6e6 !important;
+    }
     /* La colonne Opérations (10) a une taille minimum pour que les icones restent alignées */
     .tablesorter-filter-row > td:nth-child(10) {
         min-width: 120px;

@@ -166,11 +166,18 @@
 	            echo "<tr>";
 	                echo "<td><a href='maj_bouteille.php?id={$id}' class='linkBottle'>{$nomb}</a>";
 	                if (isset($nomPhoto) && strlen($nomPhoto)>0) {
-	                	$nomComplet=  'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+	                	$nomComplet=  'uploads'.DIRECTORY_SEPARATOR.$nomPhoto;
 	                	if (file_exists($nomComplet) ) {
 	                		list($width, $height) = getimagesize($nomComplet);
-	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."'><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
-	                }	
+	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-tit='Recto' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."' title='Recto'  alt='Recto ".$nomComplet."' ><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
+	                	}	
+	                }
+	                if (isset($nomPhoto2) && strlen($nomPhoto2)>0) {
+	                	$nomComplet=  'uploads'.DIRECTORY_SEPARATOR.$nomPhoto2;
+	                	if (file_exists($nomComplet) ) {
+	                		list($width, $height) = getimagesize($nomComplet);
+	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-tit='Verso' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."' title='Verso' alt='Verso ".$nomComplet."' ><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
+	                	}	
 	                }
 	                echo "</td>";
 	                echo "<td class='colQuantite hidden-xs' id='quantite_{$id}' style='text-align:center;'>{$quantite}</td>";
@@ -530,12 +537,14 @@ $(document).ready(function() {
 	});
 
 	$("a.enlarge").on("click", function() {
-	   $('#imagepreview').attr('src', $(this).attr('data-src')); // here asign the image to the modal when the user click the enlarge link
+	   $('#imagepreview').attr('src', $(this).attr('data-src')); // Image to the modal when the user click the enlarge link
+	   $('#myModalLabel').html($(this).attr('data-tit')); // Title of the popup
 	   if ($(this).attr('data-width')>$(this).attr('data-height')) {
 		   	$('#imagepreview').css('width', '400px'); // Landscape view
 	   } else {
 		   	$('#imagepreview').css('width', '300px'); // Portrait view
 	   }
+
 	   $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
 	});
 

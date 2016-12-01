@@ -27,6 +27,7 @@ class Bouteille{
     public $id_aoc;
     public $id_type;
     public $nomPhoto;
+    public $nomPhoto2;
     public $id_emplacement;
     public $id_utilisateur;
     public $timestamp;
@@ -102,7 +103,7 @@ class Bouteille{
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, nomPhoto, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin
+                        quantite, commentaire, nomPhoto, nomPhoto2, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin
                         , c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
@@ -116,7 +117,7 @@ class Bouteille{
                         WHERE b.id_utilisateur = ?" ;
         }else {
             $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, nomPhoto, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, 
+                        quantite, commentaire, nomPhoto, nomPhoto2, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, 
                         c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
@@ -184,6 +185,7 @@ class Bouteille{
                     id_aoc  = :id_aoc,
                     id_type  = :id_type,
                     nomPhoto = :nomPhoto,
+                    nomPhoto2 = :nomPhoto2,
                     id_emplacement  = :id_emplacement,
                     id_utilisateur  = :id_utilisateur,
                     empl_x  = :empl_x,
@@ -206,6 +208,7 @@ class Bouteille{
         $stmt->bindParam(':nomCepage', $this->nomCepage);
         $stmt->bindParam(':id_aoc', $this->id_aoc);
         $stmt->bindParam(':nomPhoto', $this->nomPhoto);
+        $stmt->bindParam(':nomPhoto2', $this->nomPhoto2);
         $stmt->bindParam(':id_type', $this->id_type);
         $stmt->bindParam(':id_emplacement', $this->id_emplacement);
         $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
@@ -306,7 +309,7 @@ class Bouteille{
     function readOne(){
         $query = "SELECT
                 nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, nomCepage, id_aoc, 
-                id_type, id_emplacement, id_utilisateur, nomPhoto, ajout, empl_x, empl_y
+                id_type, id_emplacement, id_utilisateur, nomPhoto, nomPhoto2, ajout, empl_x, empl_y
             FROM
                 " . $this->table_name . "
             WHERE
@@ -329,6 +332,7 @@ class Bouteille{
         $this->nomCepage = $row['nomCepage'];
         $this->id_aoc = $row['id_aoc'];
         $this->nomPhoto = $row['nomPhoto'];
+        $this->nomPhoto2 = $row['nomPhoto2'];
         $this->id_type = $row['id_type'];
         $this->id_emplacement = $row['id_emplacement'];
         $this->id_utilisateur = $row['id_utilisateur'];
