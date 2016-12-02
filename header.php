@@ -216,7 +216,7 @@ td.pager {
   left: 15px;
 }
 .footer .container p {
-    margin-top: 10px;
+    margin-top: 18px;
     font-size: 10px;
 }
 .footer {

@@ -144,10 +144,11 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
 			echo $response;                   
 			echo "</div>";
+			$bouteille->nomPhoto = "";
 		} else  {
 			echo "<div class=\"alert alert-success alert-dismissable\">";
 			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-			  echo "La photo de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
+			  echo "La photo <b>recto</b> de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
 			echo "</div>";			
 			$bouteille->nomPhoto = $nomPhoto;
 		}
@@ -223,10 +224,11 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
 			echo $response;                   
 			echo "</div>";
+			$bouteille->nomPhoto2 = "";
 		} else  {
 			echo "<div class=\"alert alert-success alert-dismissable\">";
 			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-			  echo "La photo de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
+			  echo "La photo <b>verso</b>  de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
 			echo "</div>";			
 			$bouteille->nomPhoto2 = $nomPhoto;
 		}
@@ -300,6 +302,10 @@ echo "</div><br>";
         	if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
 	        	$tmpPhoto = explode("-", $bouteille->nomPhoto);
 	        	$tmp=$tmpPhoto[3];
+	        	// Compatibilité ancien nommage des photos (1 seule photo)
+	        	if (!isset($tmp)) {
+		        	$tmp=$tmpPhoto[2];
+	        	}
 			}        	
 		    echo "<span class='label label-info' id='upload-file-info1'>".$tmp."</span>";
         ?>
