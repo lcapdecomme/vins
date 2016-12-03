@@ -151,6 +151,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
 			  echo "La photo <b>recto</b> de la bouteille a été mise à jour :-)";
 			echo "</div>";			
+			$nomRectoPrec = $bouteille->nomPhoto;
 			$bouteille->nomPhoto = $nomPhoto;
 		}
 	}
@@ -231,16 +232,20 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
 			  echo "La photo <b>verso</b> de la bouteille a été mise à jour :-)";
 			echo "</div>";			
+			$nomVersoPrec = $bouteille->nomPhoto2;
 			$bouteille->nomPhoto2 = $nomPhoto;
 		}
 	}
 
 	// update the bouteille
 	if($bouteille->update()){
-	echo "<div class=\"alert alert-success alert-dismissable\">";
-	    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-	    echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
-	echo "</div>";
+		echo "<div class=\"alert alert-success alert-dismissable\">";
+		    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+		    echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
+		echo "</div>";
+		// Suppression des images précédentes
+		$bouteille->deletePhotos(UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomRectoPrec);	
+		$bouteille->deletePhotos(UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomVersoPrec);		
 	}
 	// if unable to update the bouteille, tell the user
 	else{

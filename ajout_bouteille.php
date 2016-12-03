@@ -167,7 +167,7 @@ if($_POST )
                               if (!isLocalhost()) {
                                   $name = str_replace("chat", "ch_at", $name);
                               }
-                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
+                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-2-'.$name;
                               $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR.$nomPhoto;
                               $success=move_uploaded_file($tmpName,$targetPath);
                           }

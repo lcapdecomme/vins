@@ -267,19 +267,20 @@ class Bouteille{
 
     // delete a picture
     function deletePhotos($file){
-        if (isset($file) && strlen($file)>0) {
-            $fullName="..".DIRECTORY_SEPARATOR.UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$file;
-            if (file_exists($fullName) ) {
-                unlink($fullName);
-            }
+        if (isset($file) && strlen($file)>0 && file_exists($file) ) {
+            unlink($file);
         }
     }
     // delete the wine
     function delete(){
         // Read for get picture names
         $this->readOne();
-        $this->deletePhotos($this->nomPhoto);
-        $this->deletePhotos($this->nomPhoto2);
+        if (isset($this->nomPhoto) && strlen($this->nomPhoto)>0) {
+            $this->deletePhotos("..".DIRECTORY_SEPARATOR.UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$this->nomPhoto);
+        }
+        if (isset($this->nomPhoto2) && strlen($this->nomPhoto2)>0) {
+            $this->deletePhotos("..".DIRECTORY_SEPARATOR.UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$this->nomPhoto2);
+        }
         // Delete in database
         $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
         $stmt = $this->conn->prepare($query);
