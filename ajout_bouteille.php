@@ -281,8 +281,8 @@ if($_POST )
 <br>
 
 <div class="row">
-  <div class="col-md-3 hidden-sm hidden-xs"><img src="img/fond.png" alt="verre"></div>
-  <div class="col-md-9 col-sm-12 col-xs-12">
+  <div class="col-md-4 hidden-sm hidden-xs"><img  class='viewBottle' src="img/fond.png" alt="verre"></div>
+  <div class="col-md-8 col-sm-12 col-xs-12">
 <!-- Formulaire d'ajout d'une bouteille  -->
 <form action='ajout_bouteille.php' method='POST'  class="form-horizontal"  enctype="multipart/form-data">
  
