@@ -57,18 +57,44 @@
     } else   {
 		include_once 'objects/Type.php';
 		include_once 'objects/Emplacement.php';
+		include_once 'objects/Fournisseur.php';
     	$dateSysteme=date("Y");
+
 		// Recherche de tous les objets Emplacement
-		$total_emplacement = 0;
 		$emplacement = new Emplacement($db);
 		$emplacement->id_utilisateur = $_SESSION['id_utilisateur'];
 		$stmtEmplacment = $emplacement->readAll();
-		$total_emplacement = $stmtEmplacment->rowCount();
+		if (isset($stmtEmplacment)) {
+			$total_emplacement = $stmtEmplacment->rowCount();
+		} else {
+			$total_emplacement = 0;
+		}
 		//set Session.Emplacement only here !
 		if ($total_emplacement>=1) {
 	    	$_SESSION['emplacement']='O';
 		} else {
 	    	$_SESSION['emplacement']='N';
+		}
+		// Recherche de tous les objets Fournisseur
+		$fournisseur = new Fournisseur($db);
+		$fournisseur->id_utilisateur = $_SESSION['id_utilisateur'];
+		$stmtFournisseur = $fournisseur->readAll();
+		if (isset($stmtFournisseur)) {
+			$total_fournisseur = $stmtFournisseur->rowCount();
+		} else {
+			$total_fournisseur = 0;
+		}
+
+		//set Session.Fournisseur only here !
+		if ($total_fournisseur>=1) {
+	    	$_SESSION['fournisseur']='O';
+		} else {
+	    	$_SESSION['fournisseur']='N';
+		}
+
+		if ($debug) {
+			print_r("Segment session");
+			print_r($_SESSION);
 		}
 		echo "<br class='row hidden-xs'>";
 		// Row except smartphone

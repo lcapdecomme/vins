@@ -60,6 +60,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	if (isset($_POST['id_aoc']))   			$bouteille->id_aoc = $_POST['id_aoc'];
 	if (isset($_POST['id_type']))   		$bouteille->id_type = $_POST['id_type'];
 	if (isset($_POST['id_emplacement']))	$bouteille->id_emplacement = $_POST['id_emplacement'];
+	if (isset($_POST['id_fournisseur']))    $bouteille->id_fournisseur = $_POST['id_fournisseur'];	
 	if (isset($_POST['empl_x']))			$bouteille->empl_x = $_POST['empl_x'];
 	if (isset($_POST['empl_y']))			$bouteille->empl_y = $_POST['empl_y'];
 	if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
@@ -148,7 +149,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 		} else  {
 			echo "<div class=\"alert alert-success alert-dismissable\">";
 			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-			  echo "La photo <b>recto</b> de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
+			  echo "La photo <b>recto</b> de la bouteille a été mise à jour :-)";
 			echo "</div>";			
 			$bouteille->nomPhoto = $nomPhoto;
 		}
@@ -228,7 +229,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 		} else  {
 			echo "<div class=\"alert alert-success alert-dismissable\">";
 			  echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-			  echo "La photo <b>verso</b>  de la bouteille <strong>".wd_remove_accents($name)."</strong> a été mise à jour :-)";
+			  echo "La photo <b>verso</b> de la bouteille a été mise à jour :-)";
 			echo "</div>";			
 			$bouteille->nomPhoto2 = $nomPhoto;
 		}
@@ -245,7 +246,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	else{
 	echo "<div class=\"alert alert-danger alert-dismissable\">";
 	    echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-	    echo "Problème de mise à jour du vin";
+	    echo "Problème de mise à jour du vin : {$bouteille->error}";
 	echo "</div>";
 	}
 }
@@ -423,6 +424,37 @@ echo "</div><br>";
 			<input type='text' id="sliderAchat" data-slider-min="2000" data-slider-max="2050" data-slider-step="1" data-slider-value="<?php echo $bouteille->achat; ?>" >
 		</div>
 	</div>
+ 
+  <?php 
+  // Fournisseurs
+  if (isset($_SESSION) && isset($_SESSION['fournisseur']) && $_SESSION['fournisseur']=='O' ) {
+      echo '<div class="form-group">';
+      echo '<label for="id_fournisseur" class="col-sm-2 control-label">Fournisseur</label>';
+      echo '<div class="col-sm-10">';
+      // Recherche des fournisseurs en BD
+      include_once 'objects/Fournisseur.php';
+      // Recherche de tous les objets Fournisseur
+      $fournisseur = new Fournisseur($db);
+      $fournisseur->id_utilisateur = $_SESSION['id_utilisateur'];
+      $stmttFournisseur = $fournisseur->readAll();
+      // Remplissage de la liste
+      echo "<select class='form-control' name='id_fournisseur'>";
+      echo "<option>Choisir le fournisseur ...</option>";
+
+      while ($row_fournisseur = $stmttFournisseur->fetch(PDO::FETCH_ASSOC)) {
+          extract($row_fournisseur);
+		    // current fournisseur of the product must be selected
+		    if($bouteille->id_fournisseur==$id){
+		        echo "<option value='$id' selected>";
+		    }else{
+		        echo "<option value='$id'>";
+		    }
+          echo "{$nom} ({$cp} {$ville})</option>";
+      }
+      echo "</select>";
+      echo '</div></div>';
+      }
+  ?>
 
 	<div class="form-group">
 		<label for="millesime" class="col-sm-2 col-xs-4 control-label">Millésime</label>
@@ -508,7 +540,7 @@ echo "</div><br>";
       $stmtEmplacment = $emplacement->readAll();
       // Remplissage de la liste
       echo "<select class='form-control' name='id_emplacement'>";
-      echo "<option>Choisir l'Emplacement ...</option>";
+      echo "<option>Choisir l'emplacement ...</option>";
 
       while ($row_emplacement = $stmtEmplacment->fetch(PDO::FETCH_ASSOC)) {
           extract($row_emplacement);

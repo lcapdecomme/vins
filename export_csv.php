@@ -17,7 +17,7 @@ $db = $database->getConnection();
 $bouteille = new Bouteille($db);
 $stmt = $bouteille->readAll();
 
-$header = array('Nom du vin', 'quantite', 'Date achat', 'millesime', 'apogee', 'prix achat', 'prix estime', 'type', 'commentaire', 'contenance', 'cepage', 'aoc', 'region', 'emplacement', 'ajout');
+$header = array('Nom du vin', 'quantite', 'Date achat', 'millesime', 'apogee', 'prix achat', 'prix estime', 'type', 'commentaire', 'contenance', 'cepage', 'aoc', 'region', 'emplacement', 'ajout', 'fournisseur');
 
 $fp = fopen('php://output', 'w');
 // Encoding
@@ -32,7 +32,7 @@ if ($fp && $stmt) {
 	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
 		$value = array($nomb, $quantite, $achat, $millesime, $apogee, $prixachat, 
-                        $prixestime, $type_vin, $commentaire, $type_contenance, $nom_cepage, $appellation, $region, $lieu, $ajout);
+                        $prixestime, $type_vin, $commentaire, $type_contenance, $nomCepage, $appellation, $region, $lieu, $ajout, $fournisseur);
         fputcsv($fp, array_values($value), ';');
     }
     die;

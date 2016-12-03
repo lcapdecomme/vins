@@ -7,6 +7,7 @@ class Bouteille{
     private $table_name_conso = "consommation";
     private $table_name_utilisateur = "utilisateur";
     private $table_name_emplacement = "emplacement";
+    private $table_name_fournisseur = "fournisseur";
     private $table_name_aoc = "aoc";
     private $table_name_type = "type";
     private $table_name_contenance = "contenance";
@@ -29,6 +30,7 @@ class Bouteille{
     public $nomPhoto;
     public $nomPhoto2;
     public $id_emplacement;
+    public $id_fournisseur;
     public $id_utilisateur;
     public $timestamp;
     public $error;
@@ -60,13 +62,16 @@ class Bouteille{
         if (!is_numeric($this->id_emplacement)) {
             $this->id_emplacement=0;
         }
+        if (!is_numeric($this->id_fournisseur)) {
+            $this->id_fournisseur=0;
+        }
  
         try {
             //write query
             $query = "INSERT INTO `" . $this->table_name . "` (nom, quantite, achat, prixachat, prixestime, millesime, apogee, 
-                            commentaire, id_contenance, nomCepage, id_aoc, id_type, id_emplacement, id_utilisateur, ajout, empl_x, empl_y) 
+                            commentaire, id_contenance, nomCepage, id_aoc, id_type, id_emplacement, id_fournisseur, id_utilisateur, ajout, empl_x, empl_y) 
                             values (:nom, :quantite, :achat, :prixachat, :prixestime, :millesime, :apogee, 
-                            :commentaire, :id_contenance, :nomCepage, :id_aoc, :id_type, :id_emplacement, :id_utilisateur, :ajout, :empl_x, :empl_y)";
+                            :commentaire, :id_contenance, :nomCepage, :id_aoc, :id_type, :id_emplacement, :id_fournisseur, :id_utilisateur, :ajout, :empl_x, :empl_y)";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':nom', $this->nom);
             $stmt->bindParam(':quantite', $this->quantite);
@@ -81,6 +86,7 @@ class Bouteille{
             $stmt->bindParam(':id_aoc', $this->id_aoc);
             $stmt->bindParam(':id_type', $this->id_type);
             $stmt->bindParam(':id_emplacement', $this->id_emplacement);
+            $stmt->bindParam(':id_fournisseur', $this->id_fournisseur);
             $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
             $stmt->bindParam(':ajout', $this->timestamp);
             $stmt->bindParam(':empl_x', $this->empl_x);
@@ -90,8 +96,9 @@ class Bouteille{
                 $this->id = $this->conn->lastInsertId();
                 return true;
             } else {
+print_r($stmt);
                 $errorInfo = $stmt->errorInfo();
-                $this->error = $errorInfo[2];
+                $this->error = $errorInfo[1] .":".$errorInfo[2];
                 return false;
             }
         } catch(PDOException $exception) {
@@ -102,12 +109,15 @@ class Bouteille{
 
     function readAll(){
        if (isset($_SESSION['id_utilisateur'])){
-            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, nomPhoto, nomPhoto2, ajout, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin
-                        , c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_fournisseur, nomCepage, id_type, b.id_utilisateur, 
+                        prixachat, prixestime, achat, quantite, commentaire, nomPhoto, nomPhoto2, ajout, e.lieu as lieu, a.appellation as appellation, 
+                        a.region as region, t.libelle as type_vin, c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y, 
+                        CONCAT(f.nom,' ',f.cp,' ',f.ville) as fournisseur 
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
+                        LEFT JOIN {$this->table_name_fournisseur} f
+                        ON f.id = b.id_fournisseur
                         LEFT JOIN {$this->table_name_aoc} a
                         ON a.id = b.id_aoc
                         LEFT JOIN {$this->table_name_type} t
@@ -116,12 +126,15 @@ class Bouteille{
                         ON c.id = b.id_contenance
                         WHERE b.id_utilisateur = ?" ;
         }else {
-            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, nomCepage, id_type, b.id_utilisateur, prixachat, prixestime, achat, 
-                        quantite, commentaire, nomPhoto, nomPhoto2, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, a.region as region, t.libelle as type_vin, 
-                        c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y
+            $query = " SELECT b.id, b.nom as nomb, millesime, apogee, id_contenance, id_aoc, id_emplacement, id_fournisseur, nomCepage, id_type, b.id_utilisateur, 
+                        prixachat, prixestime, achat, quantite, commentaire, nomPhoto, nomPhoto2, b.ajout, u.nom as nomu, e.lieu as lieu, a.appellation as appellation, 
+                        a.region as region, t.libelle as type_vin, c.nom as type_contenance, c.volume as type_volume, empl_x, empl_y,
+                        CONCAT(f.nom,' ',f.cp,' ',f.ville) as fournisseur 
                         FROM {$this->table_name} b
                         LEFT JOIN {$this->table_name_emplacement} e
                         ON e.id = b.id_emplacement
+                        LEFT JOIN {$this->table_name_fournisseur} f
+                        ON f.id = b.id_fournisseur
                         LEFT JOIN {$this->table_name_aoc} a
                         ON a.id = b.id_aoc
                         LEFT JOIN {$this->table_name_type} t
@@ -171,6 +184,9 @@ class Bouteille{
         if (!is_numeric($this->id_emplacement)) {
             $this->id_emplacement=0;
         }
+        if (!is_numeric($this->id_fournisseur)) {
+            $this->id_fournisseur=0;
+        }
         $query = "UPDATE " . $this->table_name . " SET
                     nom = :nom,
                     quantite = :quantite,
@@ -187,6 +203,7 @@ class Bouteille{
                     nomPhoto = :nomPhoto,
                     nomPhoto2 = :nomPhoto2,
                     id_emplacement  = :id_emplacement,
+                    id_fournisseur  = :id_fournisseur,
                     id_utilisateur  = :id_utilisateur,
                     empl_x  = :empl_x,
                     empl_y  = :empl_y
@@ -211,6 +228,7 @@ class Bouteille{
         $stmt->bindParam(':nomPhoto2', $this->nomPhoto2);
         $stmt->bindParam(':id_type', $this->id_type);
         $stmt->bindParam(':id_emplacement', $this->id_emplacement);
+        $stmt->bindParam(':id_fournisseur', $this->id_fournisseur);
         $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':empl_x', $this->empl_x);
@@ -309,7 +327,7 @@ class Bouteille{
     function readOne(){
         $query = "SELECT
                 nom, quantite, achat, prixachat, prixestime, millesime, apogee, commentaire, id_contenance, nomCepage, id_aoc, 
-                id_type, id_emplacement, id_utilisateur, nomPhoto, nomPhoto2, ajout, empl_x, empl_y
+                id_type, id_emplacement, id_fournisseur, id_utilisateur, nomPhoto, nomPhoto2, ajout, empl_x, empl_y
             FROM
                 " . $this->table_name . "
             WHERE
@@ -335,6 +353,7 @@ class Bouteille{
         $this->nomPhoto2 = $row['nomPhoto2'];
         $this->id_type = $row['id_type'];
         $this->id_emplacement = $row['id_emplacement'];
+        $this->id_fournisseur = $row['id_fournisseur'];
         $this->id_utilisateur = $row['id_utilisateur'];
         $this->ajout = $row['ajout'];
         $this->empl_x = $row['empl_x'];

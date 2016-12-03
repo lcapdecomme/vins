@@ -13,9 +13,10 @@ User to test : *test/test*
 
 ## Versions
 
-* v0.6 : Upload picture
-* v0.5 : Multiple cepage
-* v0.4 : Storage Managment
+* v0.7 : Supplier Management
+* v0.6 : Upload pictures
+* v0.5 : Multiple wine variety
+* v0.4 : Storage Management
 * v0.3 : Preference page, export CSV
 * v0.2 : Multiple users
 * v0.1 : Add, update, delete or drink a bottle, enumeration of wine variety, aoc and wines

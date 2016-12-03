@@ -40,6 +40,7 @@ if($_POST )
             if (isset($_POST['id_aoc']))              $bouteille->id_aoc = $_POST['id_aoc'];
             if (isset($_POST['id_type']))             $bouteille->id_type = $_POST['id_type'];
             if (isset($_POST['id_emplacement']))      $bouteille->id_emplacement = $_POST['id_emplacement'];
+            if (isset($_POST['id_fournisseur']))      $bouteille->id_fournisseur = $_POST['id_fournisseur'];
             if (isset($_POST['commentaire']))         $bouteille->commentaire = $_POST['commentaire'];
             if (isset($_POST['empl_x']))              $bouteille->empl_x = $_POST['empl_x'];
             if (isset($_POST['empl_y']))              $bouteille->empl_y = $_POST['empl_y'];
@@ -52,12 +53,12 @@ if($_POST )
                     echo "La bouteille <strong>".$_POST['nom']."</strong> a été ajoutée :-)";
                 echo "</div>";
 
-              // Upload image 
-              if (isset($_FILES) && isset($_FILES['file']) && isset($_FILES['file']['name'])  && strlen($_FILES['file']['name'])>0 ) {
-                  $name     = $_FILES['file']['name'];
-                  $tmpName  = $_FILES['file']['tmp_name'];
-                  $error    = $_FILES['file']['error'];
-                  $size     = $_FILES['file']['size'];
+              // Upload image 1
+              if (isset($_FILES) && isset($_FILES['file1']) && isset($_FILES['file1']['name'])  && strlen($_FILES['file1']['name'])>0 ) {
+                  $name     = $_FILES['file1']['name'];
+                  $tmpName  = $_FILES['file1']['tmp_name'];
+                  $error    = $_FILES['file1']['error'];
+                  $size     = $_FILES['file1']['size'];
                   $ext      = strtolower(pathinfo($name, PATHINFO_EXTENSION));
                   $response = "";
                   $success=false;
@@ -84,7 +85,7 @@ if($_POST )
                               if (!isLocalhost()) {
                                   $name = str_replace("chat", "ch_at", $name);
                               }
-                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-'.$name;
+                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
                               $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
                               $success=move_uploaded_file($tmpName,$targetPath);
                           }
@@ -127,18 +128,94 @@ if($_POST )
                         if($bouteille->update()){
                           echo "<div class=\"alert alert-success alert-dismissable\">";
                               echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                              echo "La photo de la bouteille <strong>".wd_remove_accents($name)."</strong> a été associée à cette bouteille :-)";
+                              echo "La photo <b>recto</b> de la bouteille a été mise à jour :-)";
                           echo "</div>";
-                        } else {
-                          echo "<div class=\"alert alert-danger alert-dismissable\">";
-                            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                            echo "La photo de la bouteille <strong>".wd_remove_accents($name)."</strong> n'a pas été associée à cette bouteille :-(";               
-                          echo "</div>";
-                        }
+                        } 
                     }
                   }
               }
 
+              // Upload image 2
+               if (isset($_FILES) && isset($_FILES['file2']) && isset($_FILES['file2']['name'])  && strlen($_FILES['file2']['name'])>0 ) {
+                  $name     = $_FILES['file2']['name'];
+                  $tmpName  = $_FILES['file2']['tmp_name'];
+                  $error    = $_FILES['file2']['error'];
+                  $size     = $_FILES['file2']['size'];
+                  $ext      = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                  $response = "";
+                  $success=false;
+                  switch ($error) {
+                      case UPLOAD_ERR_OK:
+                          $valid = true;
+                          //validate file extensions
+                          if ( !in_array($ext, array('jpg','jpeg','png','gif')) ) {
+                              $valid = false;
+                              $response = "L'extension du fichier est invalide.";
+                          }
+                          //validate file size
+                          if ( $size/1024/1024 > 2 ) {
+                              $valid = false;
+                              $response = "La taille du fichier a dépassé la taille autorisée.";
+                          }
+                          //upload file
+                          if ($valid) {
+                              // Replace - by _
+                              $name=str_replace('-', '_', $name);
+                              // replace accents
+                              $name=wd_remove_accents($name);
+                              // Hebergeur bloque tous les fichiers dont le nom contient 'chat'
+                              if (!isLocalhost()) {
+                                  $name = str_replace("chat", "ch_at", $name);
+                              }
+                              $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
+                              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+                              $success=move_uploaded_file($tmpName,$targetPath);
+                          }
+                          break;
+                      case UPLOAD_ERR_INI_SIZE:
+                          $response = "La taille du fichier dépasse la taille autorisée par le fichier php.ini.";
+                          break;
+                      case UPLOAD_ERR_FORM_SIZE:
+                          $response = "La taille du fichier dépasse la directive MAX_FILE_SIZE du formulaire.";
+                          break;
+                      case UPLOAD_ERR_PARTIAL:
+                          $response = "Le fichier a été partiellement téléchargé.";
+                          break;
+                      case UPLOAD_ERR_NO_FILE:
+                          $response = "Aucun fichier n'a été téléchargé.";
+                          break;
+                      case UPLOAD_ERR_NO_TMP_DIR:
+                          $response = "Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.";
+                          break;
+                      case UPLOAD_ERR_CANT_WRITE:
+                          $response = "Erreur d'écriture du fichier sur le disque (PHP 5.1.0).";
+                          break;
+                      case UPLOAD_ERR_EXTENSION:
+                          $response = "Le fichier téléchargé a été stoppé par son extension (PHP 5.2.0).";
+                          break;
+                      default:
+                          $response = "Erreur inconnu";
+                      break;
+                  }
+                  if (!$success) {
+                    // Affichage d'un message d'erreur suite à l'upload de la photo
+                    echo "<div class=\"alert alert-danger alert-dismissable\">";
+                      echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+                      echo $response;                   
+                    echo "</div>";
+                  } else {
+                    // Mise à jour du nom de la photo dans la base
+                    if (isset($nomPhoto)) {
+                        $bouteille->nomPhoto2 = $nomPhoto;
+                        if($bouteille->update()){
+                          echo "<div class=\"alert alert-success alert-dismissable\">";
+                              echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+                              echo "La photo <b>verso</b> de la bouteille a été mise à jour :-)";
+                          echo "</div>";
+                        } 
+                    }
+                  }
+              }
 
               // Nouvel objet Referentiel
               $referentiel = new Referentiel($db);   
@@ -185,7 +262,7 @@ if($_POST )
             else{
                 echo "<div class=\"alert alert-danger alert-dismissable\">";
                     echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                    echo "Impossible d'ajouter ce vin ".$_POST['nom']. ' ('.$bouteille->error.')';
+                    echo "Impossible d'ajouter ce vin {$bouteille->nom} : {$bouteille->error}";
                 echo "</div>";
             }
 
@@ -220,9 +297,19 @@ if($_POST )
       <label for="file" class="col-sm-2 control-label">Etiquette</label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-          Sélection de l'image <input type="file" name="file" style="display: none;" onchange="$('#upload-file-info').html($(this).val());">
+          Recto<input type="file" name="file1" style="display: none;" onchange="$('upload-file-info1').html($(this).val());">
         </label>
-        <span class='label label-info' id="upload-file-info"></span>
+        <span class='label label-info' id="uupload-file-info1"></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+      <label for="file" class="col-sm-2 control-label"></label>
+      <div class="col-sm-10">
+        <label class="btn btn-sm btn-primary btn-file">
+          Verso<input type="file" name="file2" style="display: none;" onchange="$('#upload-file-info2').html($(this).val());">
+        </label>
+        <span class='label label-info' id="upload-file-info2"></span>
     </div>
   </div>
 
@@ -327,6 +414,32 @@ if($_POST )
       <input type='text' id="sliderAchat" data-slider-min="2000" data-slider-max="2050" data-slider-step="1" data-slider-value="<?php echo $temp; ?>" >
     </div>
   </div>
+ 
+  <?php 
+  // Fournisseurs
+  if (isset($_SESSION) && isset($_SESSION['fournisseur']) && $_SESSION['fournisseur']=='O' ) {
+      echo '<div class="form-group">';
+      echo '<label for="id_fournisseur" class="col-sm-2 control-label">Fournisseur</label>';
+      echo '<div class="col-sm-10">';
+      // Recherche des fournisseurs en BD
+      include_once 'objects/Fournisseur.php';
+      // Recherche de tous les objets Fournisseur
+      $fournisseur = new Fournisseur($db);
+      $fournisseur->id_utilisateur = $_SESSION['id_utilisateur'];
+      $stmttFournisseur = $fournisseur->readAll();
+      // Remplissage de la liste
+      echo "<select class='form-control' name='id_fournisseur'>";
+      echo "<option>Choisir le fournisseur ...</option>";
+
+      while ($row_fournisseur = $stmttFournisseur->fetch(PDO::FETCH_ASSOC)) {
+          extract($row_fournisseur);
+          echo "<option value='$id'>{$nom} ({$cp} {$ville})</option>";
+      }
+      echo "</select>";
+      echo '</div></div>';
+      }
+  ?>
+
 
    <div class="form-group">
     <label for="millesime" class="col-sm-2 col-xs-4 control-label">Millésime</label>

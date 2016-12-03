@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 24 Novembre 2016 à 03:12
+-- Généré le :  Sam 03 Décembre 2016 à 06:12
 -- Version du serveur :  5.7.14
 -- Version de PHP :  5.6.25
 
@@ -345,6 +345,7 @@ CREATE TABLE `bouteille` (
   `id_contenance` int(10) DEFAULT NULL,
   `id_aoc` int(10) DEFAULT NULL,
   `id_emplacement` int(10) DEFAULT NULL,
+  `id_fournisseur` int(10) DEFAULT NULL,
   `id_type` int(10) DEFAULT NULL,
   `id_utilisateur` int(10) NOT NULL,
   `prixachat` decimal(10,2) DEFAULT NULL,
@@ -354,8 +355,13 @@ CREATE TABLE `bouteille` (
   `commentaire` text COLLATE utf8_unicode_ci,
   `ajout` date DEFAULT NULL,
   `nomCepage` varchar(300) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `nomPhoto` varchar(1000) COLLATE utf8_unicode_ci NOT NULL
+  `nomPhoto` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nomPhoto2` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `empl_x` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `empl_y` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Structure de la table `cepage`
@@ -485,8 +491,23 @@ INSERT INTO `contenance` (`id`, `ordre`, `nom`, `volume`, `equivalence`) VALUES
 CREATE TABLE `emplacement` (
   `id` int(10) NOT NULL,
   `lieu` varchar(100) NOT NULL,
-  `id_utilisateurg` int(10) NOT NULL
+  `id_utilisateur` int(10) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Structure de la table `fournisseur`
+--
+
+CREATE TABLE `fournisseur` (
+  `id` int(10) NOT NULL,
+  `nom` varchar(100) NOT NULL,
+  `cp` varchar(100) DEFAULT NULL,
+  `ville` varchar(100) DEFAULT NULL,
+  `id_utilisateur` int(10) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
 
 --
 -- Structure de la table `referentiel`
@@ -16060,6 +16081,13 @@ ALTER TABLE `emplacement`
   ADD UNIQUE KEY `id` (`id`);
 
 --
+-- Index pour la table `fournisseur`
+--
+ALTER TABLE `fournisseur`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- Index pour la table `referentiel`
 --
 ALTER TABLE `referentiel`
@@ -16108,6 +16136,11 @@ ALTER TABLE `contenance`
 -- AUTO_INCREMENT pour la table `emplacement`
 --
 ALTER TABLE `emplacement`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT pour la table `fournisseur`
+--
+ALTER TABLE `fournisseur`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT pour la table `referentiel`

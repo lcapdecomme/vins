@@ -65,7 +65,7 @@ ini_set('display_errors', 1);
     }
     /* Fond blanc cassé pour toutes les pages du site */
     body {
-        background-color: #f7f7f7 !important;
+        background-color: #f0f0f0 !important;
     }
     /* Du fait régle précédente, on force la couleur des lignes impaires des tables */
     .table-striped > tbody > tr:nth-of-type(2n+1) {
@@ -365,6 +365,7 @@ img.viewBottle {
                     <li><a href="mon_compte.php">Mes préférences</a></li>
                     <li><a href="mon_mot_de_passe.php">Mot de passe</a></li>
                     <li><a href="emplacement.php">Mes emplacements</a></li>
+                    <li><a href="fournisseur.php">Fournisseurs</a></li>
                     <li><a href="export_csv.php">Export CSV</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="logout.php">Déconnexion</a></li>
