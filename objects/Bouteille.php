@@ -1,4 +1,5 @@
 <?php
+include_once "../config/constants.php";
 class Bouteille{
  
     // database connection and table name
@@ -96,7 +97,6 @@ class Bouteille{
                 $this->id = $this->conn->lastInsertId();
                 return true;
             } else {
-print_r($stmt);
                 $errorInfo = $stmt->errorInfo();
                 $this->error = $errorInfo[1] .":".$errorInfo[2];
                 return false;
@@ -265,14 +265,30 @@ print_r($stmt);
         }
     }
 
+    // delete a picture
+    function deletePhotos($file){
+        if (isset($file) && strlen($file)>0) {
+            $fullName="..".DIRECTORY_SEPARATOR.UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$file;
+            if (file_exists($fullName) ) {
+                unlink($fullName);
+            }
+        }
+    }
     // delete the wine
     function delete(){
+        // Read for get picture names
+        $this->readOne();
+        $this->deletePhotos($this->nomPhoto);
+        $this->deletePhotos($this->nomPhoto2);
+        // Delete in database
         $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->id);
         if($result = $stmt->execute()){
             return true;
         }else{
+            $errorInfo = $stmt->errorInfo();
+            $this->error = $errorInfo[2];
             return false;
         }
     }

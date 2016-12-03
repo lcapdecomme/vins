@@ -107,7 +107,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                       $name = str_replace("chat", "ch_at", $name);
                   }
                   $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
-	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR.$nomPhoto;
 	              $success=move_uploaded_file($tmpName,$targetPath);
 	          }
 	          break;
@@ -187,7 +187,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                       $name = str_replace("chat", "ch_at", $name);
                   }
                   $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-2-'.$name;
-	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR.$nomPhoto;
 	              $success=move_uploaded_file($tmpName,$targetPath);
 	          }
 	          break;
@@ -266,11 +266,11 @@ echo "</div><br>";
 	<?php
 		$showDefault=true;
 		if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
-			echo "<img src='uploads/{$bouteille->nomPhoto}' alt='{$bouteille->nomPhoto}' class='viewBottle'><br><br><br>";
+			echo "<img src='".UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR."{$bouteille->nomPhoto}' alt='{$bouteille->nomPhoto}' class='viewBottle'><br><br><br>";
 			$showDefault=false;
 		} 
 		if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
-			echo "<img src='uploads/{$bouteille->nomPhoto2}' alt='{$bouteille->nomPhoto2}' class='viewBottle'>";
+			echo "<img src='".UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR."{$bouteille->nomPhoto2}' alt='{$bouteille->nomPhoto2}' class='viewBottle'>";
 			$showDefault=false;
 		} 
 		if ( $showDefault )

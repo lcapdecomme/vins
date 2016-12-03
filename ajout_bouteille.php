@@ -86,7 +86,7 @@ if($_POST )
                                   $name = str_replace("chat", "ch_at", $name);
                               }
                               $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
-                              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+                              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. UPLOAD_DIRECTORY. DIRECTORY_SEPARATOR.$nomPhoto;
                               $success=move_uploaded_file($tmpName,$targetPath);
                           }
                           break;
@@ -168,7 +168,7 @@ if($_POST )
                                   $name = str_replace("chat", "ch_at", $name);
                               }
                               $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
-                              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. 'uploads' . DIRECTORY_SEPARATOR.$nomPhoto;
+                              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR.$nomPhoto;
                               $success=move_uploaded_file($tmpName,$targetPath);
                           }
                           break;
@@ -297,9 +297,9 @@ if($_POST )
       <label for="file" class="col-sm-2 control-label">Etiquette</label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-          Recto<input type="file" name="file1" style="display: none;" onchange="$('upload-file-info1').html($(this).val());">
+          Recto<input type="file" name="file1" style="display: none;" onchange="$('#upload-file-info1').html($(this).val());">
         </label>
-        <span class='label label-info' id="uupload-file-info1"></span>
+        <span class='label label-info' id="upload-file-info1"></span>
     </div>
   </div>
 

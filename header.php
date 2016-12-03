@@ -3,10 +3,13 @@ session_start();
 ini_set('zlib.output_compression_level', 6);
 ob_start('ob_gzhandler');
 include_once 'config/util.php';
+include_once "config/constants.php";
 isCookieOk();
 // Rapporte les erreurs d'exécution de script
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
+
+
 ?>
 <!DOCTYPE html>
 <html>

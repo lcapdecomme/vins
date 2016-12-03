@@ -192,14 +192,14 @@
 	            echo "<tr>";
 	                echo "<td><a href='maj_bouteille.php?id={$id}' class='linkBottle'>{$nomb}</a>";
 	                if (isset($nomPhoto) && strlen($nomPhoto)>0) {
-	                	$nomComplet=  'uploads'.DIRECTORY_SEPARATOR.$nomPhoto;
+	                	$nomComplet=  UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomPhoto;
 	                	if (file_exists($nomComplet) ) {
 	                		list($width, $height) = getimagesize($nomComplet);
 	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-tit='Recto' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."' title='Recto'  alt='Recto ".$nomComplet."' ><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
 	                	}	
 	                }
 	                if (isset($nomPhoto2) && strlen($nomPhoto2)>0) {
-	                	$nomComplet=  'uploads'.DIRECTORY_SEPARATOR.$nomPhoto2;
+	                	$nomComplet=  UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomPhoto2;
 	                	if (file_exists($nomComplet) ) {
 	                		list($width, $height) = getimagesize($nomComplet);
 	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-tit='Verso' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."' title='Verso' alt='Verso ".$nomComplet."' ><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
@@ -495,13 +495,13 @@ $(document).ready(function() {
 
 		function suppression(valueId){
 			$.ajax({
-			url: "efface_bouteille.php",
-			type: "POST",
-			data: {id : valueId},
-			success : function(msg) {
-			location.reload();
-			}
-			});
+				url: "scripts/wsEffaceBouteille.php",
+				type: "GET",
+				data: {id : valueId},
+				success : function(msg) {
+					location.reload();
+				}
+				});
 		}
 		return false;
 	});
@@ -544,7 +544,7 @@ $(document).ready(function() {
 			$.ajax({
 				valueId : valueId,
 				valueQte : valueQte,
-				url: "scripts/wsBoire.php",
+				url: "scripts/wsBoireBouteille.php",
 				type: "POST",
 				data: {id : valueId, qte : valueQte},
 				success : function(msg) {
