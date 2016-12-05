@@ -166,6 +166,10 @@ td.pager {
   vertical-align: middle;
   margin-right: 2px;
 }
+/* Bouton delete uploaded file  */
+#removePicture1, #removePicture2 {
+    margin: 0 3px;
+}
 /* pager output text */
 .pager .pagedisplay {
   font-size: 11px;
