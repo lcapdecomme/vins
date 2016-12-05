@@ -270,6 +270,14 @@ img.viewBottle {
 .passWordOk {
     background-color: #DFF0D8 !important;
 }
+/*** Zoom picture ***/
+.zoomTint {
+  z-index: 10;
+}
+.zoomLens {
+  border: 10px solid #fff;
+}
+
 </style>
   
     <!-- Bootstrap -->

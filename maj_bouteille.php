@@ -271,11 +271,13 @@ echo "</div><br>";
 	<?php
 		$showDefault=true;
 		if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
-			echo "<img src='".UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR."{$bouteille->nomPhoto}' alt='{$bouteille->nomPhoto}' class='viewBottle'><br><br><br>";
+			$tmpName=UPLOAD_DIRECTORY."&#47;".$bouteille->nomPhoto;
+			echo "<img src='{$tmpName}' alt='{$bouteille->nomPhoto}' class='viewBottle' data-zoom-image='{$tmpName}'><br><br><br>";
 			$showDefault=false;
 		} 
 		if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
-			echo "<img src='".UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR."{$bouteille->nomPhoto2}' alt='{$bouteille->nomPhoto2}' class='viewBottle'>";
+			$tmpName=UPLOAD_DIRECTORY."&#47;".$bouteille->nomPhoto2;
+			echo "<img src='{$tmpName}' alt='{$bouteille->nomPhoto2}' class='viewBottle' data-zoom-image='{$tmpName}'>";
 			$showDefault=false;
 		} 
 		if ( $showDefault )
@@ -578,8 +580,6 @@ echo "</div><br>";
 	<?php
   }
   ?>
-
-
  
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-primary">Modifier</button>
@@ -591,59 +591,79 @@ echo "</div><br>";
 <br>
 
 
+ <script src="lib/elevatezoom/js/jquery.elevateZoom-3.0.8.min.js"></script>
+
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="lib/mousewheel/js/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox main JS and CSS files -->
+<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox.js?v=2.1.5"></script>
+<link rel="stylesheet" type="text/css" href="lib/fancybox/css/jquery.fancybox.css?v=2.1.5" media="screen" />
+
+<!-- Add Button helper (this is optional) -->
+<link rel="stylesheet" type="text/css" href="lib/fancybox/css/jquery.fancybox-buttons.css?v=1.0.5" />
+<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+
+<!-- Add Thumbnail helper (this is optional) -->
+<link rel="stylesheet" type="text/css" href="lib/fancybox/css/jquery.fancybox-thumbs.css?v=1.0.7" />
+<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<!-- Add Media helper (this is optional) -->
+<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox-media.js?v=1.0.6"></script>
+
+ 
  <script type="text/javascript">
     $(document).ready(function() {
+		$( function() {
+    		var availableTags = [
+				<?php
+					while ($row_cepage = $stmtcepage->fetch(PDO::FETCH_ASSOC)) {
+					extract($row_cepage);
+					echo '"'.$nom.'",';
+					}
+				?>
+			];
+		    function split( val ) {
+		      return val.split( /,\s*/ );
+		    }
+		    function extractLast( term ) {
+		      return split( term ).pop();
+		    }
 
-  $( function() {
-    var availableTags = [
-          <?php
-            while ($row_cepage = $stmtcepage->fetch(PDO::FETCH_ASSOC)){
-                extract($row_cepage);
-                echo '"'.$nom.'",';
-            }
-          ?>
-    ];
-    function split( val ) {
-      return val.split( /,\s*/ );
-    }
-    function extractLast( term ) {
-      return split( term ).pop();
-    }
- 
-    $( "#nomCepage" )
-      // don't navigate away from the field on tab when selecting an item
-      .on( "keydown", function( event ) {
-        if ( event.keyCode === $.ui.keyCode.TAB &&
-            $( this ).autocomplete( "instance" ).menu.active ) {
-          event.preventDefault();
-        }
-      })
-      .autocomplete({
-        minLength: 0,
-        source: function( request, response ) {
-          // delegate back to autocomplete, but extract the last term
-          response( $.ui.autocomplete.filter(
-            availableTags, extractLast( request.term ) ) );
-        },
-        focus: function() {
-          // prevent value inserted on focus
-          return false;
-        },
-        select: function( event, ui ) {
-          var terms = split( this.value );
-          // remove the current input
-          terms.pop();
-          // add the selected item
-          terms.push( ui.item.value );
-          // add placeholder to get the comma-and-space at the end
-          terms.push( "" );
-          this.value = terms.join( ", " );
-          return false;
-        }
-      });
-  } );
+		    $( "#nomCepage" )
+	    		// don't navigate away from the field on tab when selecting an item
+	      		.on( "keydown", function( event ) {
+	        		if ( event.keyCode === $.ui.keyCode.TAB &&
+	            		$( this ).autocomplete( "instance" ).menu.active ) {
+	          			event.preventDefault();
+	        		}
+	      		})
+	      		.autocomplete({
+					minLength: 0,
+					source: function( request, response ) {
+					  // delegate back to autocomplete, but extract the last term
+					  response( $.ui.autocomplete.filter(
+					    availableTags, extractLast( request.term ) ) );
+					},
+					focus: function() {
+					  // prevent value inserted on focus
+					  return false;
+					},
+					select: function( event, ui ) {
+					  var terms = split( this.value );
+					  // remove the current input
+					  terms.pop();
+					  // add the selected item
+					  terms.push( ui.item.value );
+					  // add placeholder to get the comma-and-space at the end
+					  terms.push( "" );
+					  this.value = terms.join( ", " );
+					  return false;
+					}
+			});
+  		});
 
-
+		// Touchspin quantity
 		$("input[name='quantite']").TouchSpin({
 			min: 0,
 			max: 240,
@@ -652,8 +672,7 @@ echo "</div><br>";
 			postfix: 'Bouteilles(s)'
 		});
 
-
-
+		// Slider Achat
 		var slider0 = new Slider("#sliderAchat");
 		slider0.on("slide", function(slideEvt) {
 			$("#achat").val(slideEvt);
@@ -662,6 +681,7 @@ echo "</div><br>";
 			$("#achat").val(slideEvt.newValue);
 		});
 
+		// Slider Millesime
 		var slider1 = new Slider("#sliderMillesime");
 		slider1.on("slide", function(slideEvt) {
 			$("#millesime").val(slideEvt);
@@ -670,6 +690,7 @@ echo "</div><br>";
 			$("#millesime").val(slideEvt.newValue);
 		});
 
+		// Slider Apogée
 		var slider2 = new Slider("#sliderApogee");
 		slider2.on("slide", function(slideEvt) {
 			$("#apogee").val(slideEvt);
@@ -678,13 +699,21 @@ echo "</div><br>";
 			$("#apogee").val(slideEvt.newValue);
 		});
 
-
+		// Autocomplete name of wine
 		$('#nomBouteille').autocomplete({
 			source: 'autocomplete.php',
 			minLength: 2, //search after two characters
 			dataType: 'json'
 		});
 
+		// Zoom Picture
+		$(".viewBottle").elevateZoom({tint:true, tintColour:'#F90', tintOpacity:0.5});
+		//pass the images to Fancybox
+		$(".viewBottle").bind("click", function(e) {  
+		  var ez =   $('.viewBottle').data('elevateZoom');	
+			$.fancybox(ez.getGalleryList());
+		  return false;
+		});
     });
 
       </script>
