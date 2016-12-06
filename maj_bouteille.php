@@ -264,6 +264,25 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) ) {
 }
 echo "</div>";
 echo "</div><br>";
+// Name of picture of the wine
+$displayPhoto1="none";
+$nomPhoto1="";
+if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
+	$tmpPhoto = explode("-", $bouteille->nomPhoto);
+	$tmp=$tmpPhoto[3];
+	// Compatibilité ancien nommage des photos (1 seule photo)
+	if (!isset($tmp)) {
+    	$nomPhoto1=$tmpPhoto[2];
+	}
+    $displayPhoto1="";
+}       
+$displayPhoto2="none";
+$nomPhoto2="";
+if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
+	$tmpPhoto = explode("-", $bouteille->nomPhoto2);
+   	$nomPhoto2=$tmpPhoto[3];
+    $displayPhoto2="";
+}    
 ?>
 
 <div class="row">
@@ -295,7 +314,9 @@ echo "</div><br>";
 		<div class="col-sm-10">
 		<input type="text"  name='nom' class="form-control" id="nomBouteille" value='<?php echo $bouteille->nom; ?>' >
 		<input type="hidden"  name='debug' class="form-control" id="nomBouteille" value='<?php echo $debug; ?>' >
-		</div>
+		<input type="text"  name='debug' class="form-control" id="setRemovePicture1">
+		<input type="text"  name='debug' class="form-control" id="setRemovePicture2">
+	</div>
 	</div>
 
 
@@ -303,19 +324,11 @@ echo "</div><br>";
       <label for="file" class="col-sm-2 control-label">Etiquette</label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-          Recto<input type="file" name="file1" style="display: none;" onchange="$('#upload-file-info1').html($(this).val());">
+          Recto<input type="file" name="file1" style="display: none;" onchange="$('#uploadFileInfo1').html($(this).val());$('#removePicture1').show();">
         </label>
         <?php
-        	$tmp="";
-        	if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
-	        	$tmpPhoto = explode("-", $bouteille->nomPhoto);
-	        	$tmp=$tmpPhoto[3];
-	        	// Compatibilité ancien nommage des photos (1 seule photo)
-	        	if (!isset($tmp)) {
-		        	$tmp=$tmpPhoto[2];
-	        	}
-			}        	
-		    echo "<span class='label label-info' id='upload-file-info1'>".$tmp."</span>";
+		    echo "<label class='btn btn-sm btn-danger' style='display: {$displayPhoto1};' id='removePicture1'><b>X</b></label>";
+		    echo "<span class='label label-info' id='uploadFileInfo1'>".$nomPhoto1."</span>";
         ?>
     </div>
   </div>
@@ -324,15 +337,11 @@ echo "</div><br>";
       <label for="file" class="col-sm-2 control-label"></label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-         Verso<input type="file" name="file2" style="display: none;" onchange="$('#upload-file-info2').html($(this).val());">
+         Verso<input type="file" name="file2" style="display: none;" onchange="$('#uploadFileInfo2').html($(this).val());$('#removePicture2').show();">
         </label>
         <?php
-        	$tmp="";
-        	if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
-	        	$tmpPhoto = explode("-", $bouteille->nomPhoto2);
-	        	$tmp=$tmpPhoto[3];
-			}        	
-		    echo "<span class='label label-info' id='upload-file-info2'>".$tmp."</span>";
+    	    echo "<label class='btn btn-sm btn-danger' style='display: {$displayPhoto2};' id='removePicture2'><b>X</b></label>";
+		    echo "<span class='label label-info' id='uploadFileInfo2'>".$nomPhoto2."</span>";
         ?>
     </div>
   </div>
@@ -653,6 +662,19 @@ echo "</div><br>";
 			boostat: 5,
 			maxboostedstep: 10,
 			postfix: 'Bouteilles(s)'
+		});
+
+		// Button Remove Picture 1
+		$(document).on('click', '#removePicture1', function(){
+			$("#setRemovePicture1").val("O");
+			$('#uploadFileInfo1').html("");
+			$('#removePicture1').hide();
+		});
+		// Button Remove Picture 2
+		$(document).on('click', '#removePicture2', function(){
+			$("#setRemovePicture2").val("O");
+			$('#uploadFileInfo2').html("");
+			$('#removePicture2').hide();
 		});
 
 		// Slider Achat

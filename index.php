@@ -42,12 +42,12 @@
 		} else {
 	      	// mode SAAS 
 			echo "<h1>Bienvenue</h1><br>";
-			echo "<p class='lead'>Bienvenue sur l'application de gestion de votre cave à vins. A ce jour, déjà ";
+			echo "<p class='lead'>Bienvenue sur l'application de gestion de votre cave à vins. A ce jour, ";
 			echo "<span id='totalUsers'>{$total_users}</span>&nbsp;utilisateur";
 			if ($total_users>1) { echo "s"; }
 			echo " utilisent l'application pour gérer <span id='totalVins'>{$total_wines}</span>&nbsp;vin";
 			if ($total_wines>1) {   echo "s";  }
-			echo " soit <span id='totalBouteilles'>{$total_bottles}</span>&nbsp;bouteille";
+			echo " et un total de <span id='totalBouteilles'>{$total_bottles}</span>&nbsp;bouteille";
 			if ($total_bottles>1) {   echo "s";  }
 			echo "</span>.";
 			echo "<p>Vous pouvez tester l'application avec le compte <b><i>test</b></i> et le mot de passe <b><i>test</b></i> </p>";

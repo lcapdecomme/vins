@@ -277,7 +277,10 @@ img.viewBottle {
 .zoomLens {
   border: 10px solid #fff;
 }
-
+/* Bouton delete uploaded file  */
+#removePicture1, #removePicture2 {
+    margin: 0 3px;
+}
 </style>
   
     <!-- Bootstrap -->
