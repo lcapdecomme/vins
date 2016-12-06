@@ -125,11 +125,11 @@ if($_POST )
                     // Mise à jour du nom de la photo dans la base
                     if (isset($nomPhoto)) {
                         $bouteille->nomPhoto = $nomPhoto;
-                        if($bouteille->update()){
-                          echo "<div class=\"alert alert-success alert-dismissable\">";
-                              echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                              echo "La photo <b>recto</b> de la bouteille a été mise à jour :-)";
-                          echo "</div>";
+                        if(!$bouteille->update()){
+                          echo "<div class=\"alert alert-danger alert-dismissable\">";
+                          echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+                          echo "Problème de mise à jour de la photo de ce vin :-(";               
+                           echo "</div>";
                         } 
                     }
                   }
