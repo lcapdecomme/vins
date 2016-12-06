@@ -107,7 +107,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                       $name = str_replace("chat", "ch_at", $name);
                   }
                   $nomPhoto=$_SESSION['id_utilisateur'].'-'.$bouteille->id.'-1-'.$name;
-	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR. UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR.$nomPhoto;
+	              $targetPath =  dirname( __FILE__ ) . DIRECTORY_SEPARATOR . UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR.$nomPhoto;
 	              $success=move_uploaded_file($tmpName,$targetPath);
 	          }
 	          break;
@@ -244,8 +244,8 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 		    echo "Le vin <strong>".$_POST['nom']."</strong> a été mis à jour :-)";
 		echo "</div>";
 		// Suppression des images précédentes
-		$bouteille->deletePhotos(UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomRectoPrec);	
-		$bouteille->deletePhotos(UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomVersoPrec);		
+		$bouteille->deletePhotos(UPLOAD_DIRECTORY.UPLOAD_SEPARATOR_DIRECTORY.$nomRectoPrec);	
+		$bouteille->deletePhotos(UPLOAD_DIRECTORY.UPLOAD_SEPARATOR_DIRECTORY.$nomVersoPrec);		
 	}
 	// if unable to update the bouteille, tell the user
 	else{
@@ -271,12 +271,12 @@ echo "</div><br>";
 	<?php
 		$showDefault=true;
 		if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
-			$tmpName=UPLOAD_DIRECTORY."&#47;".$bouteille->nomPhoto;
+			$tmpName=UPLOAD_DIRECTORY.UPLOAD_SEPARATOR_DIRECTORY.$bouteille->nomPhoto;
 			echo "<img src='{$tmpName}' alt='{$bouteille->nomPhoto}' class='viewBottle' data-zoom-image='{$tmpName}'><br><br><br>";
 			$showDefault=false;
 		} 
 		if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
-			$tmpName=UPLOAD_DIRECTORY."&#47;".$bouteille->nomPhoto2;
+			$tmpName=UPLOAD_DIRECTORY.UPLOAD_SEPARATOR_DIRECTORY.$bouteille->nomPhoto2;
 			echo "<img src='{$tmpName}' alt='{$bouteille->nomPhoto2}' class='viewBottle' data-zoom-image='{$tmpName}'>";
 			$showDefault=false;
 		} 
@@ -593,23 +593,6 @@ echo "</div><br>";
 
  <script src="lib/elevatezoom/js/jquery.elevateZoom-3.0.8.min.js"></script>
 
-<!-- Add mousewheel plugin (this is optional) -->
-<script type="text/javascript" src="lib/mousewheel/js/jquery.mousewheel-3.0.6.pack.js"></script>
-
-<!-- Add fancyBox main JS and CSS files -->
-<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox.js?v=2.1.5"></script>
-<link rel="stylesheet" type="text/css" href="lib/fancybox/css/jquery.fancybox.css?v=2.1.5" media="screen" />
-
-<!-- Add Button helper (this is optional) -->
-<link rel="stylesheet" type="text/css" href="lib/fancybox/css/jquery.fancybox-buttons.css?v=1.0.5" />
-<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
-
-<!-- Add Thumbnail helper (this is optional) -->
-<link rel="stylesheet" type="text/css" href="lib/fancybox/css/jquery.fancybox-thumbs.css?v=1.0.7" />
-<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox-thumbs.js?v=1.0.7"></script>
-
-<!-- Add Media helper (this is optional) -->
-<script type="text/javascript" src="lib/fancybox/js/jquery.fancybox-media.js?v=1.0.6"></script>
 
  
  <script type="text/javascript">
@@ -707,12 +690,9 @@ echo "</div><br>";
 		});
 
 		// Zoom Picture
-		$(".viewBottle").elevateZoom({tint:true, tintColour:'#F90', tintOpacity:0.5});
-		//pass the images to Fancybox
-		$(".viewBottle").bind("click", function(e) {  
-		  var ez =   $('.viewBottle').data('elevateZoom');	
-			$.fancybox(ez.getGalleryList());
-		  return false;
+		$(".viewBottle").elevateZoom({
+		  zoomType: "inner",
+		  cursor: "crosshair"
 		});
     });
 

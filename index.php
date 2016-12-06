@@ -193,7 +193,10 @@
 	                echo "<td><a href='maj_bouteille.php?id={$id}' class='linkBottle'>{$nomb}</a>";
 	                if (isset($nomPhoto) && strlen($nomPhoto)>0) {
 	                	$nomComplet=  UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomPhoto;
+	                	print_r($nomcomplet);
+
 	                	if (file_exists($nomComplet) ) {
+	                		$nomComplet=  UPLOAD_DIRECTORY.UPLOAD_SEPARATOR_DIRECTORY.$nomPhoto;
 	                		list($width, $height) = getimagesize($nomComplet);
 	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-tit='Recto' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."' title='Recto'  alt='Recto ".$nomComplet."' ><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
 	                	}	
@@ -201,6 +204,7 @@
 	                if (isset($nomPhoto2) && strlen($nomPhoto2)>0) {
 	                	$nomComplet=  UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$nomPhoto2;
 	                	if (file_exists($nomComplet) ) {
+	                		$nomComplet=  UPLOAD_DIRECTORY.UPLOAD_SEPARATOR_DIRECTORY.$nomPhoto2;
 	                		list($width, $height) = getimagesize($nomComplet);
 	                		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' class='enlarge' data-tit='Verso' data-src='".$nomComplet."' data-width='".$width."' data-height='".$height."' title='Verso' alt='Verso ".$nomComplet."' ><span class='glyphicon glyphicon-camera' aria-hidden='true'></span></a>";
 	                	}	
@@ -292,6 +296,7 @@
 
 
 
+ <script src="lib/elevatezoom/js/jquery.elevateZoom-3.0.8.min.js"></script>
 
  <script type="text/javascript">
 
@@ -562,8 +567,10 @@ $(document).ready(function() {
 		return false;
 	});
 
+	// Enlarge picture
 	$("a.enlarge").on("click", function() {
 	   $('#imagepreview').attr('src', $(this).attr('data-src')); // Image to the modal when the user click the enlarge link
+	   $('#imagepreview').attr('data-zoom-image', $(this).attr('data-src')); // Image to the modal when the user click the enlarge link
 	   $('#myModalLabel').html($(this).attr('data-tit')); // Title of the popup
 	   if ($(this).attr('data-width')>$(this).attr('data-height')) {
 		   	$('#imagepreview').css('width', '400px'); // Landscape view
@@ -574,7 +581,7 @@ $(document).ready(function() {
 	   $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
 	});
 
-	
+
 	/**
 	 * Initialisation de la page 
 	 * 
