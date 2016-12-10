@@ -54,7 +54,8 @@ if($_POST )
                 echo "</div>";
 
               // Upload image 1
-              if (isset($_FILES) && isset($_FILES['file1']) && isset($_FILES['file1']['name'])  && strlen($_FILES['file1']['name'])>0 ) {
+              if ( (!isset($_POST['setRemovePicture1']) || $_POST['setRemovePicture1']!="O") &&
+                isset($_FILES) && isset($_FILES['file1']) && isset($_FILES['file1']['name'])  && strlen($_FILES['file1']['name'])>0 ) {
                   $name     = $_FILES['file1']['name'];
                   $tmpName  = $_FILES['file1']['tmp_name'];
                   $error    = $_FILES['file1']['error'];
@@ -136,7 +137,8 @@ if($_POST )
               }
 
               // Upload image 2
-               if (isset($_FILES) && isset($_FILES['file2']) && isset($_FILES['file2']['name'])  && strlen($_FILES['file2']['name'])>0 ) {
+              if ( (!isset($_POST['setRemovePicture2']) || $_POST['setRemovePicture2']!="O") &&
+                  isset($_FILES) && isset($_FILES['file2']) && isset($_FILES['file2']['name'])  && strlen($_FILES['file2']['name'])>0 ) {
                   $name     = $_FILES['file2']['name'];
                   $tmpName  = $_FILES['file2']['tmp_name'];
                   $error    = $_FILES['file2']['error'];
@@ -290,6 +292,8 @@ if($_POST )
     <label for="nomBouteille" class="col-sm-2 control-label">Nom</label>
     <div class="col-sm-10">
       <input type="text"  name='nom' class="form-control" id="nomBouteille" placeholder="Nom de la bouteille ..." required >
+      <input type="hidden" name='setRemovePicture1' class="form-control" id="setRemovePicture1">
+      <input type="hidden" name='setRemovePicture2' class="form-control" id="setRemovePicture2">
     </div>
   </div>
 
@@ -297,9 +301,10 @@ if($_POST )
       <label for="file" class="col-sm-2 control-label">Etiquette</label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-          Recto<input type="file" name="file1" style="display: none;" onchange="$('#upload-file-info1').html($(this).val());">
+          Recto<input type="file" name="file1" style="display: none;" onchange="$('#uploadFileInfo1').html($(this).val());$('#removePicture1').show();">
         </label>
-        <span class='label label-info' id="upload-file-info1"></span>
+        <label class='btn btn-sm btn-danger' style='display: none;' id='removePicture1'><b>X</b></label>
+        <span class='label label-info' id="uploadFileInfo1"></span>
     </div>
   </div>
 
@@ -307,9 +312,10 @@ if($_POST )
       <label for="file" class="col-sm-2 control-label"></label>
       <div class="col-sm-10">
         <label class="btn btn-sm btn-primary btn-file">
-          Verso<input type="file" name="file2" style="display: none;" onchange="$('#upload-file-info2').html($(this).val());">
+          Verso<input type="file" name="file2" style="display: none;" onchange="$('#uploadFileInfo2').html($(this).val());$('#removePicture2').show();">
         </label>
-        <span class='label label-info' id="upload-file-info2"></span>
+        <label class='btn btn-sm btn-danger' style='display: none;' id='removePicture2'><b>X</b></label>
+        <span class='label label-info' id="uploadFileInfo2"></span>
     </div>
   </div>
 
@@ -595,6 +601,21 @@ if($_POST )
         }
       });
   } );
+
+
+    // Button Remove Picture 1
+    $(document).on('click', '#removePicture1', function(){
+      $("#setRemovePicture1").val("O");
+      $('#uploadFileInfo1').html("");
+      $('#removePicture1').hide();
+    });
+
+    // Button Remove Picture 2
+    $(document).on('click', '#removePicture2', function(){
+      $("#setRemovePicture2").val("O");
+      $('#uploadFileInfo2').html("");
+      $('#removePicture2').hide();
+    });
 
 
         $("input[name='quantite']").TouchSpin({
