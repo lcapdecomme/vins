@@ -373,7 +373,7 @@ img.viewBottle {
                     <li><a href="mon_mot_de_passe.php">Mot de passe</a></li>
                     <li><a href="emplacement.php">Mes emplacements</a></li>
                     <li><a href="fournisseur.php">Fournisseurs</a></li>
-                    <li><a href="export_csv.php">Export CSV</a></li>
+                    <li><a href="scripts/export_csv.php">Export CSV</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="logout.php">Déconnexion</a></li>
                   </ul>

@@ -47,6 +47,9 @@ if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
                 <th>Nom</th>
                 <th>CP</th>
                 <th>Ville</th>
+                <th>mail</th>
+                <th>tel. Fixe</th>
+                <th>tel. Portable</th>
                 <th>Opérations</th>
             </tr>
             <tbody>
@@ -59,6 +62,9 @@ if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
                             echo "<td>{$nom}</td>";
                             echo "<td>{$cp}</td>";
                             echo "<td>{$ville}</td>";
+                            echo "<td>{$mail}</td>";
+                            echo "<td>{$telFixe}</td>";
+                            echo "<td>{$telPortable}</td>";
                             echo "<td class='text-center' >";
                             echo "<a href='#' data-id={$id}  class='rechercheFournisseur btn btn-primary btn-xs' title='Modification'>";
                             echo "<span class='glyphicon glyphicon-ok' aria-hidden='true'></span></a>&nbsp;";
@@ -95,6 +101,12 @@ if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
                 </div>
             </div>
             <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Adresse</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurAdresse">
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="message-text" class="control-label col-sm-2">Code postal</label>
                 <div class="col-sm-10">
                    <input type="text" class="form-control" id="fournisseurCP">
@@ -104,6 +116,30 @@ if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
                 <label for="message-text" class="control-label col-sm-2">Ville</label>
                 <div class="col-sm-10">
                    <input type="text" class="form-control" id="fournisseurVille">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Tel. Fixe</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurTelFixe">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Tel. Portable</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurTelPortable">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Mail</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurMail">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Url</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurUrl">
                 </div>
             </div>
             <div class="form-group">
@@ -168,13 +204,19 @@ if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
             e.preventDefault();
             var idFournisseur = $('#idFournisseur').val(); 
             var nom = $('#fournisseurNom').val(); 
+            var adresse = $('#fournisseurAdresse').val(); 
             var cp = $('#fournisseurCP').val(); 
             var ville = $('#fournisseurVille').val(); 
+            var telFixe = $('#fournisseurTelFixe').val(); 
+            var telPortable = $('#fournisseurTelPortable').val(); 
+            var mail = $('#fournisseurMail').val(); 
+            var url = $('#fournisseurUrl').val(); 
 
             $.ajax({
                 type: "POST",
                 cache: false,
-                data: { op : 'M', id : idFournisseur, nom : nom, cp : cp, ville : ville },
+                data: { op : 'M', id : idFournisseur, nom : nom, adresse : adresse, cp : cp, ville : ville,
+                telFixe : telFixe, telPortable: telPortable, mail : mail, url : url },
                 url : "scripts/wsFournisseur.php",
                 success : function( msg, status,xhr ) {
                     if (msg && msg.resultat==true) {
@@ -232,8 +274,13 @@ if (isset($errorInfo) && strlen($errorInfo[2])>0 ) {
                 if (msg && msg.resultat==true) {
                         $('#idFournisseur').val(msg.id);
                         $('#fournisseurNom').val(msg.nom);
+                        $('#fournisseurAdresse').val(msg.adresse);
                         $('#fournisseurCP').val(msg.cp);
                         $('#fournisseurVille').val(msg.ville);
+                        $('#fournisseurTelFixe').val(msg.telFixe);
+                        $('#fournisseurTelPortable').val(msg.telPortable);
+                        $('#fournisseurMail').val(msg.mail);
+                        $('#fournisseurUrl').val(msg.url);
                         $('#myFournisseurPopup').modal();
                     }
                     else {

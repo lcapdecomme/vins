@@ -34,8 +34,13 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
         $json["resultat"]=true;
         $json["id"]=$fournisseur->id;
         $json["nom"]=$fournisseur->nom;
+        $json["adresse"]=$fournisseur->adresse;
         $json["cp"]=$fournisseur->cp;
         $json["ville"]=$fournisseur->ville;
+        $json["telFixe"]=$fournisseur->telFixe;
+        $json["telPortable"]=$fournisseur->telPortable;
+        $json["mail"]=$fournisseur->mail;
+        $json["url"]=$fournisseur->url;
         $json["message"]="";
       }
       else {
@@ -48,8 +53,13 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
     {
       $fournisseur->id = $_POST['id'];
       $fournisseur->nom = $_POST['nom'];
+      $fournisseur->adresse = $_POST['adresse'];
       $fournisseur->cp = $_POST['cp'];
       $fournisseur->ville = $_POST['ville'];
+      $fournisseur->telFixe = $_POST['telFixe'];
+      $fournisseur->telPortable = $_POST['telPortable'];
+      $fournisseur->mail = $_POST['mail'];
+      $fournisseur->url = $_POST['url'];
       if ($debug==true)
       {
         echo "Modification de l'objet Fournisseur {$fournisseur->id}<br>";
@@ -85,8 +95,13 @@ if ($_SESSION && isset($_SESSION['id_utilisateur']) )  {
     {
       $fournisseur->id = $fournisseur->id;
       $fournisseur->nom = $_POST['nom'];
+      $fournisseur->adresse = $_POST['adresse'];
       $fournisseur->cp = $_POST['cp'];
       $fournisseur->ville = $_POST['ville'];
+      $fournisseur->telFixe = $_POST['telFixe'];
+      $fournisseur->telPortable = $_POST['telPortable'];
+      $fournisseur->mail = $_POST['mail'];
+      $fournisseur->url = $_POST['url'];
       $valTemp = $_SESSION['id_utilisateur'];
       $fournisseur->id_utilisateur = $valTemp;
       if ($debug==true)

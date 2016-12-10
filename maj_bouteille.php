@@ -29,7 +29,7 @@ $db = $database->getConnection();
 $cepage = new Cepage($db);
 $stmtcepage = $cepage->read();
 
-// prepare bouteille object
+// prepare botle object
 $bouteille = new Bouteille($db);
 // get ID of the bouteille to be edited
 $id = $_GET['id'];
@@ -66,7 +66,8 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	if (isset($_POST['commentaire']))   	$bouteille->commentaire = $_POST['commentaire'];
 
 
-	// Upload image 
+
+	// debug 
 	if ($_POST['debug']) {
 		print_r($_FILES);
 		print_r($_FILES['file']);
@@ -75,6 +76,38 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 		print_r("error:".$_FILES['file']['error']."<br>");
 		print_r("size:".$_FILES['file']['size']."<br>");
 	}
+
+	// Delete picture 1 ? 	
+	if (isset($_POST['setRemovePicture1']) && $_POST['setRemovePicture1']=="O") {
+		// prepare botle object
+		$bouteilleTemp = new Bouteille($db);
+		$bouteilleTemp->id = $bouteille->id;
+	   	$bouteilleTemp->readOne();
+		if (isset($bouteilleTemp->nomPhoto) && strlen($bouteilleTemp->nomPhoto)>0) {
+			$bouteille->deletePhotos(UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$bouteilleTemp->nomPhoto);
+			$bouteille->nomPhoto = "";
+			if ($_POST['debug']) {
+				echo "Suppression photo recto ".$bouteilleTemp->nomPhoto."<br>";
+			}
+	
+		}
+	}
+
+	// Delete picture 2 ? 	
+	if (isset($_POST['setRemovePicture2']) && $_POST['setRemovePicture2']=="O") {
+		// prepare botle object
+		$bouteilleTemp = new Bouteille($db);
+		$bouteilleTemp->id = $bouteille->id;
+	   	$bouteilleTemp->readOne();
+		if (isset($bouteilleTemp->nomPhoto2) && strlen($bouteilleTemp->nomPhoto2)>0) {
+			$bouteille->deletePhotos(UPLOAD_DIRECTORY.DIRECTORY_SEPARATOR.$bouteilleTemp->nomPhoto2);	
+			$bouteille->nomPhoto2 = "";
+			if ($_POST['debug']) {
+				echo "Suppression photo verso ".$bouteilleTemp->nomPhoto2."<br>";
+			}
+		}
+	}
+
 	if (isset($_FILES) && isset($_FILES['file1']) && isset($_FILES['file1']['name'])  && strlen($_FILES['file1']['name'])>0 ) {
 		$name     = $_FILES['file1']['name'];
 		$tmpName  = $_FILES['file1']['tmp_name'];
@@ -136,9 +169,9 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                   $response = "Erreur inconnu";
 	      break;
 	  	}
-	if ($_POST['debug']) {
-		print_r("success:".$success."<br>");
-	}
+		if ($_POST['debug']) {
+			print_r("success:".$success."<br>");
+		}
 		if (!$success) {
 			// Affichage d'un message d'erreur suite à l'upload de la photo
 			echo "<div class=\"alert alert-danger alert-dismissable\">";
@@ -217,9 +250,9 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
                   $response = "Erreur inconnu";
 	      break;
 	  	}
-	if ($_POST['debug']) {
-		print_r("success:".$success."<br>");
-	}
+		if ($_POST['debug']) {
+			print_r("success:".$success."<br>");
+		}
 		if (!$success) {
 			// Affichage d'un message d'erreur suite à l'upload de la photo
 			echo "<div class=\"alert alert-danger alert-dismissable\">";
@@ -235,6 +268,7 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 			$nomVersoPrec = $bouteille->nomPhoto2;
 			$bouteille->nomPhoto2 = $nomPhoto;
 		}
+		$_FILES['file2']['name']="";
 	}
 
 	// update the bouteille
@@ -256,6 +290,10 @@ if($_POST && $_SESSION && isset($_SESSION['id_utilisateur']))
 	}
 }
 
+
+reset($_FILES);
+reset($_POST);
+
 echo "<div class='row hidden-sm hidden-xs'>";
 echo "<div class='col-md-12 right-button-margin'>";
 echo "<a href='index.php' class='btn btn-primary pull-right' style='margin-left:10px;'>Liste des vins</a>";
@@ -270,12 +308,13 @@ $displayPhoto1="none";
 $nomPhoto1="";
 if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
 	$tmpPhoto = explode("-", $bouteille->nomPhoto);
-	$tmp=$tmpPhoto[3];
+	$nomPhoto1=$tmpPhoto[3];
 	// Compatibilité ancien nommage des photos (1 seule photo)
-	if (!isset($tmp)) {
+	if (!isset($nomPhoto1)) {
     	$nomPhoto1=$tmpPhoto[2];
 	}
     $displayPhoto1="";
+    echo $displayPhoto1;
 }       
 $displayPhoto2="none";
 $nomPhoto2="";
@@ -283,20 +322,20 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 	$tmpPhoto = explode("-", $bouteille->nomPhoto2);
    	$nomPhoto2=$tmpPhoto[3];
     $displayPhoto2="";
+    echo $displayPhoto2;
 }       
 ?>
-
 
 <div class="row">
 <div class="col-md-4 hidden-sm hidden-xs">
 	<?php
 		$showDefault=true;
 		if (isset($bouteille->nomPhoto) && strlen($bouteille->nomPhoto)>0) {
-			echo "<img src='".UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR."{$bouteille->nomPhoto}' alt='{$bouteille->nomPhoto}' class='viewBottle' title='{$nomPhoto1}' ><br><br><br>";
+			echo "<img src='".UPLOAD_DIRECTORY . UPLOAD_SEPARATOR_DIRECTORY."{$bouteille->nomPhoto}' alt='{$bouteille->nomPhoto}' class='viewBottle' title='{$nomPhoto1}' ><br><br><br>";
 			$showDefault=false;
 		} 
 		if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
-			echo "<img src='".UPLOAD_DIRECTORY . DIRECTORY_SEPARATOR."{$bouteille->nomPhoto2}' alt='{$bouteille->nomPhoto2}' class='viewBottle' title='{$nomPhoto2}' >";
+			echo "<img src='".UPLOAD_DIRECTORY . UPLOAD_SEPARATOR_DIRECTORY."{$bouteille->nomPhoto2}' alt='{$bouteille->nomPhoto2}' class='viewBottle' title='{$nomPhoto2}' >";
 			$showDefault=false;
 		} 
 		if ( $showDefault )
@@ -313,9 +352,9 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 		<label for="nomBouteille" class="col-sm-2 control-label">Nom</label>
 		<div class="col-sm-10">
 		<input type="text"  name='nom' class="form-control" id="nomBouteille" value='<?php echo $bouteille->nom; ?>' >
-		<input type="hidden"  name='debug' class="form-control" id="nomBouteille" value='<?php echo $debug; ?>' >
-		<input type="text"  name='debug' class="form-control" id="setRemovePicture1">
-		<input type="text"  name='debug' class="form-control" id="setRemovePicture2">
+		<input type="hidden" name='debug' class="form-control" id="nomBouteille" value='<?php echo $debug; ?>' >
+		<input type="hidden" name='setRemovePicture1' class="form-control" id="setRemovePicture1" value="">
+		<input type="hidden" name='setRemovePicture2' class="form-control" id="setRemovePicture2" value="">
 		</div>
 	</div>
 
@@ -326,8 +365,7 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
         <label class="btn btn-sm btn-primary btn-file">
           Recto<input type="file" name="file1" style="display: none;" onchange="$('#uploadFileInfo1').html($(this).val());$('#removePicture1').show();">
         </label>
-        <?php
- 	
+        <?php	
 		    echo "<label class='btn btn-sm btn-danger' style='display: {$displayPhoto1};' id='removePicture1'><b>X</b></label>";
 		    echo "<span class='label label-info' id='uploadFileInfo1'>".$nomPhoto1."</span>";
         ?>
@@ -442,36 +480,45 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 		</div>
 	</div>
  
-  <?php 
-  // Fournisseurs
-  if (isset($_SESSION) && isset($_SESSION['fournisseur']) && $_SESSION['fournisseur']=='O' ) {
-      echo '<div class="form-group">';
-      echo '<label for="id_fournisseur" class="col-sm-2 control-label">Fournisseur</label>';
-      echo '<div class="col-sm-10">';
-      // Recherche des fournisseurs en BD
-      include_once 'objects/Fournisseur.php';
-      // Recherche de tous les objets Fournisseur
-      $fournisseur = new Fournisseur($db);
-      $fournisseur->id_utilisateur = $_SESSION['id_utilisateur'];
-      $stmttFournisseur = $fournisseur->readAll();
-      // Remplissage de la liste
-      echo "<select class='form-control' name='id_fournisseur'>";
-      echo "<option>Choisir le fournisseur ...</option>";
 
-      while ($row_fournisseur = $stmttFournisseur->fetch(PDO::FETCH_ASSOC)) {
-          extract($row_fournisseur);
-		    // current fournisseur of the product must be selected
-		    if($bouteille->id_fournisseur==$id){
-		        echo "<option value='$id' selected>";
-		    }else{
-		        echo "<option value='$id'>";
-		    }
-          echo "{$nom} ({$cp} {$ville})</option>";
-      }
-      echo "</select>";
-      echo '</div></div>';
-      }
-  ?>
+	<?php 
+	// Fournisseurs
+	if (isset($_SESSION) && isset($_SESSION['fournisseur']) && $_SESSION['fournisseur']=='O' ) {
+		echo '<div class="form-group">';
+		echo '<label for="id_fournisseur" class="col-sm-2 control-label">Fournisseur</label>';
+		echo '<div class="col-sm-8">';
+		// Recherche des fournisseurs en BD
+		include_once 'objects/Fournisseur.php';
+		// Recherche de tous les objets Fournisseur
+		$fournisseur = new Fournisseur($db);
+		$fournisseur->id_utilisateur = $_SESSION['id_utilisateur'];
+		$stmttFournisseur = $fournisseur->readAll();
+		// Remplissage de la liste
+		echo "<select class='form-control' name='id_fournisseur' id='changeSupplier'>";
+		echo "<option>Choisir le fournisseur ...</option>";
+
+		while ($row_fournisseur = $stmttFournisseur->fetch(PDO::FETCH_ASSOC)) {
+			extract($row_fournisseur);
+			// current fournisseur of the product must be selected
+			if($bouteille->id_fournisseur==$id){
+				echo "<option value='$id' selected>";
+			} else{
+				echo "<option value='$id'>";
+			}
+			echo "{$nom} ({$cp} {$ville})</option>";
+		}
+		echo "</select>";
+		echo "</div>";
+		echo '<div class="col-sm-2">';
+		if(isset($bouteille->id_fournisseur) && $bouteille->id_fournisseur!=0) {
+			echo "<label class='btn btn-sm btn-primary pull-right' id='showSupplier' data-id={$bouteille->id_fournisseur}><b>Voir</b></label>";
+		} else {
+			echo "<label class='btn btn-sm btn-primary disabled pull-right' id='showSupplier'><b>Voir</b></label>";
+		}
+		echo "</div>";
+		echo "</div>";
+	}
+  	?>
 
 	<div class="form-group">
 		<label for="millesime" class="col-sm-2 col-xs-4 control-label">Millésime</label>
@@ -602,6 +649,73 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 </div>
 <br>
 
+<!-- Modal - MAJ d'un objet -->
+<div class="modal fade" id="myFournisseurPopup" tabindex="-1">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <h4 class="modal-title" id="fournisseurNom">&nbsp;</h4>
+         </div>
+         <div class="modal-body form-horizontal">
+            <input type="hidden" class="form-control" id="idFournisseur">
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Adresse</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurAdresse">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Code postal</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurCP">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Ville</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurVille">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Tel. Fixe</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurTelFixe">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Tel. Portable</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurTelPortable">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Mail</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurMail">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="control-label col-sm-2">Url</label>
+                <div class="col-sm-10">
+                   <input type="text" class="form-control" id="fournisseurUrl">
+                </div>
+            </div>
+            <div class="form-group">
+                <p class="col-sm-12 text-warning text-left" id="messageModification"></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-primary" id="sauverFournisseur">Sauver</button>
+         </div>
+        </div>
+      </form>
+  </div>
+</div>
+
+<script src="lib/elevatezoom/js/jquery.elevateZoom-3.0.8.min.js"></script>
 
  <script type="text/javascript">
     $(document).ready(function() {
@@ -656,6 +770,11 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
   } );
 
 
+		$(".viewBottle").elevateZoom({
+		  zoomType: "inner",
+		  cursor: "crosshair"
+ 		});
+
 		$("input[name='quantite']").TouchSpin({
 			min: 0,
 			max: 240,
@@ -704,12 +823,87 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 			$("#apogee").val(slideEvt.newValue);
 		});
 
+    /**
+    * Recherche Fournisseur
+    */
+    $('#showSupplier').click( function(e) {
+        e.preventDefault();
+        var idFournisseur = $(this).data("id");
+        $.ajax({
+            cache: false,
+            data: { op : 'R', id : idFournisseur },
+            url : "scripts/wsFournisseur.php",
+            success : function( msg, status,xhr ) {
+                if (msg && msg.resultat==true) {
+                        $('#idFournisseur').val(msg.id);
+                        $('#fournisseurNom').html(msg.nom);
+                        $('#fournisseurAdresse').val(msg.adresse);
+                        $('#fournisseurCP').val(msg.cp);
+                        $('#fournisseurVille').val(msg.ville);
+                        $('#fournisseurTelFixe').val(msg.telFixe);
+                        $('#fournisseurTelPortable').val(msg.telPortable);
+                        $('#fournisseurMail').val(msg.mail);
+                        $('#fournisseurUrl').val(msg.url);
+                        $('#myFournisseurPopup').modal();
+                    }
+                    else {
+                        $('#messageRecherche').html('Erreur : ' + msg.message);
+                    }    
+            },
+            error : function( msg, status,xhr ) {
+                $('#messageRecherche').html('Erreur : ' + msg + "("+status+")"+ "("+xhr+")");
+            }
+        });         
+    });
+    /**
+    * Sauver Fournisseur
+    */
+    $(function() {
+        $('#sauverFournisseur').click( function(e) {
+            e.preventDefault();
+            var idFournisseur = $('#idFournisseur').val(); 
+            var nom = $('#fournisseurNom').html(); 
+            var adresse = $('#fournisseurAdresse').val(); 
+            var cp = $('#fournisseurCP').val(); 
+            var ville = $('#fournisseurVille').val(); 
+            var telFixe = $('#fournisseurTelFixe').val(); 
+            var telPortable = $('#fournisseurTelPortable').val(); 
+            var mail = $('#fournisseurMail').val(); 
+            var url = $('#fournisseurUrl').val(); 
 
-		$('#nomBouteille').autocomplete({
-			source: 'autocomplete.php',
-			minLength: 2, //search after two characters
-			dataType: 'json'
-		});
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: { op : 'M', id : idFournisseur, nom : nom, adresse : adresse, cp : cp, ville : ville,
+                telFixe : telFixe, telPortable: telPortable, mail : mail, url : url },
+                url : "scripts/wsFournisseur.php",
+                success : function( msg, status,xhr ) {
+                    if (msg && msg.resultat==true) {
+                        $('#myFournisseurPopup').modal('hide');
+                        location.reload();
+                    }
+                    else {
+                        $('#messageModification').html('Erreur : ' + msg.message);
+                    }           
+                },
+                error : function( msg, status,xhr ) {
+                    console.log(msg + "("+status+")", "Fournisseur");
+                }
+            });         
+        });
+    });
+
+    // Event Change on Supplier
+	$('#changeSupplier').on('change', function() {
+		$('#showSupplier').data('id', this.value );
+	})
+
+	// Autocomplete name of wine
+	$('#nomBouteille').autocomplete({
+		source: 'autocomplete.php',
+		minLength: 2, //search after two characters
+		dataType: 'json'
+	});
 
     });
 

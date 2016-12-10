@@ -10,8 +10,13 @@ class Fournisseur{
     // object properties
     public $id;
     public $nom;
+    public $adresse;
     public $cp;
     public $ville;
+    public $telFixe;
+    public $telPortable;
+    public $mail;
+    public $url;
     public $id_utilisateur;
     public $error; 
   
@@ -34,8 +39,13 @@ class Fournisseur{
           extract($row);
           $this->id=$id;
           $this->nom=$nom;
+          $this->adresse=$adresse;
           $this->cp=$cp;
           $this->ville=$ville;
+          $this->telFixe=$telFixe;
+          $this->telPortable=$telPortable;
+          $this->mail=$mail;
+          $this->url=$url;
           $this->id_utilisateur=$id_utilisateur;
           return true;
         }
@@ -61,12 +71,17 @@ class Fournisseur{
     // Add storage
     function create(){
          try {
-            $query= "insert into fournisseur (nom, cp, ville,id_utilisateur) 
-                    values ( :nom, :cp, :ville, :id_utilisateur)";
+            $query= "insert into fournisseur (nom, adresse, cp, ville, id_utilisateur, telFixe, telPortable, mail, url) 
+                    values ( :nom, :adresse, :cp, :ville, :id_utilisateur, :telFixe, :telPortable, :mail, :url)";
             $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':adresse', $this->adresse);
         $stmt->bindParam(':cp', $this->cp);
         $stmt->bindParam(':ville', $this->ville);
+        $stmt->bindParam(':telFixe', $this->telFixe);
+        $stmt->bindParam(':telPortable', $this->telPortable);
+        $stmt->bindParam(':mail', $this->mail);
+        $stmt->bindParam(':url', $this->url);
             $stmt->bindParam(':id_utilisateur', $this->id_utilisateur);
             if ($stmt->execute()) {
               return true;
@@ -87,15 +102,25 @@ class Fournisseur{
         try {
         $query = "update fournisseur set
                     nom = :nom,
+                    adresse = :adresse,
                     cp = :cp,
-                    ville = :ville
+                    ville = :ville,
+                    telFixe = :telFixe,
+                    telPortable = :telPortable,
+                    mail = :mail,
+                    url = :url
                 WHERE
                     id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':adresse', $this->adresse);
         $stmt->bindParam(':cp', $this->cp);
         $stmt->bindParam(':ville', $this->ville);
+        $stmt->bindParam(':telFixe', $this->telFixe);
+        $stmt->bindParam(':telPortable', $this->telPortable);
+        $stmt->bindParam(':mail', $this->mail);
+        $stmt->bindParam(':url', $this->url);
         if ($stmt->execute()) {
             return true;
         }   else{

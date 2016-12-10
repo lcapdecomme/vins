@@ -4,8 +4,8 @@ ini_set('zlib.output_compression_level', 6);
 ob_start('ob_gzhandler');
 
 // include database and object files
-include_once 'config/database.php';
-include_once 'objects/Bouteille.php';
+include_once '../config/database.php';
+include_once '../objects/Bouteille.php';
 
 if (!$_SESSION || !(isset($_SESSION['id_utilisateur'])) ) {
     header('Location: index.php');
