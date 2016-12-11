@@ -513,7 +513,7 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 		if(isset($bouteille->id_fournisseur) && $bouteille->id_fournisseur!=0) {
 			echo "<label class='btn btn-sm btn-primary pull-right' id='showSupplier' data-id={$bouteille->id_fournisseur}><b>Voir</b></label>";
 		} else {
-			echo "<label class='btn btn-sm btn-primary disabled pull-right' id='showSupplier'><b>Voir</b></label>";
+			echo "<label class='btn btn-sm btn-primary disabled pull-right' id='showSupplier' data-id='0'><b>Voir</b></label>";
 		}
 		echo "</div>";
 		echo "</div>";
@@ -769,12 +769,13 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
       });
   } );
 
-
+  		// Zoom on picture
 		$(".viewBottle").elevateZoom({
 		  zoomType: "inner",
 		  cursor: "crosshair"
  		});
 
+		// Touchspin
 		$("input[name='quantite']").TouchSpin({
 			min: 0,
 			max: 240,
@@ -798,7 +799,7 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 			$('#removePicture2').hide();
 		});
 
-
+		// Sliders x3
 		var slider0 = new Slider("#sliderAchat");
 		slider0.on("slide", function(slideEvt) {
 			$("#achat").val(slideEvt);
@@ -829,31 +830,34 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
     $('#showSupplier').click( function(e) {
         e.preventDefault();
         var idFournisseur = $(this).data("id");
-        $.ajax({
-            cache: false,
-            data: { op : 'R', id : idFournisseur },
-            url : "scripts/wsFournisseur.php",
-            success : function( msg, status,xhr ) {
-                if (msg && msg.resultat==true) {
-                        $('#idFournisseur').val(msg.id);
-                        $('#fournisseurNom').html(msg.nom);
-                        $('#fournisseurAdresse').val(msg.adresse);
-                        $('#fournisseurCP').val(msg.cp);
-                        $('#fournisseurVille').val(msg.ville);
-                        $('#fournisseurTelFixe').val(msg.telFixe);
-                        $('#fournisseurTelPortable').val(msg.telPortable);
-                        $('#fournisseurMail').val(msg.mail);
-                        $('#fournisseurUrl').val(msg.url);
-                        $('#myFournisseurPopup').modal();
-                    }
-                    else {
-                        $('#messageRecherche').html('Erreur : ' + msg.message);
-                    }    
-            },
-            error : function( msg, status,xhr ) {
-                $('#messageRecherche').html('Erreur : ' + msg + "("+status+")"+ "("+xhr+")");
-            }
-        });         
+        if (idFournisseur>0) {
+	        $.ajax({
+	            cache: false,
+	            data: { op : 'R', id : idFournisseur },
+	            url : "scripts/wsFournisseur.php",
+	            success : function( msg, status,xhr ) {
+	                if (msg && msg.resultat==true) {
+	                        $('#idFournisseur').val(msg.id);
+	                        $('#fournisseurNom').html(msg.nom);
+	                        $('#fournisseurAdresse').val(msg.adresse);
+	                        $('#fournisseurCP').val(msg.cp);
+	                        $('#fournisseurVille').val(msg.ville);
+	                        $('#fournisseurTelFixe').val(msg.telFixe);
+	                        $('#fournisseurTelPortable').val(msg.telPortable);
+	                        $('#fournisseurMail').val(msg.mail);
+	                        $('#fournisseurUrl').val(msg.url);
+	                        $('#myFournisseurPopup').modal();
+	                    }
+	                    else {
+	                        $('#messageRecherche').html('Erreur : ' + msg.message);
+	                    }    
+	            },
+	            error : function( msg, status,xhr ) {
+	                $('#messageRecherche').html('Erreur : ' + msg + "("+status+")"+ "("+xhr+")");
+	            }
+	        });         
+
+        }
     });
     /**
     * Sauver Fournisseur
@@ -895,7 +899,13 @@ if (isset($bouteille->nomPhoto2) && strlen($bouteille->nomPhoto2)>0) {
 
     // Event Change on Supplier
 	$('#changeSupplier').on('change', function() {
-		$('#showSupplier').data('id', this.value );
+		if (this.value>0) {
+			$('#showSupplier').data('id', this.value );
+			$('#showSupplier').removeClass('disabled');
+		} else {
+			$('#showSupplier').data('id', 0 );
+			$('#showSupplier').addClass('disabled');
+		}
 	})
 
 	// Autocomplete name of wine
