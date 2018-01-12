@@ -169,7 +169,7 @@
             echo "<th>Nom</th>";
             echo "<th class='hidden-xs'>Qté</th>";
             echo "<th class='hidden-sm hidden-xs'>Vol.</th>";
-            echo "<th class='colCouleur hidden-xs'>Type</th>";
+            echo "<th class='colCouleur'>Type</th>";
             echo "<th class='filter-select filter-onlyAvail hidden-md hidden-sm hidden-xs'>Achat</th>";
             echo "<th class='filter-select filter-onlyAvail hidden-sm hidden-xs'>Millesime</th>";
             echo "<th class='filter-select filter-onlyAvail hidden-xs'>Apogée</th>";
@@ -208,7 +208,7 @@
 	                echo "</td>";
 	                echo "<td class='colQuantite hidden-xs' id='quantite_{$id}' style='text-align:center;'>{$quantite}</td>";
 	                echo "<td class='hidden-sm hidden-xs' style='text-align:center;'>{$type_volume}</td>";
-	                echo "<td class='textAndImg colCouleur hidden-xs'  style='text-align:center;'> ";
+	                echo "<td class='textAndImg colCouleur'  style='text-align:center;'> ";
 	                    $type->id = $id_type;
 	                    if ($id_type==1)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_rouge.png' title='Rouge' />";
 	                    if ($id_type==3)	echo "<span class='cacheca'>$id_type</span>&nbsp;&nbsp;<img src='img/logo_rose.png' title='Rosé' />";
