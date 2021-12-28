@@ -66,7 +66,7 @@ else
     // Show forms
 ?>
 <div class='row'>
-  <div  class='col-md-6 separatorForm  col-sm-12'>
+  <div  class='col-md-6 col-sm-12'>
     <h2 class="text-center">Connexion</h2>
     <form class="form-signin" action='login.php' method='POST'  >
         <input type="hidden" name="action" value="login">
@@ -95,8 +95,9 @@ else
     </form>
   </div>  
 
-  <div  class='col-md-6 hidden-sm  hidden-xs'>
-    <h2 class="text-center">Nouvel utilisateur</h2>
+  <div class='col-md-6 col-sm-12'>
+    <hr style="background-color: gray;border: 1px solid gray;"  class='hidden-md hidden-lg hidden-xl'>
+    <h2 class="text-center">Ou Nouvel utilisateur</h2>
     <form class="form-signin" action='login.php' method='POST'  >
         <input type="hidden" name="action" value="register">
         <div class="form-group">
