@@ -66,6 +66,9 @@ class Bouteille{
         if (!is_numeric($this->id_fournisseur)) {
             $this->id_fournisseur=0;
         }
+        if (!is_numeric($this->id_type)) {
+            $this->id_type=0;
+        }
  
         try {
             //write query
@@ -186,6 +189,9 @@ class Bouteille{
         }
         if (!is_numeric($this->id_fournisseur)) {
             $this->id_fournisseur=0;
+        }
+        if (!is_numeric($this->id_type)) {
+            $this->id_type=0;
         }
         $query = "UPDATE " . $this->table_name . " SET
                     nom = :nom,
